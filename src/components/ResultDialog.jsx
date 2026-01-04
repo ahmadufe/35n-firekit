@@ -62,10 +62,10 @@ export default function ResultDialog({ open, onClose, result }) {
           <div className="text-center">
             <p className="text-sm text-slate-600 mb-2">Final Score</p>
             <p className="text-4xl font-bold text-slate-900">
-              {result.total_score} <span className="text-xl font-normal text-slate-400">/ 72</span>
+              {result.total_score} <span className="text-xl font-normal text-slate-400">/ 68</span>
             </p>
             <p className="text-sm text-slate-500 mt-2">
-              Minimum passing score: 58
+              Minimum passing score: 54
             </p>
           </div>
 
