@@ -24,7 +24,7 @@ const SCORECARD_SECTIONS = [
       'Designed for distracted, rushed users (not ideal users)',
       'Core flow works with partial attention',
       'Does not assume motivation, patience, or learning',
-      'Validated against real behavior, not opinions'
+      'Validated against real behavior, not opinions or assumptions on customer behaviour'
     ]
   },
   {
@@ -43,12 +43,11 @@ const SCORECARD_SECTIONS = [
     id: 'first_value_experience',
     title: '3. First Value Experience',
     critical: true,
-    passScore: 7,
+    passScore: 5,
     questions: [
-      'Value is experienced before commitment (signup, KYC, setup)',
       'Time-to-value measured in minutes, not sessions',
       'First success possible without instructions',
-      'Onboarding proves usefulness, not feature depth'
+      'Onboarding is simple, and gets customer to their target'
     ]
   },
   {
@@ -79,12 +78,11 @@ const SCORECARD_SECTIONS = [
     id: 'momentum_habit_dependence',
     title: '6. Momentum vs Habit Dependence',
     critical: false,
-    passScore: 6,
+    passScore: 5,
     questions: [
       'Users feel progress early (even with partial completion)',
       'Continued use feels easier than first use',
-      'Product does not rely on discipline, reminders, or habit change',
-      'Partial progress is rewarded, not punished'
+      'Product does not rely on discipline, reminders, or habit change'
     ]
   },
   {
@@ -94,7 +92,7 @@ const SCORECARD_SECTIONS = [
     passScore: 7,
     questions: [
       'Failure states are intentionally designed (not default errors)',
-      'Errors are human, not technical',
+      'Errors are due to human behavior, not technical failures',
       'Recovery paths are obvious and forgiving',
       'User is never blamed for system issues'
     ]
@@ -107,7 +105,7 @@ const SCORECARD_SECTIONS = [
     questions: [
       'Language is calm, clear, and respectful',
       'Pricing, permissions, and data use are transparent',
-      'No surprises or dark patterns',
+      'No surprises or dark patterns (e.g user informed product is not yet available after a long onboarding)',
       'Support experience matches product promise'
     ]
   }
@@ -204,7 +202,7 @@ export default function Scorecard() {
     let status = 'pass';
     if (criticalFailures.length > 0) {
       status = 'fail';
-    } else if (totalScore < 58) {
+    } else if (totalScore < 54) {
       status = 'conditional';
     }
 
@@ -327,8 +325,8 @@ export default function Scorecard() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <span className={`font-semibold ${assessment.total_score >= 58 ? 'text-emerald-600' : 'text-slate-900'}`}>
-                          {assessment.total_score}/72
+                        <span className={`font-semibold ${assessment.total_score >= 54 ? 'text-emerald-600' : 'text-slate-900'}`}>
+                          {assessment.total_score}/68
                         </span>
                       </TableCell>
                       <TableCell>
@@ -476,7 +474,7 @@ export default function Scorecard() {
                 <div className="max-w-5xl mx-auto flex items-center justify-between">
                   <div>
                     <p className="text-sm text-slate-500">
-                      Minimum passing score: 58/72. Failing any CRITICAL section = No launch.
+                      Minimum passing score: 54/68. Failing any CRITICAL section = No launch.
                     </p>
                   </div>
                   <Button
