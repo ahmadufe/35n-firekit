@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowLeft, Plus, Loader2, AlertTriangle, Eye, Clock, CheckCircle2, XCircle } from "lucide-react";
+import { ArrowLeft, Plus, Loader2, AlertTriangle, Eye, Clock, CheckCircle2, XCircle, Pencil } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { format } from "date-fns";
@@ -167,6 +167,13 @@ export default function Scorecard() {
     setView('view');
   };
 
+  const handleEditAssessment = (assessment) => {
+    setViewingAssessment(assessment);
+    setScores(assessment.scores || {});
+    setProductName(assessment.product_name || '');
+    setView('edit');
+  };
+
   const calculateTotalScore = () => {
     return Object.values(scores).reduce((sum, score) => sum + (score || 0), 0);
   };
@@ -217,7 +224,15 @@ export default function Scorecard() {
     };
 
     setIsSubmitting(true);
-    await base44.entities.Assessment.create(assessmentData);
+    
+    if (view === 'edit' && viewingAssessment) {
+      // Update existing assessment
+      await base44.entities.Assessment.update(viewingAssessment.id, assessmentData);
+    } else {
+      // Create new assessment
+      await base44.entities.Assessment.create(assessmentData);
+    }
+    
     queryClient.invalidateQueries({ queryKey: ['assessments'] });
     setCurrentResult(assessmentData);
     setShowResult(true);
@@ -264,7 +279,7 @@ export default function Scorecard() {
                 className="h-8 object-contain"
               />
             </div>
-            {(view === 'new' || view === 'view') && (
+            {(view === 'new' || view === 'view' || view === 'edit') && (
               <div className="flex items-center gap-4">
                 <div className="text-right">
                   <p className="text-xs text-slate-500">Total Score</p>
@@ -347,10 +362,30 @@ export default function Scorecard() {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <Button variant="ghost" size="sm">
-                          <Eye className="h-4 w-4 mr-2" />
-                          View
-                        </Button>
+                        <div className="flex gap-2">
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleViewAssessment(assessment);
+                            }}
+                          >
+                            <Eye className="h-4 w-4 mr-2" />
+                            View
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEditAssessment(assessment);
+                            }}
+                          >
+                            <Pencil className="h-4 w-4 mr-2" />
+                            Edit
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -372,7 +407,7 @@ export default function Scorecard() {
               </p>
             </div>
 
-            {view === 'new' && (
+            {(view === 'new' || view === 'edit') && (
               <Card className="border-0 shadow-lg mb-8">
                 <CardContent className="p-6">
                   <Label htmlFor="productName" className="text-sm font-medium text-slate-700">
@@ -469,7 +504,7 @@ export default function Scorecard() {
               })}
             </div>
 
-            {view === 'new' && (
+            {(view === 'new' || view === 'edit') && (
               <div className="sticky bottom-0 bg-white/80 backdrop-blur-xl border-t border-slate-100 mt-8 -mx-6 px-6 py-4">
                 <div className="max-w-5xl mx-auto flex items-center justify-between">
                   <div>
@@ -477,20 +512,30 @@ export default function Scorecard() {
                       Minimum passing score: 48/60. Failing any CRITICAL section = No launch.
                     </p>
                   </div>
-                  <Button
-                    onClick={handleSubmit}
-                    disabled={!allAnswered || isSubmitting}
-                    className="bg-slate-900 hover:bg-slate-800 text-white px-8 h-12"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Submitting...
-                      </>
-                    ) : (
-                      'Submit Assessment'
+                  <div className="flex gap-3">
+                    {view === 'edit' && (
+                      <Button
+                        onClick={() => setView('list')}
+                        variant="outline"
+                      >
+                        Cancel
+                      </Button>
                     )}
-                  </Button>
+                    <Button
+                      onClick={handleSubmit}
+                      disabled={!allAnswered || isSubmitting}
+                      className="bg-slate-900 hover:bg-slate-800 text-white px-8 h-12"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          {view === 'edit' ? 'Updating...' : 'Submitting...'}
+                        </>
+                      ) : (
+                        view === 'edit' ? 'Update Assessment' : 'Submit Assessment'
+                      )}
+                    </Button>
+                  </div>
                 </div>
               </div>
             )}
