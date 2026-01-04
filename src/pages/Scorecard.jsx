@@ -395,7 +395,7 @@ export default function Scorecard() {
           </>
         )}
 
-        {(view === 'new' || view === 'view') && (
+        {(view === 'new' || view === 'view' || view === 'edit') && (
           <>
             <div className="mb-8">
               <h1 className="text-3xl font-light text-slate-900 tracking-tight mb-2">
