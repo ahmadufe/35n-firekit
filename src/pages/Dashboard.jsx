@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from "@/api/base44Client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { 
   DropdownMenu, 
@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
-import { ClipboardCheck, BookOpen, Wrench, User, LogOut, Settings, ChevronDown } from "lucide-react";
+import { ClipboardCheck, BookOpen, Wrench, User, LogOut, Settings, ChevronDown, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import UserSetupModal from "@/components/UserSetupModal";
@@ -34,11 +34,39 @@ export default function Dashboard() {
 
   const userProfile = userProfiles[0];
 
+  const { data: publishedConfig } = useQuery({
+    queryKey: ['publishedLandingPage'],
+    queryFn: async () => {
+      const configs = await base44.entities.LandingPageConfig.filter({ config_name: 'published' });
+      return configs[0];
+    }
+  });
+
   useEffect(() => {
     if (!profileLoading && !userLoading && user && !userProfile) {
       setShowSetup(true);
     }
   }, [userProfile, profileLoading, userLoading, user]);
+
+  // Track login
+  useEffect(() => {
+    const trackLogin = async () => {
+      if (user && userProfile) {
+        const logins = await base44.entities.LoginHistory.filter({ user_email: user.email });
+        const loginType = logins.length === 0 ? 'first_time' : 'returning';
+        
+        await base44.entities.LoginHistory.create({
+          user_email: user.email,
+          user_name: userProfile.name || user.full_name,
+          login_type: loginType
+        });
+      }
+    };
+
+    if (user && userProfile && !showSetup) {
+      trackLogin();
+    }
+  }, [user, userProfile, showSetup]);
 
   const handleSetupSubmit = async (formData) => {
     setIsSubmitting(true);
@@ -118,6 +146,16 @@ export default function Dashboard() {
                     User Details
                   </DropdownMenuItem>
                 </Link>
+                {user?.role === 'admin' && (
+                  <>
+                    <Link to={createPageUrl('AdminDashboard')}>
+                      <DropdownMenuItem className="cursor-pointer">
+                        <Shield className="mr-2 h-4 w-4" />
+                        Admin Dashboard
+                      </DropdownMenuItem>
+                    </Link>
+                  </>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600 focus:text-red-600">
                   <LogOut className="mr-2 h-4 w-4" />
@@ -141,44 +179,76 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* Tools Section */}
-        <section className="mb-16">
-          <SectionHeader title="Tools" />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <ToolCard
-              title="Product Launch CX Scorecard"
-              description="A non-technical launch gate assessment for fintech, enterprise, and emerging markets products."
-              icon={ClipboardCheck}
-              href={createPageUrl('Scorecard')}
-            />
-          </div>
-        </section>
+        {/* Dynamic Sections */}
+        {publishedConfig?.sections ? (
+          publishedConfig.sections.map((section) => (
+            <section key={section.id} className="mb-16">
+              <SectionHeader title={section.title} comingSoon={section.coming_soon} />
+              {section.tools && section.tools.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {section.tools.map((tool) => {
+                    const iconMap = {
+                      ClipboardCheck,
+                      BookOpen,
+                      Wrench
+                    };
+                    const IconComponent = iconMap[tool.icon] || ClipboardCheck;
+                    
+                    return (
+                      <ToolCard
+                        key={tool.id}
+                        title={tool.title}
+                        description={tool.description}
+                        icon={IconComponent}
+                        href={tool.page ? createPageUrl(tool.page) : '#'}
+                        comingSoon={tool.coming_soon}
+                      />
+                    );
+                  })}
+                </div>
+              )}
+            </section>
+          ))
+        ) : (
+          <>
+            {/* Default sections if no config */}
+            <section className="mb-16">
+              <SectionHeader title="Tools" />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <ToolCard
+                  title="Product Launch CX Scorecard"
+                  description="A non-technical launch gate assessment for fintech, enterprise, and emerging markets products."
+                  icon={ClipboardCheck}
+                  href={createPageUrl('Scorecard')}
+                />
+              </div>
+            </section>
 
-        {/* Resources Section */}
-        <section className="mb-16">
-          <SectionHeader title="Resources" comingSoon />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <ToolCard
-              title="Launch Checklist Templates"
-              description="Comprehensive templates to ensure nothing is missed before your product launch."
-              icon={BookOpen}
-              comingSoon
-            />
-          </div>
-        </section>
+            <section className="mb-16">
+              <SectionHeader title="Resources" comingSoon />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <ToolCard
+                  title="Launch Checklist Templates"
+                  description="Comprehensive templates to ensure nothing is missed before your product launch."
+                  icon={BookOpen}
+                  comingSoon
+                />
+              </div>
+            </section>
 
-        {/* Playbooks Section */}
-        <section className="mb-16">
-          <SectionHeader title="Playbooks" comingSoon />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <ToolCard
-              title="CX Best Practices"
-              description="Proven strategies and frameworks for delivering exceptional customer experiences."
-              icon={Wrench}
-              comingSoon
-            />
-          </div>
-        </section>
+            <section className="mb-16">
+              <SectionHeader title="Playbooks" comingSoon />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <ToolCard
+                  title="CX Best Practices"
+                  description="Proven strategies and frameworks for delivering exceptional customer experiences."
+                  icon={Wrench}
+                  comingSoon
+                />
+              </div>
+            </section>
+          </>
+        )}
       </main>
 
       {/* Footer */}
