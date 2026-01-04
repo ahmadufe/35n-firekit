@@ -9,6 +9,7 @@ import { ArrowLeft, Loader2, CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 
 export default function UserSettings() {
   const [formData, setFormData] = useState({
