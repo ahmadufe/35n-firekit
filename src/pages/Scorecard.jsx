@@ -268,8 +268,8 @@ export default function Scorecard() {
               <div className="flex items-center gap-4">
                 <div className="text-right">
                   <p className="text-xs text-slate-500">Total Score</p>
-                  <p className={`text-2xl font-bold ${totalScore >= 58 ? 'text-emerald-600' : 'text-slate-900'}`}>
-                    {totalScore} <span className="text-sm font-normal text-slate-400">/ 72</span>
+                  <p className={`text-2xl font-bold ${totalScore >= 54 ? 'text-emerald-600' : 'text-slate-900'}`}>
+                    {totalScore} <span className="text-sm font-normal text-slate-400">/ 68</span>
                   </p>
                 </div>
               </div>
