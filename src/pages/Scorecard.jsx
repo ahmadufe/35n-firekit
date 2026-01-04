@@ -202,7 +202,7 @@ export default function Scorecard() {
     let status = 'pass';
     if (criticalFailures.length > 0) {
       status = 'fail';
-    } else if (totalScore < 54) {
+    } else if (totalScore < 48) {
       status = 'conditional';
     }
 
@@ -268,8 +268,8 @@ export default function Scorecard() {
               <div className="flex items-center gap-4">
                 <div className="text-right">
                   <p className="text-xs text-slate-500">Total Score</p>
-                  <p className={`text-2xl font-bold ${totalScore >= 54 ? 'text-emerald-600' : 'text-slate-900'}`}>
-                    {totalScore} <span className="text-sm font-normal text-slate-400">/ 68</span>
+                  <p className={`text-2xl font-bold ${totalScore >= 48 ? 'text-emerald-600' : 'text-slate-900'}`}>
+                    {totalScore} <span className="text-sm font-normal text-slate-400">/ 60</span>
                   </p>
                 </div>
               </div>
@@ -284,7 +284,7 @@ export default function Scorecard() {
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h1 className="text-3xl font-light text-slate-900 tracking-tight mb-2">
-                  CX Launch Scorecard
+                  Product Launch CX Scorecard
                 </h1>
                 <p className="text-slate-500">Your previous assessments</p>
               </div>
@@ -325,8 +325,8 @@ export default function Scorecard() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <span className={`font-semibold ${assessment.total_score >= 54 ? 'text-emerald-600' : 'text-slate-900'}`}>
-                          {assessment.total_score}/68
+                        <span className={`font-semibold ${assessment.total_score >= 48 ? 'text-emerald-600' : 'text-slate-900'}`}>
+                          {assessment.total_score}/60
                         </span>
                       </TableCell>
                       <TableCell>
@@ -364,7 +364,7 @@ export default function Scorecard() {
           <>
             <div className="mb-8">
               <h1 className="text-3xl font-light text-slate-900 tracking-tight mb-2">
-                CX Launch Scorecard
+                Product Launch CX Scorecard
               </h1>
               <p className="text-slate-500 max-w-2xl">
                 A non-technical launch gate for fintech, enterprise, and emerging markets products. 
@@ -474,7 +474,7 @@ export default function Scorecard() {
                 <div className="max-w-5xl mx-auto flex items-center justify-between">
                   <div>
                     <p className="text-sm text-slate-500">
-                      Minimum passing score: 54/68. Failing any CRITICAL section = No launch.
+                      Minimum passing score: 48/60. Failing any CRITICAL section = No launch.
                     </p>
                   </div>
                   <Button

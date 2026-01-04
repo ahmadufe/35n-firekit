@@ -62,10 +62,10 @@ export default function ResultDialog({ open, onClose, result }) {
           <div className="text-center">
             <p className="text-sm text-slate-600 mb-2">Final Score</p>
             <p className="text-4xl font-bold text-slate-900">
-              {result.total_score} <span className="text-xl font-normal text-slate-400">/ 68</span>
+              {result.total_score} <span className="text-xl font-normal text-slate-400">/ 60</span>
             </p>
             <p className="text-sm text-slate-500 mt-2">
-              Minimum passing score: 54
+              Minimum passing score: 48
             </p>
           </div>
 
@@ -85,10 +85,10 @@ export default function ResultDialog({ open, onClose, result }) {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 mt-6">
-          <Link to={createPageUrl('Dashboard')} className="flex-1">
+          <Link to={createPageUrl('Scorecard')} className="flex-1">
             <Button variant="outline" className="w-full h-12 border-slate-200 hover:bg-slate-50">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Dashboard
+              Back to Scorecard
             </Button>
           </Link>
           <Button 

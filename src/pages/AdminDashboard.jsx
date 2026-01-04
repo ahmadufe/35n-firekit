@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, BarChart3, LogIn, Users, FolderOpen, Layout } from "lucide-react";
+import { ArrowLeft, BarChart3, LogIn, Users, FolderOpen, Layout, UserPlus } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import InsightsTab from "@/components/admin/InsightsTab";
@@ -11,6 +11,7 @@ import LoginsTab from "@/components/admin/LoginsTab";
 import UsersTab from "@/components/admin/UsersTab";
 import ResourcesTab from "@/components/admin/ResourcesTab";
 import LandingPageTab from "@/components/admin/LandingPageTab";
+import InviteUserTab from "@/components/admin/InviteUserTab";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('insights');
@@ -89,6 +90,10 @@ export default function AdminDashboard() {
               <Layout className="h-4 w-4" />
               Landing Page
             </TabsTrigger>
+            <TabsTrigger value="invite" className="flex items-center gap-2">
+              <UserPlus className="h-4 w-4" />
+              Invite Users
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="insights">
@@ -109,6 +114,10 @@ export default function AdminDashboard() {
 
           <TabsContent value="landing">
             <LandingPageTab />
+          </TabsContent>
+
+          <TabsContent value="invite">
+            <InviteUserTab />
           </TabsContent>
         </Tabs>
       </main>
