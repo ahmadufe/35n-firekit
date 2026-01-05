@@ -180,14 +180,23 @@ export default function LandingPageTab() {
       sections
     };
 
+    const draftConfigData = {
+      config_name: 'draft',
+      sections
+    };
+
+    // Save both published and draft with the same data
     if (publishedConfig) {
       await base44.entities.LandingPageConfig.update(publishedConfig.id, configData);
     } else {
       await base44.entities.LandingPageConfig.create(configData);
     }
 
-    // Also save as draft
-    await handleSaveDraft();
+    if (draftConfig) {
+      await base44.entities.LandingPageConfig.update(draftConfig.id, draftConfigData);
+    } else {
+      await base44.entities.LandingPageConfig.create(draftConfigData);
+    }
 
     queryClient.invalidateQueries({ queryKey: ['landingPageConfigs'] });
     queryClient.invalidateQueries({ queryKey: ['publishedLandingPage'] });
