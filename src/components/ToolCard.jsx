@@ -19,8 +19,8 @@ export default function ToolCard({ title, description, icon: Icon, href, comingS
   // If there's a file or link, use div with onClick; otherwise use Link
   if (fileUrl || link) {
     return (
-      <div onClick={handleClick}>
-        <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer`}>
+      <div onClick={handleClick} className="cursor-pointer">
+        <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500`}>
         <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-white" />
         <div className="absolute top-0 right-0 w-32 h-32 bg-slate-100 rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700" />
         
