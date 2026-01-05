@@ -1,10 +1,7 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, XCircle, AlertTriangle, ArrowLeft, LogOut } from "lucide-react";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
-import { base44 } from "@/api/base44Client";
+import { CheckCircle2, XCircle, AlertTriangle, ArrowLeft } from "lucide-react";
 
 export default function ResultDialog({ open, onClose, result }) {
   if (!result) return null;
@@ -38,10 +35,6 @@ export default function ResultDialog({ open, onClose, result }) {
 
   const config = statusConfig[result.status];
   const Icon = config.icon;
-
-  const handleLogout = () => {
-    base44.auth.logout();
-  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -84,20 +77,14 @@ export default function ResultDialog({ open, onClose, result }) {
           )}
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 mt-6">
-          <Link to={createPageUrl('Scorecard')} className="flex-1">
-            <Button variant="outline" className="w-full h-12 border-slate-200 hover:bg-slate-50">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Scorecard
-            </Button>
-          </Link>
+        <div className="flex justify-center mt-6">
           <Button 
-            onClick={handleLogout}
-            variant="ghost" 
-            className="flex-1 h-12 text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+            onClick={onClose}
+            variant="outline" 
+            className="h-12 px-8 border-slate-200 hover:bg-slate-50"
           >
-            <LogOut className="mr-2 h-4 w-4" />
-            Log Out
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Scorecard
           </Button>
         </div>
       </DialogContent>
