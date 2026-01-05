@@ -9,18 +9,15 @@ import { ArrowLeft, Loader2, CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+
 
 export default function UserSettings() {
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
     company: '',
     team: ''
   });
   const [isSaving, setIsSaving] = useState(false);
-  const [showEmailConfirm, setShowEmailConfirm] = useState(false);
-  const [newEmail, setNewEmail] = useState('');
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -40,7 +37,6 @@ export default function UserSettings() {
     if (userProfile && user) {
       setFormData({
         name: userProfile.name || '',
-        email: user.email || '',
         company: userProfile.company || '',
         team: userProfile.team || ''
       });
@@ -48,15 +44,8 @@ export default function UserSettings() {
   }, [userProfile, user]);
 
   const handleSave = async () => {
-    if (!formData.name.trim() || !formData.email.trim() || !formData.company.trim() || !formData.team.trim()) {
+    if (!formData.name.trim() || !formData.company.trim() || !formData.team.trim()) {
       toast.error('All fields are required');
-      return;
-    }
-
-    // Check if email changed
-    if (formData.email !== user.email) {
-      setNewEmail(formData.email);
-      setShowEmailConfirm(true);
       return;
     }
 
@@ -69,33 +58,6 @@ export default function UserSettings() {
     queryClient.invalidateQueries({ queryKey: ['userProfile'] });
     toast.success('Profile updated successfully');
     setIsSaving(false);
-  };
-
-  const handleEmailChange = async () => {
-    setShowEmailConfirm(false);
-    setIsSaving(true);
-    
-    try {
-      // Update profile first
-      await base44.entities.UserProfile.update(userProfile.id, {
-        name: formData.name,
-        company: formData.company,
-        team: formData.team
-      });
-      
-      // Update email - this will trigger email verification
-      await base44.auth.updateMe({ email: newEmail });
-      
-      toast.success('Verification email sent! Please check your inbox and confirm your new email address.');
-      
-      // Log out user so they can re-authenticate with new email
-      setTimeout(() => {
-        base44.auth.logout();
-      }, 2000);
-    } catch (error) {
-      toast.error('Failed to update email. Please try again.');
-      setIsSaving(false);
-    }
   };
 
   if (isLoading) {
@@ -162,13 +124,12 @@ export default function UserSettings() {
               <Input
                 id="email"
                 type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="Enter your email"
-                className="h-12 border-slate-200 focus:border-slate-900 focus:ring-slate-900"
+                value={user?.email || ''}
+                disabled
+                className="h-12 border-slate-200 bg-slate-50 text-slate-500 cursor-not-allowed"
               />
               <p className="text-xs text-slate-500">
-                Changing your email will require verification and update your login credentials.
+                Email address cannot be changed. Contact support if you need to update it.
               </p>
             </div>
 
@@ -220,36 +181,6 @@ export default function UserSettings() {
           </CardContent>
         </Card>
       </main>
-
-      {/* Email Change Confirmation Dialog */}
-      <Dialog open={showEmailConfirm} onOpenChange={setShowEmailConfirm}>
-        <DialogContent className="sm:max-w-md bg-white">
-          <DialogHeader>
-            <DialogTitle>Confirm Email Change</DialogTitle>
-            <DialogDescription className="pt-4">
-              You are about to change your email from <strong>{user?.email}</strong> to <strong>{newEmail}</strong>.
-              <br /><br />
-              This will update your login credentials. You will receive a verification email and need to confirm it before you can log in with the new email.
-              <br /><br />
-              Do you want to continue?
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="flex gap-2 sm:gap-0">
-            <Button
-              variant="outline"
-              onClick={() => setShowEmailConfirm(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleEmailChange}
-              className="bg-slate-900 hover:bg-slate-800"
-            >
-              Confirm Change
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
+      </div>
   );
 }
