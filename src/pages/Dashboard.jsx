@@ -202,6 +202,8 @@ export default function Dashboard() {
                         icon={IconComponent}
                         href={tool.page ? createPageUrl(tool.page) : '#'}
                         comingSoon={tool.coming_soon}
+                        fileUrl={tool.file_url}
+                        link={tool.link}
                       />
                     );
                   })}

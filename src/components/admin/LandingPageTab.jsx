@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Plus, Trash2, GripVertical, Save, Eye, Edit2, X } from "lucide-react";
+import { Plus, Trash2, GripVertical, Save, Eye, Edit2, X, ChevronUp, ChevronDown, Upload, Link as LinkIcon } from "lucide-react";
 import { toast } from "sonner";
 
 export default function LandingPageTab() {
@@ -129,6 +129,32 @@ export default function LandingPageTab() {
     setHasChanges(true);
   };
 
+  const handleMoveSectionUp = (index) => {
+    if (index === 0) return;
+    const newSections = [...sections];
+    [newSections[index - 1], newSections[index]] = [newSections[index], newSections[index - 1]];
+    setSections(newSections);
+    setHasChanges(true);
+  };
+
+  const handleMoveSectionDown = (index) => {
+    if (index === sections.length - 1) return;
+    const newSections = [...sections];
+    [newSections[index], newSections[index + 1]] = [newSections[index + 1], newSections[index]];
+    setSections(newSections);
+    setHasChanges(true);
+  };
+
+  const handleFileUpload = async (sectionId, toolId, file) => {
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      handleUpdateTool(sectionId, toolId, { file_url });
+      toast.success('File uploaded successfully');
+    } catch (error) {
+      toast.error('Failed to upload file');
+    }
+  };
+
   const handleSaveDraft = async () => {
     const configData = {
       config_name: 'draft',
@@ -212,7 +238,26 @@ export default function LandingPageTab() {
             <CardHeader className="border-b border-slate-100">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3 flex-1">
-                  <GripVertical className="h-5 w-5 text-slate-400" />
+                  <div className="flex flex-col gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-5 w-5 p-0"
+                      onClick={() => handleMoveSectionUp(sectionIndex)}
+                      disabled={sectionIndex === 0}
+                    >
+                      <ChevronUp className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-5 w-5 p-0"
+                      onClick={() => handleMoveSectionDown(sectionIndex)}
+                      disabled={sectionIndex === sections.length - 1}
+                    >
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </div>
                   {editingSection === section.id ? (
                     <Input
                       value={section.title}
@@ -283,12 +328,65 @@ export default function LandingPageTab() {
                           className="resize-none"
                           rows={2}
                         />
-                        <Input
-                          value={tool.page || ''}
-                          onChange={(e) => handleUpdateTool(section.id, tool.id, { page: e.target.value })}
-                          placeholder="Page name (e.g., Scorecard)"
-                          className="max-w-xs"
-                        />
+                        <div className="flex gap-3">
+                          <div className="flex-1">
+                            <Label className="text-xs text-slate-500 mb-1">Page Name (optional)</Label>
+                            <Input
+                              value={tool.page || ''}
+                              onChange={(e) => handleUpdateTool(section.id, tool.id, { page: e.target.value })}
+                              placeholder="e.g., Scorecard"
+                              className="mt-1"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <Label className="text-xs text-slate-500 mb-1">External Link (optional)</Label>
+                            <Input
+                              value={tool.link || ''}
+                              onChange={(e) => handleUpdateTool(section.id, tool.id, { link: e.target.value })}
+                              placeholder="https://..."
+                              className="mt-1"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <Label className="text-xs text-slate-500 mb-2 block">
+                            Attachment (optional) - Will be displayed when user clicks the card
+                          </Label>
+                          <div className="flex items-center gap-3">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => document.getElementById(`file-${tool.id}`).click()}
+                              className="flex items-center gap-2"
+                            >
+                              <Upload className="h-4 w-4" />
+                              Upload File
+                            </Button>
+                            <input
+                              id={`file-${tool.id}`}
+                              type="file"
+                              className="hidden"
+                              onChange={(e) => {
+                                const file = e.target.files[0];
+                                if (file) handleFileUpload(section.id, tool.id, file);
+                              }}
+                            />
+                            {tool.file_url && (
+                              <div className="flex items-center gap-2">
+                                <Badge variant="secondary" className="bg-emerald-100 text-emerald-700">
+                                  File attached
+                                </Badge>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleUpdateTool(section.id, tool.id, { file_url: null })}
+                                >
+                                  <X className="h-4 w-4 text-red-500" />
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
                       <Button
                         variant="ghost"

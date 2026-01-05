@@ -5,12 +5,24 @@ import { ArrowRight, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
-export default function ToolCard({ title, description, icon: Icon, href, comingSoon = false }) {
-  const CardWrapper = comingSoon ? 'div' : Link;
-  const wrapperProps = comingSoon ? {} : { to: href };
+export default function ToolCard({ title, description, icon: Icon, href, comingSoon = false, fileUrl, link }) {
+  const handleClick = (e) => {
+    if (comingSoon) return;
+    
+    if (fileUrl) {
+      e.preventDefault();
+      window.open(fileUrl, '_blank');
+    } else if (link) {
+      e.preventDefault();
+      window.open(link, '_blank');
+    }
+  };
+
+  const CardWrapper = (comingSoon || fileUrl || link) ? 'div' : Link;
+  const wrapperProps = (comingSoon || fileUrl || link) ? {} : { to: href };
 
   return (
-    <CardWrapper {...wrapperProps}>
+    <CardWrapper {...wrapperProps} onClick={handleClick}>
       <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500 ${comingSoon ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}>
         <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-white" />
         <div className="absolute top-0 right-0 w-32 h-32 bg-slate-100 rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700" />
