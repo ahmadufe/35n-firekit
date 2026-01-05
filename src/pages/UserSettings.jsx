@@ -129,7 +129,7 @@ export default function UserSettings() {
                 className="h-12 border-slate-200 bg-slate-50 text-slate-500 cursor-not-allowed"
               />
               <p className="text-xs text-slate-500">
-                Email address cannot be changed. Contact support if you need to update it.
+                Email address cannot be changed. Contact support at <a href="mailto:hello@35nventures.com" className="text-slate-900 underline hover:text-slate-700">hello@35nventures.com</a> if you need to update it.
               </p>
             </div>
 

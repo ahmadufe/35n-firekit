@@ -260,9 +260,13 @@ export default function Dashboard() {
               alt="35N Ventures" 
               className="h-6 object-contain opacity-50"
             />
-            <p className="text-xs text-slate-400">
-              © 2024 35N Ventures. All rights reserved.
-            </p>
+            <div className="flex flex-col sm:flex-row items-center gap-4 text-xs text-slate-400">
+              <a href="mailto:hello@35nventures.com" className="hover:text-slate-600 transition-colors">
+                hello@35nventures.com
+              </a>
+              <span className="hidden sm:inline">•</span>
+              <p>© 2024 35N Ventures. All rights reserved.</p>
+            </div>
           </div>
         </div>
       </footer>
