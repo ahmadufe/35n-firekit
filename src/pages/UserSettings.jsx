@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { ArrowLeft, Loader2, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle2, Eye, EyeOff, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
@@ -18,6 +18,8 @@ export default function UserSettings() {
     team: ''
   });
   const [isSaving, setIsSaving] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [isResettingPassword, setIsResettingPassword] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -58,6 +60,17 @@ export default function UserSettings() {
     queryClient.invalidateQueries({ queryKey: ['userProfile'] });
     toast.success('Profile updated successfully');
     setIsSaving(false);
+  };
+
+  const handlePasswordReset = async () => {
+    setIsResettingPassword(true);
+    try {
+      await base44.auth.requestPasswordReset(user.email);
+      toast.success('Password reset link sent to your email');
+    } catch (error) {
+      toast.error('Failed to send password reset link');
+    }
+    setIsResettingPassword(false);
   };
 
   if (isLoading) {
@@ -131,9 +144,53 @@ export default function UserSettings() {
               <p className="text-xs text-slate-500">
                 Email address cannot be changed. Contact support at <a href="mailto:hello@35nventures.com" className="text-slate-900 underline hover:text-slate-700">hello@35nventures.com</a> if you need to update it.
               </p>
-            </div>
+              </div>
 
-            <div className="space-y-2">
+              <div className="space-y-2">
+              <Label htmlFor="password" className="text-sm font-medium text-slate-700">
+                Password
+              </Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value="••••••••••••"
+                  disabled
+                  className="h-12 border-slate-200 bg-slate-50 text-slate-500 cursor-not-allowed pr-20"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-14 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+              <Button
+                type="button"
+                onClick={handlePasswordReset}
+                disabled={isResettingPassword}
+                variant="outline"
+                className="w-full mt-2 h-10 border-slate-200"
+              >
+                {isResettingPassword ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <Mail className="mr-2 h-4 w-4" />
+                    Reset Password via Email
+                  </>
+                )}
+              </Button>
+              <p className="text-xs text-slate-500">
+                Click the button above to receive a password reset link in your email.
+              </p>
+              </div>
+
+              <div className="space-y-2">
               <Label htmlFor="company" className="text-sm font-medium text-slate-700">
                 Company
               </Label>
