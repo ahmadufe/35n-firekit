@@ -137,7 +137,7 @@ export default function UsersTab() {
                         onClick={() => handleViewLoginHistory(user)}
                       >
                         <Eye className="h-4 w-4 mr-2" />
-                        Login History
+                        View Details
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -148,22 +148,86 @@ export default function UsersTab() {
         </Table>
       </Card>
 
-      {/* Login History Dialog */}
+      {/* User Details Dialog */}
       <Dialog open={showLoginHistory} onOpenChange={setShowLoginHistory}>
         <DialogContent className="sm:max-w-2xl bg-white">
           <DialogHeader>
             <DialogTitle>
-              Login History - {selectedUser?.email}
+              User Details - {selectedUser?.email}
             </DialogTitle>
           </DialogHeader>
-          <div className="mt-4">
-            {logins.length === 0 ? (
-              <div className="text-center py-8">
-                <LogIn className="h-12 w-12 text-slate-300 mx-auto mb-4" />
-                <p className="text-slate-500">No login history for this user</p>
+          <div className="mt-4 space-y-6">
+            <div className="border-b border-slate-200 pb-6">
+              <h3 className="text-lg font-semibold text-slate-900 mb-4">Profile Information</h3>
+              <div className="space-y-3">
+                <div>
+                  <p className="text-sm font-medium text-slate-700">Email</p>
+                  <p className="text-slate-900">{selectedUser?.email}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-slate-700">Name</p>
+                  <p className="text-slate-900">{userProfiles.find(p => p.user_email === selectedUser?.email)?.name || 'N/A'}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-slate-700">Company</p>
+                  <p className="text-slate-900">{userProfiles.find(p => p.user_email === selectedUser?.email)?.company || 'N/A'}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-slate-700">Team</p>
+                  <p className="text-slate-900">{userProfiles.find(p => p.user_email === selectedUser?.email)?.team || 'N/A'}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-slate-700">Role</p>
+                  <Badge 
+                    variant="secondary"
+                    className={selectedUser?.role === 'admin' 
+                      ? 'bg-purple-100 text-purple-700 border-purple-200' 
+                      : 'bg-slate-100 text-slate-700 border-slate-200'
+                    }
+                  >
+                    {selectedUser?.role}
+                  </Badge>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-slate-700 mb-2">Interested Resources</p>
+                  <div className="flex flex-wrap gap-2">
+                    {userProfiles.find(p => p.user_email === selectedUser?.email)?.interested_resources?.length > 0 ? (
+                      userProfiles.find(p => p.user_email === selectedUser?.email).interested_resources.map((resource) => (
+                        <Badge key={resource} variant="secondary" className="bg-emerald-100 text-emerald-700 border-emerald-200">
+                          {resource}
+                        </Badge>
+                      ))
+                    ) : (
+                      <p className="text-slate-500 text-sm">N/A</p>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-slate-700 mb-2">Interested Areas</p>
+                  <div className="flex flex-wrap gap-2">
+                    {userProfiles.find(p => p.user_email === selectedUser?.email)?.interested_areas?.length > 0 ? (
+                      userProfiles.find(p => p.user_email === selectedUser?.email).interested_areas.map((area) => (
+                        <Badge key={area} variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200">
+                          {area}
+                        </Badge>
+                      ))
+                    ) : (
+                      <p className="text-slate-500 text-sm">N/A</p>
+                    )}
+                  </div>
+                </div>
               </div>
-            ) : (
-              <div className="space-y-3 max-h-96 overflow-y-auto">
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold text-slate-900 mb-4">Login History</h3>
+              {logins.length === 0 ? (
+                <div className="text-center py-8">
+                  <LogIn className="h-12 w-12 text-slate-300 mx-auto mb-4" />
+                  <p className="text-slate-500">No login history for this user</p>
+                </div>
+              ) : (
+                <div className="space-y-3 max-h-60 overflow-y-auto">
                 {logins.map((login) => (
                   <div 
                     key={login.id}
@@ -191,8 +255,9 @@ export default function UsersTab() {
                     </Badge>
                   </div>
                 ))}
-              </div>
-            )}
+                </div>
+              )}
+            </div>
           </div>
         </DialogContent>
       </Dialog>

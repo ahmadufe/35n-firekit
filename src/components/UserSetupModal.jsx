@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2 } from "lucide-react";
 
 export default function UserSetupModal({ open, onSubmit, isLoading }) {
@@ -20,8 +21,28 @@ export default function UserSetupModal({ open, onSubmit, isLoading }) {
     if (!formData.name.trim()) newErrors.name = 'Name is required';
     if (!formData.company.trim()) newErrors.company = 'Company is required';
     if (!formData.team.trim()) newErrors.team = 'Team is required';
+    if (formData.interested_resources.length === 0) newErrors.interested_resources = 'Please select at least one resource';
+    if (formData.interested_areas.length === 0) newErrors.interested_areas = 'Please select at least one area';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const handleResourceToggle = (resource) => {
+    setFormData(prev => ({
+      ...prev,
+      interested_resources: prev.interested_resources.includes(resource)
+        ? prev.interested_resources.filter(r => r !== resource)
+        : [...prev.interested_resources, resource]
+    }));
+  };
+
+  const handleAreaToggle = (area) => {
+    setFormData(prev => ({
+      ...prev,
+      interested_areas: prev.interested_areas.includes(area)
+        ? prev.interested_areas.filter(a => a !== area)
+        : [...prev.interested_areas, area]
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -91,6 +112,70 @@ export default function UserSetupModal({ open, onSubmit, isLoading }) {
               className={`h-12 border-slate-200 focus:border-slate-900 focus:ring-slate-900 ${errors.team ? 'border-red-500' : ''}`}
             />
             {errors.team && <p className="text-xs text-red-500">{errors.team}</p>}
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-sm font-medium text-slate-700">
+              What resources are you most interested in? *
+            </Label>
+            <div className="space-y-3">
+              {['Tools', 'Playbooks', 'Knowledge Resources & material'].map((resource) => (
+                <div key={resource} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`resource-${resource}`}
+                    checked={formData.interested_resources.includes(resource)}
+                    onCheckedChange={() => handleResourceToggle(resource)}
+                  />
+                  <label
+                    htmlFor={`resource-${resource}`}
+                    className="text-sm text-slate-700 cursor-pointer"
+                  >
+                    {resource}
+                  </label>
+                </div>
+              ))}
+            </div>
+            {errors.interested_resources && <p className="text-xs text-red-500">{errors.interested_resources}</p>}
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-sm font-medium text-slate-700">
+              Which areas are you most interested in? *
+            </Label>
+            <p className="text-xs text-slate-500">
+              Pick all that interest you
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto pr-2">
+              {[
+                'Fintech',
+                'Trade & Logistics',
+                'Gov-tech',
+                'SaaS',
+                'Banking technology',
+                'AI',
+                'Digital transformation & platforms',
+                'Product building',
+                'Venture building',
+                'Africa startups & tech',
+                'Middle East startups & tech',
+                'Emerging markets startups & tech'
+              ].map((area) => (
+                <div key={area} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`area-${area}`}
+                    checked={formData.interested_areas.includes(area)}
+                    onCheckedChange={() => handleAreaToggle(area)}
+                  />
+                  <label
+                    htmlFor={`area-${area}`}
+                    className="text-sm text-slate-700 cursor-pointer"
+                  >
+                    {area}
+                  </label>
+                </div>
+              ))}
+            </div>
+            {errors.interested_areas && <p className="text-xs text-red-500">{errors.interested_areas}</p>}
           </div>
 
           <Button 
