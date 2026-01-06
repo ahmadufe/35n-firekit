@@ -122,7 +122,7 @@ export default function UserSetupModal({ open, onSubmit, isLoading }) {
               What resources are you most interested in? *
             </Label>
             <div className="space-y-3">
-              {['Tools', 'Playbooks', 'Knowledge resources & material'].map((resource) => (
+              {['Tools', 'Playbooks', 'Knowledge Materials & Insights'].map((resource) => (
                 <div key={resource} className="flex items-center space-x-2">
                   <Checkbox
                     id={`resource-${resource}`}
