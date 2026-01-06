@@ -115,7 +115,7 @@ export default function Dashboard() {
               />
               <div className="hidden sm:block h-8 w-px bg-slate-200" />
               <div className="hidden sm:block">
-                <h1 className="text-lg font-semibold text-slate-900 tracking-tight">Builder Base</h1>
+                <h1 className="text-lg font-semibold text-slate-900 tracking-tight">FirePit</h1>
                 <p className="text-xs text-slate-500">Free tools for builders</p>
               </div>
             </div>
