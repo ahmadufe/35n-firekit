@@ -85,8 +85,9 @@ export default function InsightsTab() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="space-y-8">
+      {/* User Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="Total Users"
           value={totalUsers}
@@ -112,22 +113,28 @@ export default function InsightsTab() {
           icon={Activity}
           color="text-purple-600"
         />
-        <StatCard
-          title="Scorecards Completed"
-          value={totalAssessments}
-          icon={ClipboardCheck}
-          color="text-amber-600"
-        />
-        <StatCard
-          title="Pass Rate"
-          value={`${passRate}%`}
-          icon={TrendingUp}
-          color="text-emerald-600"
-        />
       </div>
 
-      {/* Additional insights */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Product Launch CX Scorecard Section */}
+      <div>
+        <h2 className="text-xl font-semibold text-slate-900 mb-6">Product Launch CX Scorecard</h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <StatCard
+            title="Scorecards Completed"
+            value={totalAssessments}
+            icon={ClipboardCheck}
+            color="text-amber-600"
+          />
+          <StatCard
+            title="Pass Rate"
+            value={`${passRate}%`}
+            icon={TrendingUp}
+            color="text-emerald-600"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="border-0 shadow-md">
           <CardHeader>
             <CardTitle className="text-lg">Recent Activity</CardTitle>
@@ -187,6 +194,7 @@ export default function InsightsTab() {
             </div>
           </CardContent>
         </Card>
+        </div>
       </div>
     </div>
   );
