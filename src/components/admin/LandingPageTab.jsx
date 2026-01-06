@@ -51,7 +51,7 @@ export default function LandingPageTab() {
         },
         {
           id: 'resources',
-          title: 'Resources',
+          title: 'Guides & Insights',
           coming_soon: true,
           tools: []
         },
