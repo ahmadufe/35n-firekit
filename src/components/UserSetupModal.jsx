@@ -9,7 +9,9 @@ export default function UserSetupModal({ open, onSubmit, isLoading }) {
   const [formData, setFormData] = useState({
     name: '',
     company: '',
-    team: ''
+    team: '',
+    interested_resources: [],
+    interested_areas: []
   });
   const [errors, setErrors] = useState({});
 
