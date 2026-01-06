@@ -54,7 +54,7 @@ export default function UserSetupModal({ open, onSubmit, isLoading }) {
 
   return (
     <Dialog open={open}>
-      <DialogContent className="sm:max-w-md bg-white border-0 shadow-2xl">
+      <DialogContent className="sm:max-w-4xl bg-white border-0 shadow-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader className="space-y-4">
           <div className="flex justify-center">
             <img 
@@ -108,7 +108,7 @@ export default function UserSetupModal({ open, onSubmit, isLoading }) {
               id="team"
               value={formData.team}
               onChange={(e) => setFormData({ ...formData, team: e.target.value })}
-              placeholder="Enter your team name"
+              placeholder="e.g. Product, Marketing & Growth, etc."
               className={`h-12 border-slate-200 focus:border-slate-900 focus:ring-slate-900 ${errors.team ? 'border-red-500' : ''}`}
             />
             {errors.team && <p className="text-xs text-red-500">{errors.team}</p>}
@@ -119,7 +119,7 @@ export default function UserSetupModal({ open, onSubmit, isLoading }) {
               What resources are you most interested in? *
             </Label>
             <div className="space-y-3">
-              {['Tools', 'Playbooks', 'Knowledge Resources & material'].map((resource) => (
+              {['Tools', 'Playbooks', 'Knowledge resources & material'].map((resource) => (
                 <div key={resource} className="flex items-center space-x-2">
                   <Checkbox
                     id={`resource-${resource}`}
@@ -145,7 +145,7 @@ export default function UserSetupModal({ open, onSubmit, isLoading }) {
             <p className="text-xs text-slate-500">
               Pick all that interest you
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto pr-2">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {[
                 'Fintech',
                 'Trade & Logistics',
