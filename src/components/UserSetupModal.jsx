@@ -55,7 +55,7 @@ export default function UserSetupModal({ open, onSubmit, isLoading }) {
   return (
     <Dialog open={open}>
       <DialogContent className="sm:max-w-4xl bg-white border-0 shadow-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="space-y-4">
+        <DialogHeader className="space-y-3">
           <div className="flex justify-center">
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_695a45a00c41aebc946dc291/dcce5d331_VenturesBlack.png" 
@@ -64,14 +64,17 @@ export default function UserSetupModal({ open, onSubmit, isLoading }) {
             />
           </div>
           <DialogTitle className="text-2xl font-light text-center tracking-tight">
-            Welcome to Builder Base
+            Welcome to <span className="text-orange-500">Fire</span>Kit
           </DialogTitle>
           <DialogDescription className="text-center text-slate-500">
-            Please complete your profile to get started
+            Free tools for builders, innovators & dreamers
           </DialogDescription>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-6 mt-6">
+          <p className="text-sm text-slate-600 -mb-2">
+            Please complete your profile to get started
+          </p>
           <div className="space-y-2">
             <Label htmlFor="name" className="text-sm font-medium text-slate-700">
               Full Name *
