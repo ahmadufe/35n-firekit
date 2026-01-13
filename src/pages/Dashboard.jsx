@@ -183,36 +183,46 @@ export default function Dashboard() {
 
         {/* Dynamic Sections */}
         {publishedConfig?.sections ? (
-          publishedConfig.sections.map((section) => (
-            <section key={section.id} className="mb-16">
-              <SectionHeader title={section.title} comingSoon={section.coming_soon} />
-              {section.tools && section.tools.length > 0 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {section.tools.map((tool) => {
-                    const iconMap = {
-                      ClipboardCheck,
-                      BookOpen,
-                      Wrench
-                    };
-                    const IconComponent = iconMap[tool.icon] || ClipboardCheck;
-                    
-                    return (
-                      <ToolCard
-                        key={tool.id}
-                        title={tool.title}
-                        description={tool.description}
-                        icon={IconComponent}
-                        href={tool.page ? createPageUrl(tool.page) : '#'}
-                        comingSoon={tool.coming_soon}
-                        fileUrl={tool.file_url}
-                        link={tool.link}
-                      />
-                    );
-                  })}
-                </div>
-              )}
-            </section>
-          ))
+          publishedConfig.sections.map((section) => {
+            // Determine action text based on section
+            const getActionText = (sectionId) => {
+              if (['resources', 'insights', 'playbooks'].includes(sectionId)) return 'Read';
+              if (sectionId === 'deep-dive') return 'Explore';
+              return 'Open Tool';
+            };
+
+            return (
+              <section key={section.id} className="mb-16">
+                <SectionHeader title={section.title} comingSoon={section.coming_soon} />
+                {section.tools && section.tools.length > 0 && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {section.tools.map((tool) => {
+                      const iconMap = {
+                        ClipboardCheck,
+                        BookOpen,
+                        Wrench
+                      };
+                      const IconComponent = iconMap[tool.icon] || ClipboardCheck;
+
+                      return (
+                        <ToolCard
+                          key={tool.id}
+                          title={tool.title}
+                          description={tool.description}
+                          icon={IconComponent}
+                          href={tool.page ? createPageUrl(tool.page) : '#'}
+                          comingSoon={tool.coming_soon}
+                          fileUrl={tool.file_url}
+                          link={tool.link}
+                          actionText={getActionText(section.id)}
+                        />
+                      );
+                    })}
+                  </div>
+                )}
+              </section>
+            );
+          })
         ) : (
           <>
             {/* Default sections if no config */}

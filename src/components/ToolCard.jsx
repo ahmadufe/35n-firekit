@@ -5,7 +5,7 @@ import { ArrowRight, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
-export default function ToolCard({ title, description, icon: Icon, href, comingSoon = false, fileUrl, link }) {
+export default function ToolCard({ title, description, icon: Icon, href, comingSoon = false, fileUrl, link, actionText = "Open Tool" }) {
   const handleClick = () => {
     if (comingSoon) return;
     
