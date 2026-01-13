@@ -88,7 +88,7 @@ export default function ToolCard({ title, description, icon: Icon, href, comingS
           
           {!comingSoon && (
             <div className="flex items-center text-slate-900 font-medium text-sm group-hover:translate-x-2 transition-transform duration-300">
-              Open Tool
+              {actionText}
               <ArrowRight className="ml-2 h-4 w-4" />
             </div>
           )}
