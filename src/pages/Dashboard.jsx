@@ -340,11 +340,11 @@ export default function Dashboard() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setOpenFilter(null)}
-                className="absolute top-2 left-2 h-6 w-6 text-slate-500 hover:text-slate-900"
+                className="absolute top-2 right-2 h-6 w-6 text-slate-500 hover:text-slate-900"
               >
                 <X className="h-4 w-4" />
               </Button>
-              <div className="flex flex-wrap gap-2 ml-8">
+              <div className="flex flex-wrap gap-2">
                 {availableTopics.map(topic => (
                   <Badge
                     key={topic}
@@ -369,11 +369,11 @@ export default function Dashboard() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setOpenFilter(null)}
-                className="absolute top-2 left-2 h-6 w-6 text-slate-500 hover:text-slate-900"
+                className="absolute top-2 right-2 h-6 w-6 text-slate-500 hover:text-slate-900"
               >
                 <X className="h-4 w-4" />
               </Button>
-              <div className="flex flex-wrap gap-2 ml-8">
+              <div className="flex flex-wrap gap-2">
                 {availableTypes.map(type => (
                   <Badge
                     key={type}
@@ -398,11 +398,11 @@ export default function Dashboard() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setOpenFilter(null)}
-                className="absolute top-2 left-2 h-6 w-6 text-slate-500 hover:text-slate-900"
+                className="absolute top-2 right-2 h-6 w-6 text-slate-500 hover:text-slate-900"
               >
                 <X className="h-4 w-4" />
               </Button>
-              <div className="flex flex-wrap gap-2 ml-8">
+              <div className="flex flex-wrap gap-2">
                 {['Free', 'Exclusive'].map(access => (
                   <Badge
                     key={access}
