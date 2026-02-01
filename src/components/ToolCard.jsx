@@ -31,12 +31,12 @@ export default function ToolCard({
   // If there's a file or link, use div with onClick; otherwise use Link
   if (fileUrl || link) {
     return (
-      <div onClick={handleClick} className={`${comingSoon ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
-        <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500 ${comingSoon ? 'opacity-60' : ''}`}>
+      <div onClick={handleClick} className={`${comingSoon ? 'cursor-not-allowed' : 'cursor-pointer'} h-full`}>
+        <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col ${comingSoon ? 'opacity-60' : ''}`}>
         <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-white" />
         <div className="absolute top-0 right-0 w-32 h-32 bg-slate-100 rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700" />
 
-        <CardContent className="relative p-6">
+        <CardContent className="relative p-6 flex flex-col h-full">
           {/* Header: Icon, Type, and Access on same line */}
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
@@ -57,10 +57,10 @@ export default function ToolCard({
             </Badge>
           </div>
           
-          <h3 className="text-lg font-semibold text-slate-900 mb-2 tracking-tight">
+          <h3 className="text-lg font-semibold text-slate-900 mb-2 tracking-tight line-clamp-2">
             {title}
           </h3>
-          <p className="text-slate-500 text-sm leading-relaxed mb-3">
+          <p className="text-slate-500 text-sm leading-relaxed mb-3 line-clamp-3">
             {description}
           </p>
 
@@ -75,17 +75,19 @@ export default function ToolCard({
             </div>
           )}
           
-          {comingSoon ? (
-            <div className="flex items-center text-slate-600 font-medium text-sm">
-              <Bell className="mr-2 h-4 w-4" />
-              Notify me when available
-            </div>
-          ) : (
-            <div className="flex items-center text-slate-900 font-medium text-sm group-hover:translate-x-2 transition-transform duration-300">
-              Access
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </div>
-          )}
+          <div className="mt-auto">
+            {comingSoon ? (
+              <div className="flex items-center text-slate-600 font-medium text-sm">
+                <Bell className="mr-2 h-4 w-4" />
+                Notify me when available
+              </div>
+            ) : (
+              <div className="flex items-center text-slate-900 font-medium text-sm group-hover:translate-x-2 transition-transform duration-300">
+                Access
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </div>
+            )}
+          </div>
         </CardContent>
       </Card>
       </div>
@@ -97,12 +99,12 @@ export default function ToolCard({
   const wrapperProps = comingSoon ? {} : { to: href };
 
   return (
-    <CardWrapper {...wrapperProps}>
-      <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500 ${comingSoon ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}>
+    <CardWrapper {...wrapperProps} className="h-full">
+      <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col ${comingSoon ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}>
         <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-white" />
         <div className="absolute top-0 right-0 w-32 h-32 bg-slate-100 rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700" />
 
-        <CardContent className="relative p-6">
+        <CardContent className="relative p-6 flex flex-col h-full">
           {/* Header: Icon, Type, and Access on same line */}
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
@@ -123,10 +125,10 @@ export default function ToolCard({
             </Badge>
           </div>
           
-          <h3 className="text-lg font-semibold text-slate-900 mb-2 tracking-tight">
+          <h3 className="text-lg font-semibold text-slate-900 mb-2 tracking-tight line-clamp-2">
             {title}
           </h3>
-          <p className="text-slate-500 text-sm leading-relaxed mb-3">
+          <p className="text-slate-500 text-sm leading-relaxed mb-3 line-clamp-3">
             {description}
           </p>
 
@@ -141,17 +143,19 @@ export default function ToolCard({
             </div>
           )}
           
-          {comingSoon ? (
-            <div className="flex items-center text-slate-600 font-medium text-sm">
-              <Bell className="mr-2 h-4 w-4" />
-              Notify me when available
-            </div>
-          ) : (
-            <div className="flex items-center text-slate-900 font-medium text-sm group-hover:translate-x-2 transition-transform duration-300">
-              Access
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </div>
-          )}
+          <div className="mt-auto">
+            {comingSoon ? (
+              <div className="flex items-center text-slate-600 font-medium text-sm">
+                <Bell className="mr-2 h-4 w-4" />
+                Notify me when available
+              </div>
+            ) : (
+              <div className="flex items-center text-slate-900 font-medium text-sm group-hover:translate-x-2 transition-transform duration-300">
+                Access
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </div>
+            )}
+          </div>
         </CardContent>
       </Card>
     </CardWrapper>
