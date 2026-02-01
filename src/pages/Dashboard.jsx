@@ -9,16 +9,21 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
-import { ClipboardCheck, BookOpen, Wrench, User, LogOut, Settings, ChevronDown, Shield } from "lucide-react";
+import { ClipboardCheck, BookOpen, Wrench, User, LogOut, Settings, ChevronDown, Shield, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import UserSetupModal from "@/components/UserSetupModal";
 import ToolCard from "@/components/ToolCard";
 import SectionHeader from "@/components/SectionHeader";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 
 export default function Dashboard() {
   const [showSetup, setShowSetup] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTypes, setSelectedTypes] = useState([]);
+  const [selectedTopics, setSelectedTopics] = useState([]);
   const queryClient = useQueryClient();
 
   const { data: user, isLoading: userLoading } = useQuery({
@@ -82,6 +87,74 @@ export default function Dashboard() {
 
   const handleLogout = () => {
     base44.auth.logout();
+  };
+
+  // Extract all tools from all sections
+  const allTools = publishedConfig?.sections 
+    ? publishedConfig.sections.flatMap(section => 
+        (section.tools || []).map(tool => ({
+          ...tool,
+          sectionTitle: section.title,
+          sectionId: section.id,
+          sectionComingSoon: section.coming_soon
+        }))
+      )
+    : [];
+
+  // Get unique types (section titles)
+  const availableTypes = publishedConfig?.sections 
+    ? [...new Set(publishedConfig.sections.map(s => s.title))]
+    : [];
+
+  // Topics from user setup form
+  const availableTopics = [
+    'Fintech',
+    'Trade & Logistics',
+    'Gov-tech',
+    'SaaS',
+    'Banking technology',
+    'AI',
+    'Digital transformation & platforms',
+    'Product building',
+    'Venture building',
+    'Africa startups & tech',
+    'Middle East startups & tech',
+    'Emerging markets startups & tech'
+  ];
+
+  // Filter tools based on search and filters
+  const filteredTools = allTools.filter(tool => {
+    // Search filter
+    const matchesSearch = !searchQuery || 
+      tool.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      tool.description.toLowerCase().includes(searchQuery.toLowerCase());
+
+    // Type filter
+    const matchesType = selectedTypes.length === 0 || selectedTypes.includes(tool.sectionTitle);
+
+    // Topic filter - for now, show all if no topics selected
+    // In the future, you might want to add topic metadata to tools
+    const matchesTopic = selectedTopics.length === 0;
+
+    return matchesSearch && matchesType && matchesTopic;
+  });
+
+  const toggleType = (type) => {
+    setSelectedTypes(prev => 
+      prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
+    );
+  };
+
+  const toggleTopic = (topic) => {
+    setSelectedTopics(prev => 
+      prev.includes(topic) ? prev.filter(t => t !== topic) : [...prev, topic]
+    );
+  };
+
+  const getActionText = (sectionId) => {
+    if (['resources', 'insights', 'playbooks'].includes(sectionId)) return 'Read';
+    if (sectionId === 'deep-dive') return 'Explore';
+    return 'Open Tool';
   };
 
   if (userLoading || profileLoading) {
@@ -172,7 +245,7 @@ export default function Dashboard() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-12">
         {/* Hero */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-12">
           <h2 className="text-4xl sm:text-5xl font-light text-slate-900 tracking-tight mb-4">
             Welcome back{userProfile?.name ? `, ${userProfile.name.split(' ')[0]}` : ''}
           </h2>
@@ -181,87 +254,108 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* Dynamic Sections */}
-        {publishedConfig?.sections ? (
-          publishedConfig.sections.map((section) => {
-            // Determine action text based on section
-            const getActionText = (sectionId) => {
-              if (['resources', 'insights', 'playbooks'].includes(sectionId)) return 'Read';
-              if (sectionId === 'deep-dive') return 'Explore';
-              return 'Open Tool';
-            };
+        {/* Search Bar */}
+        <div className="mb-8 max-w-2xl mx-auto">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+            <Input
+              type="text"
+              placeholder="Search tools, resources, and playbooks..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="h-14 pl-12 pr-4 text-base border-slate-200 focus:border-slate-900 focus:ring-slate-900 shadow-sm"
+            />
+          </div>
+        </div>
 
-            return (
-              <section key={section.id} className="mb-16">
-                <SectionHeader title={section.title} comingSoon={section.coming_soon} />
-                {section.tools && section.tools.length > 0 && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {section.tools.map((tool) => {
-                      const iconMap = {
-                        ClipboardCheck,
-                        BookOpen,
-                        Wrench
-                      };
-                      const IconComponent = iconMap[tool.icon] || ClipboardCheck;
+        {/* Filters */}
+        <div className="mb-10 space-y-6">
+          {/* Type Filters */}
+          {availableTypes.length > 0 && (
+            <div>
+              <h3 className="text-sm font-semibold text-slate-900 mb-3">Type</h3>
+              <div className="flex flex-wrap gap-2">
+                {availableTypes.map(type => (
+                  <Badge
+                    key={type}
+                    variant={selectedTypes.includes(type) ? "default" : "outline"}
+                    className={`cursor-pointer px-4 py-2 text-sm transition-all ${
+                      selectedTypes.includes(type)
+                        ? 'bg-slate-900 text-white hover:bg-slate-800'
+                        : 'bg-white text-slate-700 hover:bg-slate-50 border-slate-300'
+                    }`}
+                    onClick={() => toggleType(type)}
+                  >
+                    {type}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
 
-                      return (
-                        <ToolCard
-                          key={tool.id}
-                          title={tool.title}
-                          description={tool.description}
-                          icon={IconComponent}
-                          href={tool.page ? createPageUrl(tool.page) : '#'}
-                          comingSoon={tool.coming_soon}
-                          fileUrl={tool.file_url}
-                          link={tool.link}
-                          actionText={getActionText(section.id)}
-                        />
-                      );
-                    })}
-                  </div>
-                )}
-              </section>
-            );
-          })
+          {/* Topic Filters */}
+          <div>
+            <h3 className="text-sm font-semibold text-slate-900 mb-3">Topic</h3>
+            <div className="flex flex-wrap gap-2">
+              {availableTopics.map(topic => (
+                <Badge
+                  key={topic}
+                  variant={selectedTopics.includes(topic) ? "default" : "outline"}
+                  className={`cursor-pointer px-4 py-2 text-sm transition-all ${
+                    selectedTopics.includes(topic)
+                      ? 'bg-slate-900 text-white hover:bg-slate-800'
+                      : 'bg-white text-slate-700 hover:bg-slate-50 border-slate-300'
+                  }`}
+                  onClick={() => toggleTopic(topic)}
+                >
+                  {topic}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Results */}
+        <div className="mb-6">
+          <p className="text-sm text-slate-600">
+            {filteredTools.length} {filteredTools.length === 1 ? 'result' : 'results'} found
+          </p>
+        </div>
+
+        {/* Tools Grid */}
+        {filteredTools.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredTools.map((tool) => {
+              const iconMap = {
+                ClipboardCheck,
+                BookOpen,
+                Wrench
+              };
+              const IconComponent = iconMap[tool.icon] || ClipboardCheck;
+
+              return (
+                <ToolCard
+                  key={tool.id}
+                  title={tool.title}
+                  description={tool.description}
+                  icon={IconComponent}
+                  href={tool.page ? createPageUrl(tool.page) : '#'}
+                  comingSoon={tool.coming_soon || tool.sectionComingSoon}
+                  fileUrl={tool.file_url}
+                  link={tool.link}
+                  actionText={getActionText(tool.sectionId)}
+                />
+              );
+            })}
+          </div>
         ) : (
-          <>
-            {/* Default sections if no config */}
-            <section className="mb-16">
-              <SectionHeader title="Tools" />
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <ToolCard
-                  title="Product Launch CX Scorecard"
-                  description="A non-technical launch gate assessment for fintech, enterprise, and emerging markets products."
-                  icon={ClipboardCheck}
-                  href={createPageUrl('Scorecard')}
-                />
-              </div>
-            </section>
-
-            <section className="mb-16">
-              <SectionHeader title="Resources" comingSoon />
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <ToolCard
-                  title="Launch Checklist Templates"
-                  description="Comprehensive templates to ensure nothing is missed before your product launch."
-                  icon={BookOpen}
-                  comingSoon
-                />
-              </div>
-            </section>
-
-            <section className="mb-16">
-              <SectionHeader title="Playbooks" comingSoon />
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <ToolCard
-                  title="CX Best Practices"
-                  description="Proven strategies and frameworks for delivering exceptional customer experiences."
-                  icon={Wrench}
-                  comingSoon
-                />
-              </div>
-            </section>
-          </>
+          <div className="text-center py-16">
+            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Search className="h-8 w-8 text-slate-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">No results found</h3>
+            <p className="text-slate-500">Try adjusting your search or filters</p>
+          </div>
         )}
       </main>
 
