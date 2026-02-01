@@ -26,7 +26,7 @@ export default function Dashboard() {
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [selectedTopics, setSelectedTopics] = useState([]);
   const [selectedAccess, setSelectedAccess] = useState([]);
-  const [showAllTopics, setShowAllTopics] = useState(false);
+  const [openFilter, setOpenFilter] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: user, isLoading: userLoading } = useQuery({
@@ -172,6 +172,10 @@ export default function Dashboard() {
     setSelectedAccess([]);
   };
 
+  const toggleFilterSection = (filterName) => {
+    setOpenFilter(openFilter === filterName ? null : filterName);
+  };
+
   const getActionText = (sectionId) => {
     if (['resources', 'insights', 'playbooks'].includes(sectionId)) return 'Read';
     if (sectionId === 'deep-dive') return 'Explore';
@@ -275,9 +279,9 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* Search Bar */}
-        <div className="mb-8 max-w-2xl mx-auto">
-          <div className="relative">
+        {/* Search Bar and Filters */}
+        <div className="mb-8 max-w-5xl mx-auto">
+          <div className="relative mb-4">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
             <Input
               type="text"
@@ -287,51 +291,93 @@ export default function Dashboard() {
               className="h-14 pl-12 pr-4 text-base border-slate-200 focus:border-slate-900 focus:ring-slate-900 shadow-sm"
             />
           </div>
-        </div>
 
-        {/* Filters */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-slate-900">Filters</h3>
+          {/* Filter Controls */}
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-medium text-slate-700">Filter by:</span>
+            <div className="flex items-center gap-2">
+              <Button
+                variant={openFilter === 'topic' || selectedTopics.length > 0 ? "default" : "outline"}
+                size="sm"
+                onClick={() => toggleFilterSection('topic')}
+                className={`${openFilter === 'topic' || selectedTopics.length > 0 ? 'bg-slate-900 text-white' : 'bg-white text-slate-700 border-slate-300'}`}
+              >
+                Topic {selectedTopics.length > 0 && `(${selectedTopics.length})`}
+              </Button>
+              <Button
+                variant={openFilter === 'type' || selectedTypes.length > 0 ? "default" : "outline"}
+                size="sm"
+                onClick={() => toggleFilterSection('type')}
+                className={`${openFilter === 'type' || selectedTypes.length > 0 ? 'bg-slate-900 text-white' : 'bg-white text-slate-700 border-slate-300'}`}
+              >
+                Type {selectedTypes.length > 0 && `(${selectedTypes.length})`}
+              </Button>
+              <Button
+                variant={openFilter === 'access' || selectedAccess.length > 0 ? "default" : "outline"}
+                size="sm"
+                onClick={() => toggleFilterSection('access')}
+                className={`${openFilter === 'access' || selectedAccess.length > 0 ? 'bg-slate-900 text-white' : 'bg-white text-slate-700 border-slate-300'}`}
+              >
+                Access {selectedAccess.length > 0 && `(${selectedAccess.length})`}
+              </Button>
+            </div>
             {hasActiveFilters && (
               <Button 
                 variant="ghost" 
                 size="sm" 
                 onClick={clearAllFilters}
-                className="text-slate-600 hover:text-slate-900"
+                className="text-slate-600 hover:text-slate-900 ml-auto"
               >
                 Clear all
               </Button>
             )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Type Filter */}
-            {availableTypes.length > 0 && (
-              <div className="space-y-2">
-                <Label className="text-xs text-slate-500 uppercase tracking-wide">Type</Label>
-                <div className="flex flex-wrap gap-2">
-                  {availableTypes.map(type => (
-                    <Badge
-                      key={type}
-                      variant={selectedTypes.includes(type) ? "default" : "outline"}
-                      className={`cursor-pointer px-3 py-1.5 text-xs transition-all ${
-                        selectedTypes.includes(type)
-                          ? 'bg-slate-900 text-white hover:bg-slate-800'
-                          : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-300'
-                      }`}
-                      onClick={() => toggleType(type)}
-                    >
-                      {type}
-                    </Badge>
-                  ))}
-                </div>
+          {/* Filter Options */}
+          {openFilter === 'topic' && (
+            <div className="mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200">
+              <div className="flex flex-wrap gap-2">
+                {availableTopics.map(topic => (
+                  <Badge
+                    key={topic}
+                    variant={selectedTopics.includes(topic) ? "default" : "outline"}
+                    className={`cursor-pointer px-3 py-1.5 text-xs transition-all ${
+                      selectedTopics.includes(topic)
+                        ? 'bg-slate-900 text-white hover:bg-slate-800'
+                        : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-300'
+                    }`}
+                    onClick={() => toggleTopic(topic)}
+                  >
+                    {topic}
+                  </Badge>
+                ))}
               </div>
-            )}
+            </div>
+          )}
 
-            {/* Access Filter */}
-            <div className="space-y-2">
-              <Label className="text-xs text-slate-500 uppercase tracking-wide">Access</Label>
+          {openFilter === 'type' && availableTypes.length > 0 && (
+            <div className="mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200">
+              <div className="flex flex-wrap gap-2">
+                {availableTypes.map(type => (
+                  <Badge
+                    key={type}
+                    variant={selectedTypes.includes(type) ? "default" : "outline"}
+                    className={`cursor-pointer px-3 py-1.5 text-xs transition-all ${
+                      selectedTypes.includes(type)
+                        ? 'bg-slate-900 text-white hover:bg-slate-800'
+                        : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-300'
+                    }`}
+                    onClick={() => toggleType(type)}
+                  >
+                    {type}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {openFilter === 'access' && (
+            <div className="mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200">
               <div className="flex flex-wrap gap-2">
                 {['Free', 'Exclusive'].map(access => (
                   <Badge
@@ -349,47 +395,7 @@ export default function Dashboard() {
                 ))}
               </div>
             </div>
-
-            {/* Topic Filter */}
-            <div className="space-y-2">
-              <Label className="text-xs text-slate-500 uppercase tracking-wide">Topic</Label>
-              <div className="flex flex-wrap gap-2 max-h-20 overflow-hidden relative">
-                {availableTopics.slice(0, showAllTopics ? availableTopics.length : 6).map(topic => (
-                  <Badge
-                    key={topic}
-                    variant={selectedTopics.includes(topic) ? "default" : "outline"}
-                    className={`cursor-pointer px-3 py-1.5 text-xs transition-all ${
-                      selectedTopics.includes(topic)
-                        ? 'bg-slate-900 text-white hover:bg-slate-800'
-                        : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-300'
-                    }`}
-                    onClick={() => toggleTopic(topic)}
-                  >
-                    {topic}
-                  </Badge>
-                ))}
-                {!showAllTopics && availableTopics.length > 6 && (
-                  <Badge
-                    variant="outline"
-                    className="cursor-pointer px-3 py-1.5 text-xs bg-slate-50 text-slate-600 hover:bg-slate-100 border-slate-300"
-                    onClick={() => setShowAllTopics(true)}
-                  >
-                    +{availableTopics.length - 6} more
-                  </Badge>
-                )}
-              </div>
-              {showAllTopics && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowAllTopics(false)}
-                  className="text-xs text-slate-600 h-auto p-0 hover:text-slate-900"
-                >
-                  Show less
-                </Button>
-              )}
-            </div>
-          </div>
+          )}
         </div>
 
         {/* Results */}
