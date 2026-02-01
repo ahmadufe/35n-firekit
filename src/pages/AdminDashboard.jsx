@@ -87,9 +87,13 @@ export default function AdminDashboard() {
               <FolderOpen className="h-4 w-4" />
               Resources
             </TabsTrigger>
-            <TabsTrigger value="landing" className="flex items-center gap-2">
+            <TabsTrigger value="manage" className="flex items-center gap-2">
               <Layout className="h-4 w-4" />
-              Landing Page
+              Manage Resources
+            </TabsTrigger>
+            <TabsTrigger value="filters" className="flex items-center gap-2">
+              <Layout className="h-4 w-4" />
+              Filter Attributes
             </TabsTrigger>
             <TabsTrigger value="invite" className="flex items-center gap-2">
               <UserPlus className="h-4 w-4" />
