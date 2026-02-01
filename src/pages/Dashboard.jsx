@@ -24,6 +24,8 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [selectedTopics, setSelectedTopics] = useState([]);
+  const [selectedAccess, setSelectedAccess] = useState([]);
+  const [showAllTopics, setShowAllTopics] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: user, isLoading: userLoading } = useQuery({
@@ -136,7 +138,11 @@ export default function Dashboard() {
     // In the future, you might want to add topic metadata to tools
     const matchesTopic = selectedTopics.length === 0;
 
-    return matchesSearch && matchesType && matchesTopic;
+    // Access filter - tools with file_url or link are free, others might be exclusive
+    // For now, all tools are free
+    const matchesAccess = selectedAccess.length === 0 || selectedAccess.includes('free');
+
+    return matchesSearch && matchesType && matchesTopic && matchesAccess;
   });
 
   const toggleType = (type) => {
@@ -149,6 +155,20 @@ export default function Dashboard() {
     setSelectedTopics(prev => 
       prev.includes(topic) ? prev.filter(t => t !== topic) : [...prev, topic]
     );
+  };
+
+  const toggleAccess = (access) => {
+    setSelectedAccess(prev => 
+      prev.includes(access) ? prev.filter(a => a !== access) : [...prev, access]
+    );
+  };
+
+  const hasActiveFilters = selectedTypes.length > 0 || selectedTopics.length > 0 || selectedAccess.length > 0;
+
+  const clearAllFilters = () => {
+    setSelectedTypes([]);
+    setSelectedTopics([]);
+    setSelectedAccess([]);
   };
 
   const getActionText = (sectionId) => {
@@ -269,48 +289,104 @@ export default function Dashboard() {
         </div>
 
         {/* Filters */}
-        <div className="mb-10 space-y-6">
-          {/* Type Filters */}
-          {availableTypes.length > 0 && (
-            <div>
-              <h3 className="text-sm font-semibold text-slate-900 mb-3">Type</h3>
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-semibold text-slate-900">Filters</h3>
+            {hasActiveFilters && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={clearAllFilters}
+                className="text-slate-600 hover:text-slate-900"
+              >
+                Clear all
+              </Button>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Type Filter */}
+            {availableTypes.length > 0 && (
+              <div className="space-y-2">
+                <Label className="text-xs text-slate-500 uppercase tracking-wide">Type</Label>
+                <div className="flex flex-wrap gap-2">
+                  {availableTypes.map(type => (
+                    <Badge
+                      key={type}
+                      variant={selectedTypes.includes(type) ? "default" : "outline"}
+                      className={`cursor-pointer px-3 py-1.5 text-xs transition-all ${
+                        selectedTypes.includes(type)
+                          ? 'bg-slate-900 text-white hover:bg-slate-800'
+                          : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-300'
+                      }`}
+                      onClick={() => toggleType(type)}
+                    >
+                      {type}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Access Filter */}
+            <div className="space-y-2">
+              <Label className="text-xs text-slate-500 uppercase tracking-wide">Access</Label>
               <div className="flex flex-wrap gap-2">
-                {availableTypes.map(type => (
+                {['Free', 'Exclusive'].map(access => (
                   <Badge
-                    key={type}
-                    variant={selectedTypes.includes(type) ? "default" : "outline"}
-                    className={`cursor-pointer px-4 py-2 text-sm transition-all ${
-                      selectedTypes.includes(type)
+                    key={access}
+                    variant={selectedAccess.includes(access.toLowerCase()) ? "default" : "outline"}
+                    className={`cursor-pointer px-3 py-1.5 text-xs transition-all ${
+                      selectedAccess.includes(access.toLowerCase())
                         ? 'bg-slate-900 text-white hover:bg-slate-800'
-                        : 'bg-white text-slate-700 hover:bg-slate-50 border-slate-300'
+                        : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-300'
                     }`}
-                    onClick={() => toggleType(type)}
+                    onClick={() => toggleAccess(access.toLowerCase())}
                   >
-                    {type}
+                    {access}
                   </Badge>
                 ))}
               </div>
             </div>
-          )}
 
-          {/* Topic Filters */}
-          <div>
-            <h3 className="text-sm font-semibold text-slate-900 mb-3">Topic</h3>
-            <div className="flex flex-wrap gap-2">
-              {availableTopics.map(topic => (
-                <Badge
-                  key={topic}
-                  variant={selectedTopics.includes(topic) ? "default" : "outline"}
-                  className={`cursor-pointer px-4 py-2 text-sm transition-all ${
-                    selectedTopics.includes(topic)
-                      ? 'bg-slate-900 text-white hover:bg-slate-800'
-                      : 'bg-white text-slate-700 hover:bg-slate-50 border-slate-300'
-                  }`}
-                  onClick={() => toggleTopic(topic)}
+            {/* Topic Filter */}
+            <div className="space-y-2">
+              <Label className="text-xs text-slate-500 uppercase tracking-wide">Topic</Label>
+              <div className="flex flex-wrap gap-2 max-h-20 overflow-hidden relative">
+                {availableTopics.slice(0, showAllTopics ? availableTopics.length : 6).map(topic => (
+                  <Badge
+                    key={topic}
+                    variant={selectedTopics.includes(topic) ? "default" : "outline"}
+                    className={`cursor-pointer px-3 py-1.5 text-xs transition-all ${
+                      selectedTopics.includes(topic)
+                        ? 'bg-slate-900 text-white hover:bg-slate-800'
+                        : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-300'
+                    }`}
+                    onClick={() => toggleTopic(topic)}
+                  >
+                    {topic}
+                  </Badge>
+                ))}
+                {!showAllTopics && availableTopics.length > 6 && (
+                  <Badge
+                    variant="outline"
+                    className="cursor-pointer px-3 py-1.5 text-xs bg-slate-50 text-slate-600 hover:bg-slate-100 border-slate-300"
+                    onClick={() => setShowAllTopics(true)}
+                  >
+                    +{availableTopics.length - 6} more
+                  </Badge>
+                )}
+              </div>
+              {showAllTopics && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowAllTopics(false)}
+                  className="text-xs text-slate-600 h-auto p-0 hover:text-slate-900"
                 >
-                  {topic}
-                </Badge>
-              ))}
+                  Show less
+                </Button>
+              )}
             </div>
           </div>
         </div>
