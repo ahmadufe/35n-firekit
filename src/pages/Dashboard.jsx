@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
-import { ClipboardCheck, BookOpen, Wrench, User, LogOut, Settings, ChevronDown, Shield, Search } from "lucide-react";
+import { ClipboardCheck, BookOpen, Wrench, User, LogOut, Settings, ChevronDown, Shield, Search, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import UserSetupModal from "@/components/UserSetupModal";
@@ -335,8 +335,16 @@ export default function Dashboard() {
 
           {/* Filter Options */}
           {openFilter === 'topic' && (
-            <div className="mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200">
-              <div className="flex flex-wrap gap-2">
+            <div className="mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200 relative">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setOpenFilter(null)}
+                className="absolute top-2 left-2 h-6 w-6 text-slate-500 hover:text-slate-900"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+              <div className="flex flex-wrap gap-2 ml-8">
                 {availableTopics.map(topic => (
                   <Badge
                     key={topic}
@@ -356,8 +364,16 @@ export default function Dashboard() {
           )}
 
           {openFilter === 'type' && availableTypes.length > 0 && (
-            <div className="mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200">
-              <div className="flex flex-wrap gap-2">
+            <div className="mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200 relative">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setOpenFilter(null)}
+                className="absolute top-2 left-2 h-6 w-6 text-slate-500 hover:text-slate-900"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+              <div className="flex flex-wrap gap-2 ml-8">
                 {availableTypes.map(type => (
                   <Badge
                     key={type}
@@ -377,8 +393,16 @@ export default function Dashboard() {
           )}
 
           {openFilter === 'access' && (
-            <div className="mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200">
-              <div className="flex flex-wrap gap-2">
+            <div className="mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200 relative">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setOpenFilter(null)}
+                className="absolute top-2 left-2 h-6 w-6 text-slate-500 hover:text-slate-900"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+              <div className="flex flex-wrap gap-2 ml-8">
                 {['Free', 'Exclusive'].map(access => (
                   <Badge
                     key={access}
