@@ -10,7 +10,8 @@ import InsightsTab from "@/components/admin/InsightsTab";
 import LoginsTab from "@/components/admin/LoginsTab";
 import UsersTab from "@/components/admin/UsersTab";
 import ResourcesTab from "@/components/admin/ResourcesTab";
-import LandingPageTab from "@/components/admin/LandingPageTab";
+import ResourcesManagementTab from "@/components/admin/ResourcesManagementTab";
+import FilterAttributesTab from "@/components/admin/FilterAttributesTab";
 import InviteUserTab from "@/components/admin/InviteUserTab";
 
 export default function AdminDashboard() {
@@ -112,8 +113,12 @@ export default function AdminDashboard() {
             <ResourcesTab />
           </TabsContent>
 
-          <TabsContent value="landing">
-            <LandingPageTab />
+          <TabsContent value="manage">
+            <ResourcesManagementTab />
+          </TabsContent>
+
+          <TabsContent value="filters">
+            <FilterAttributesTab />
           </TabsContent>
 
           <TabsContent value="invite">
