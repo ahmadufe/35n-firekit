@@ -17,6 +17,7 @@ import ToolCard from "@/components/ToolCard";
 import SectionHeader from "@/components/SectionHeader";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 
 export default function Dashboard() {
   const [showSetup, setShowSetup] = useState(false);
