@@ -16,19 +16,10 @@ export default function ToolCard({
   actionText = "Open Tool",
   type,
   topics = [],
-  accessType = "free",
-  onClick,
-  onRequestAccess
+  onClick
 }) {
-  const isExclusive = accessType === 'exclusive';
-  
   const handleClick = () => {
     if (comingSoon) return;
-    
-    if (isExclusive && onRequestAccess) {
-      onRequestAccess();
-      return;
-    }
     
     if (fileUrl) {
       window.open(fileUrl, '_blank');
@@ -37,8 +28,8 @@ export default function ToolCard({
     }
   };
 
-  // If there's a file or link or exclusive, use div with onClick; otherwise use Link
-  if (fileUrl || link || isExclusive) {
+  // If there's a file or link, use div with onClick; otherwise use Link
+  if (fileUrl || link) {
     return (
       <div onClick={handleClick} className={`${comingSoon ? 'cursor-not-allowed' : 'cursor-pointer'} h-full`}>
         <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col ${comingSoon ? 'opacity-60' : ''}`}>
@@ -173,8 +164,8 @@ export default function ToolCard({
               </div>
             ) : (
               <div className="flex items-center text-slate-900 font-medium text-sm group-hover:translate-x-2 transition-transform duration-300">
-                {isExclusive ? 'Request access' : 'Access'}
-                {isExclusive ? <Lock className="ml-2 h-4 w-4" /> : <ArrowRight className="ml-2 h-4 w-4" />}
+                Access
+                <ArrowRight className="ml-2 h-4 w-4" />
               </div>
             )}
           </div>

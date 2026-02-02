@@ -27,7 +27,6 @@ const AVAILABLE_TOPICS = [
   'Middle East startups & tech',
   'Emerging markets startups & tech'
 ];
-const AVAILABLE_ACCESS = ['free', 'exclusive'];
 const ICON_OPTIONS = ['ClipboardCheck', 'BookOpen', 'Wrench'];
 
 export default function ResourcesManagementTab() {
@@ -39,7 +38,6 @@ export default function ResourcesManagementTab() {
     description: '',
     type: 'Tools',
     topics: [],
-    access_type: 'free',
     icon: 'ClipboardCheck',
     page: '',
     link: '',
@@ -107,7 +105,6 @@ export default function ResourcesManagementTab() {
         description: resource.description || '',
         type: resource.sectionTitle || 'Tools',
         topics: resource.topics || [],
-        access_type: resource.access_type || 'free',
         icon: resource.icon || 'ClipboardCheck',
         page: resource.page || '',
         link: resource.link || '',
@@ -123,7 +120,6 @@ export default function ResourcesManagementTab() {
         description: '',
         type: 'Tools',
         topics: [],
-        access_type: 'free',
         icon: 'ClipboardCheck',
         page: '',
         link: '',
@@ -167,7 +163,6 @@ export default function ResourcesManagementTab() {
       file_url: formData.file_url,
       coming_soon: formData.coming_soon,
       topics: formData.topics,
-      access_type: formData.access_type,
       published_date: formData.published_date || new Date().toISOString(),
       featured: formData.featured
     };
@@ -433,11 +428,6 @@ export default function ResourcesManagementTab() {
                     <Badge variant="outline" className="text-xs">
                       {resource.sectionTitle}
                     </Badge>
-                    {resource.access_type === 'exclusive' && (
-                      <Badge className="bg-orange-100 text-orange-700 border-orange-200 text-xs">
-                        Exclusive
-                      </Badge>
-                    )}
                     {resource.coming_soon && (
                       <Badge variant="outline" className="border-amber-300 text-amber-600 text-xs">
                         Coming Soon
@@ -527,7 +517,7 @@ export default function ResourcesManagementTab() {
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label>Type *</Label>
                 <Select value={formData.type} onValueChange={(value) => setFormData({ ...formData, type: value })}>
@@ -537,20 +527,6 @@ export default function ResourcesManagementTab() {
                   <SelectContent>
                     {AVAILABLE_TYPES.map(type => (
                       <SelectItem key={type} value={type}>{type}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label>Access *</Label>
-                <Select value={formData.access_type} onValueChange={(value) => setFormData({ ...formData, access_type: value })}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {AVAILABLE_ACCESS.map(access => (
-                      <SelectItem key={access} value={access}>{access}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>

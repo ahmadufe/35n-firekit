@@ -35,7 +35,7 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [selectedTopics, setSelectedTopics] = useState([]);
-  const [selectedAccess, setSelectedAccess] = useState([]);
+
   const [showNewOnly, setShowNewOnly] = useState(false);
   const [showFeaturedOnly, setShowFeaturedOnly] = useState(false);
   const [openFilter, setOpenFilter] = useState(null);
@@ -181,36 +181,7 @@ export default function Dashboard() {
     setShowFeedbackThankYou(true);
   };
 
-  const handleRequestAccess = async (tool) => {
-    if (!user) {
-      setLoginPromptType('timed');
-      setShowLoginPrompt(true);
-      return;
-    }
 
-    setSelectedResource(tool);
-    
-    // Save access request
-    await base44.entities.AccessRequest.create({
-      user_email: user.email,
-      user_name: userProfile?.name || user.full_name,
-      resource_title: tool.title,
-      resource_type: tool.sectionTitle
-    });
-
-    // Send email notification to admin
-    try {
-      await base44.integrations.Core.SendEmail({
-        to: 'hello@35nventures.com',
-        subject: 'New Access Request - FireKit',
-        body: `A new access request has been submitted:\n\nUser: ${userProfile?.name || user.full_name} (${user.email})\nResource: ${tool.title}\nType: ${tool.sectionTitle}\nDate: ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Dubai' })}`
-      });
-    } catch (error) {
-      console.error('Failed to send email:', error);
-    }
-
-    setShowAccessRequestDialog(true);
-  };
 
   // Extract all tools from all sections
   const allTools = publishedConfig?.sections 
@@ -283,10 +254,6 @@ export default function Dashboard() {
     // In the future, you might want to add topic metadata to tools
     const matchesTopic = selectedTopics.length === 0;
 
-    // Access filter - tools with file_url or link are free, others might be exclusive
-    // For now, all tools are free
-    const matchesAccess = selectedAccess.length === 0 || selectedAccess.includes('free');
-
     // New resources filter
     const matchesNew = !showNewOnly || (() => {
       const toolDate = tool.published_date 
@@ -302,7 +269,7 @@ export default function Dashboard() {
     // Featured filter
     const matchesFeatured = !showFeaturedOnly || tool.featured;
 
-    return matchesSearch && matchesType && matchesTopic && matchesAccess && matchesNew && matchesFeatured;
+    return matchesSearch && matchesType && matchesTopic && matchesNew && matchesFeatured;
   });
 
   const toggleType = (type) => {
@@ -317,18 +284,13 @@ export default function Dashboard() {
     );
   };
 
-  const toggleAccess = (access) => {
-    setSelectedAccess(prev => 
-      prev.includes(access) ? prev.filter(a => a !== access) : [...prev, access]
-    );
-  };
 
-  const hasActiveFilters = selectedTypes.length > 0 || selectedTopics.length > 0 || selectedAccess.length > 0 || showNewOnly || showFeaturedOnly;
+
+  const hasActiveFilters = selectedTypes.length > 0 || selectedTopics.length > 0 || showNewOnly || showFeaturedOnly;
 
   const clearAllFilters = () => {
     setSelectedTypes([]);
     setSelectedTopics([]);
-    setSelectedAccess([]);
     setShowNewOnly(false);
     setShowFeaturedOnly(false);
   };
@@ -552,14 +514,7 @@ export default function Dashboard() {
               >
                 Type {selectedTypes.length > 0 && `(${selectedTypes.length})`}
               </Button>
-              <Button
-                variant={openFilter === 'access' || selectedAccess.length > 0 ? "default" : "outline"}
-                size="sm"
-                onClick={() => toggleFilterSection('access')}
-                className={`${openFilter === 'access' || selectedAccess.length > 0 ? 'bg-slate-900 text-white' : 'bg-white text-slate-700 border-slate-300'}`}
-              >
-                Access {selectedAccess.length > 0 && `(${selectedAccess.length})`}
-              </Button>
+
               </div>
               {hasActiveFilters && (
                 <Button 
@@ -648,34 +603,7 @@ export default function Dashboard() {
             </div>
           )}
 
-          {openFilter === 'access' && (
-            <div className="mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200 relative">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setOpenFilter(null)}
-                className="absolute top-2 right-2 h-6 w-6 text-slate-500 hover:text-slate-900"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-              <div className="flex flex-wrap gap-2">
-                {['Free', 'Exclusive'].map(access => (
-                  <Badge
-                    key={access}
-                    variant={selectedAccess.includes(access.toLowerCase()) ? "default" : "outline"}
-                    className={`cursor-pointer px-3 py-1.5 text-xs transition-all ${
-                      selectedAccess.includes(access.toLowerCase())
-                        ? 'bg-slate-900 text-white hover:bg-slate-800'
-                        : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-300'
-                    }`}
-                    onClick={() => toggleAccess(access.toLowerCase())}
-                  >
-                    {access}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          )}
+
         </div>
 
         {/* Results */}
@@ -700,13 +628,10 @@ export default function Dashboard() {
                                        tool.sectionTitle?.toLowerCase().includes('tool');
               const needsLoginCheck = !user && isToolOrDeepDive && tool.page;
 
-              const isExclusive = tool.access_type === 'exclusive';
-
               return (
                 <ToolCard
                   key={tool.id}
-                  onClick={needsLoginCheck || isExclusive ? () => handleResourceClick(tool) : undefined}
-                  onRequestAccess={isExclusive ? () => handleRequestAccess(tool) : undefined}
+                  onClick={needsLoginCheck ? () => handleResourceClick(tool) : undefined}
                   title={tool.title}
                   description={tool.description}
                   icon={IconComponent}
@@ -717,7 +642,6 @@ export default function Dashboard() {
                   actionText={getActionText(tool.sectionId)}
                   type={tool.sectionTitle}
                   topics={tool.topics || []}
-                  accessType={tool.access_type || 'free'}
                 />
               );
             })}
