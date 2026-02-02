@@ -19,6 +19,8 @@ import LoginPromptDialog from "@/components/LoginPromptDialog";
 import LoginConfirmDialog from "@/components/LoginConfirmDialog";
 import SuggestResourceDialog from "@/components/SuggestResourceDialog";
 import ThankYouDialog from "@/components/ThankYouDialog";
+import FeedbackDialog from "@/components/FeedbackDialog";
+import FeedbackThankYouDialog from "@/components/FeedbackThankYouDialog";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
@@ -41,6 +43,8 @@ export default function Dashboard() {
   const [hasShownTimedPrompt, setHasShownTimedPrompt] = useState(false);
   const [showSuggestDialog, setShowSuggestDialog] = useState(false);
   const [showThankYouDialog, setShowThankYouDialog] = useState(false);
+  const [showFeedbackDialog, setShowFeedbackDialog] = useState(false);
+  const [showFeedbackThankYou, setShowFeedbackThankYou] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: user, isLoading: userLoading } = useQuery({
@@ -167,6 +171,10 @@ export default function Dashboard() {
 
   const handleSuggestSuccess = () => {
     setShowThankYouDialog(true);
+  };
+
+  const handleFeedbackSuccess = () => {
+    setShowFeedbackThankYou(true);
   };
 
   // Extract all tools from all sections
@@ -348,6 +356,19 @@ export default function Dashboard() {
         onOpenChange={setShowThankYouDialog}
       />
 
+      <FeedbackDialog
+        open={showFeedbackDialog}
+        onOpenChange={setShowFeedbackDialog}
+        onSuccess={handleFeedbackSuccess}
+        userProfile={userProfile}
+        user={user}
+      />
+
+      <FeedbackThankYouDialog
+        open={showFeedbackThankYou}
+        onOpenChange={setShowFeedbackThankYou}
+      />
+
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-6 py-4">
@@ -512,12 +533,20 @@ export default function Dashboard() {
               )}
             </div>
             
-            <button
-              onClick={handleSuggestResource}
-              className="text-sm font-medium text-slate-900 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-lg transition-colors"
-            >
-              Suggest a resource
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleSuggestResource}
+                className="text-sm font-medium text-slate-900 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-lg transition-colors"
+              >
+                Suggest a resource
+              </button>
+              <button
+                onClick={() => setShowFeedbackDialog(true)}
+                className="text-sm font-medium text-slate-900 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-lg transition-colors"
+              >
+                Give feedback
+              </button>
+            </div>
           </div>
 
           {/* Filter Options */}

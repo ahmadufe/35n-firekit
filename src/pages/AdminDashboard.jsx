@@ -15,7 +15,7 @@ import InviteUserTab from "@/components/admin/InviteUserTab";
 import SuggestedResourcesTab from "@/components/admin/SuggestedResourcesTab";
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState('insights');
+  const [activeTab, setActiveTab] = useState('feedback');
   const navigate = useNavigate();
 
   const { data: user, isLoading } = useQuery({
