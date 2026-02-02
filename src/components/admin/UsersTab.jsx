@@ -2,12 +2,16 @@ import React, { useState } from 'react';
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Download, Loader2, Users as UsersIcon, Eye, LogIn } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Download, Loader2, Users as UsersIcon, Eye, LogIn, UserPlus, Mail } from "lucide-react";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 export default function UsersTab() {
   const [selectedUser, setSelectedUser] = useState(null);
