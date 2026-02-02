@@ -91,7 +91,7 @@ export default function AdminDashboard() {
             </TabsTrigger>
             <TabsTrigger value="filters" className="flex items-center gap-2">
               <Layout className="h-4 w-4" />
-              Filter Attributes
+              Filters
             </TabsTrigger>
             <TabsTrigger value="suggestions" className="flex items-center gap-2">
               <Lightbulb className="h-4 w-4" />
