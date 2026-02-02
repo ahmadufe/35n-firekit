@@ -176,15 +176,18 @@ export default function ResourcesManagementTab() {
         (s.tools || []).some(t => t.id === editingResource.id)
       );
       
-      if (oldSection && oldSection.id !== targetSection.id) {
+      if (oldSection && oldSection.title !== formData.type) {
         // Tool moved to different section, remove from old section
         oldSection.tools = (oldSection.tools || []).filter(t => t.id !== editingResource.id);
         targetSection.tools = [...(targetSection.tools || []), toolData];
-      } else {
+      } else if (oldSection) {
         // Tool stays in same section, update it
-        targetSection.tools = (targetSection.tools || []).map(t =>
+        oldSection.tools = (oldSection.tools || []).map(t =>
           t.id === editingResource.id ? toolData : t
         );
+      } else {
+        // Fallback: just add to target section
+        targetSection.tools = [...(targetSection.tools || []), toolData];
       }
     } else {
       // Add new tool
