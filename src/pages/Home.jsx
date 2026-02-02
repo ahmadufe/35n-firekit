@@ -8,34 +8,41 @@ Home.public = true;
 export default function Home() {
   return (
     <div 
-      className="min-h-screen flex items-center justify-center relative"
+      className="min-h-screen relative"
       style={{
-        backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_695a45a00c41aebc946dc291/dcce5d331_VenturesBlack.png)',
+        backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695a4c3829d04b83a5c959f0/17f483aa9_image.png)',
         backgroundColor: '#000',
         backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundBlendMode: 'overlay'
+        backgroundPosition: 'center'
       }}
     >
-      <div className="absolute inset-0 bg-black/70" />
+      <div className="absolute top-6 left-6 sm:top-8 sm:left-8 z-20">
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_695a45a00c41aebc946dc291/dcce5d331_VenturesBlack.png" 
+          alt="35N Ventures" 
+          className="h-8 sm:h-10 object-contain"
+        />
+      </div>
       
-      <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-        <h1 className="text-5xl sm:text-7xl font-light text-white tracking-tight mb-6">
-          Welcome to <span className="text-orange-500 font-semibold">Fire</span><span className="font-semibold">Kit</span> by 35N
-        </h1>
-        
-        <p className="text-xl sm:text-2xl text-slate-300 mb-12 max-w-3xl mx-auto font-light">
-          Practical insights, frameworks & tools for leaders, builders, innovators and dreamers building great things
-        </p>
-        
-        <Link to={createPageUrl('Dashboard')}>
-          <Button 
-            size="lg" 
-            className="bg-white text-black hover:bg-slate-200 text-lg px-12 py-6 h-auto font-semibold"
-          >
-            Explore
-          </Button>
-        </Link>
+      <div className="min-h-screen flex items-center px-6 sm:px-12 lg:px-20">
+        <div className="relative z-10 max-w-3xl">
+          <h1 className="text-5xl sm:text-7xl lg:text-8xl font-light text-white tracking-tight mb-6 text-left">
+            Welcome to <span className="text-orange-500 font-semibold">Fire</span><span className="font-semibold">Kit</span> by <span className="font-bold">35N</span>
+          </h1>
+          
+          <p className="text-xl sm:text-2xl text-white/90 mb-12 font-light text-left">
+            Practical insights, frameworks & tools for leaders, builders, innovators and dreamers building great things
+          </p>
+          
+          <Link to={createPageUrl('Dashboard')}>
+            <Button 
+              size="lg" 
+              className="bg-white text-black hover:bg-slate-200 text-xl px-16 py-7 h-auto font-semibold rounded-full"
+            >
+              Explore
+            </Button>
+          </Link>
+        </div>
       </div>
     </div>
   );
