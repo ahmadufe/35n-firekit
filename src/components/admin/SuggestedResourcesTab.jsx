@@ -5,11 +5,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CheckCircle2, XCircle, Clock } from "lucide-react";
+import { CheckCircle2, XCircle, Clock, Download, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { Checkbox } from "@/components/ui/checkbox";
+import { format } from "date-fns";
 
 export default function SuggestedResourcesTab() {
   const [filterStatus, setFilterStatus] = useState('all');
+  const [selectedIds, setSelectedIds] = useState([]);
   const queryClient = useQueryClient();
 
   const { data: suggestions = [], isLoading } = useQuery({
@@ -21,6 +24,66 @@ export default function SuggestedResourcesTab() {
     await base44.entities.SuggestedResource.update(suggestion.id, { status: newStatus });
     queryClient.invalidateQueries({ queryKey: ['suggestedResources'] });
     toast.success(`Status updated to ${newStatus}`);
+  };
+
+  const handleSelectAll = (checked) => {
+    if (checked) {
+      setSelectedIds(filteredSuggestions.map(s => s.id));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
+  const handleSelectOne = (id, checked) => {
+    if (checked) {
+      setSelectedIds([...selectedIds, id]);
+    } else {
+      setSelectedIds(selectedIds.filter(sid => sid !== id));
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (!confirm(`Delete ${selectedIds.length} selected suggestions?`)) return;
+    
+    for (const id of selectedIds) {
+      await base44.entities.SuggestedResource.delete(id);
+    }
+    
+    queryClient.invalidateQueries({ queryKey: ['suggestedResources'] });
+    setSelectedIds([]);
+    toast.success(`${selectedIds.length} suggestions deleted`);
+  };
+
+  const handleBulkExport = () => {
+    const selectedSuggestions = suggestions.filter(s => selectedIds.includes(s.id));
+    const headers = ['Date', 'Time', 'User Name', 'User Email', 'Company', 'Team', 'Title', 'Description', 'Status'];
+    const rows = selectedSuggestions.map(item => {
+      const date = new Date(item.created_date);
+      const abuDhabiDate = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Dubai' }));
+      return [
+        format(abuDhabiDate, 'MMM d, yyyy'),
+        format(abuDhabiDate, 'HH:mm:ss'),
+        item.user_name,
+        item.user_email,
+        item.company || 'N/A',
+        item.team || 'N/A',
+        item.title,
+        item.description,
+        item.status
+      ];
+    });
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `suggestions-${format(new Date(), 'yyyy-MM-dd')}.csv`;
+    link.click();
+    toast.success('Exported to CSV');
   };
 
   const filteredSuggestions = suggestions.filter(s => 
@@ -43,16 +106,29 @@ export default function SuggestedResourcesTab() {
           <h2 className="text-2xl font-semibold text-slate-900">Suggested Resources</h2>
           <p className="text-sm text-slate-500 mt-1">Review and manage user-submitted resource suggestions</p>
         </div>
+        {selectedIds.length > 0 && (
+          <div className="flex gap-2">
+            <Button onClick={handleBulkExport} variant="outline">
+              <Download className="mr-2 h-4 w-4" />
+              Export ({selectedIds.length})
+            </Button>
+            <Button onClick={handleBulkDelete} variant="destructive">
+              <Trash2 className="mr-2 h-4 w-4" />
+              Delete ({selectedIds.length})
+            </Button>
+          </div>
+        )}
       </div>
 
-      <div className="flex gap-2">
-        <Button
-          variant={filterStatus === 'all' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setFilterStatus('all')}
-        >
-          All ({suggestions.length})
-        </Button>
+      <div className="flex items-center justify-between">
+        <div className="flex gap-2">
+          <Button
+            variant={filterStatus === 'all' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setFilterStatus('all')}
+          >
+            All ({suggestions.length})
+          </Button>
         <Button
           variant={filterStatus === 'pending' ? 'default' : 'outline'}
           size="sm"
@@ -74,13 +150,23 @@ export default function SuggestedResourcesTab() {
         >
           Approved ({suggestions.filter(s => s.status === 'approved').length})
         </Button>
-        <Button
-          variant={filterStatus === 'rejected' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setFilterStatus('rejected')}
-        >
-          Rejected ({suggestions.filter(s => s.status === 'rejected').length})
-        </Button>
+          <Button
+            variant={filterStatus === 'rejected' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setFilterStatus('rejected')}
+          >
+            Rejected ({suggestions.filter(s => s.status === 'rejected').length})
+          </Button>
+        </div>
+        {filteredSuggestions.length > 0 && (
+          <div className="flex items-center gap-2">
+            <Checkbox
+              checked={selectedIds.length === filteredSuggestions.length}
+              onCheckedChange={handleSelectAll}
+            />
+            <span className="text-sm text-slate-600">Select all</span>
+          </div>
+        )}
       </div>
 
       <div className="grid gap-4">
@@ -98,7 +184,12 @@ export default function SuggestedResourcesTab() {
             return (
               <Card key={suggestion.id} className="border-slate-200">
                 <CardContent className="p-6">
-                  <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-start gap-4">
+                    <Checkbox
+                      checked={selectedIds.includes(suggestion.id)}
+                      onCheckedChange={(checked) => handleSelectOne(suggestion.id, checked)}
+                      className="mt-1"
+                    />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-3">
                         <h3 className="text-lg font-semibold text-slate-900">{suggestion.title}</h3>
