@@ -203,92 +203,10 @@ export default function InsightsTab() {
         />
       </div>
 
-      {/* Product Launch CX Scorecard Section */}
-      <div>
-        <h2 className="text-xl font-semibold text-slate-900 mb-6">Product Launch CX Scorecard</h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <StatCard
-            title="Scorecards Completed"
-            value={totalAssessments}
-            icon={ClipboardCheck}
-            color="text-amber-600"
-          />
-          <StatCard
-            title="Pass Rate"
-            value={`${passRate}%`}
-            icon={TrendingUp}
-            color="text-emerald-600"
-          />
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="border-0 shadow-md">
-          <CardHeader>
-            <CardTitle className="text-lg">Recent Activity</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-600">Average assessments per user</span>
-                <span className="font-semibold">
-                  {totalUsers > 0 ? (totalAssessments / totalUsers).toFixed(1) : 0}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-600">Active users (logged in)</span>
-                <span className="font-semibold">{new Set(logins.map(l => l.user_email)).size}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-600">Return rate</span>
-                <span className="font-semibold">
-                  {totalUsers > 0 ? ((uniqueReturningUsers / totalUsers) * 100).toFixed(1) : 0}%
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-md">
-          <CardHeader>
-            <CardTitle className="text-lg">Assessment Status</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-600">Passed</span>
-                <div className="flex items-center gap-2">
-                  <div className="w-32 h-2 bg-slate-100 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-emerald-500 rounded-full" 
-                      style={{ width: `${passRate}%` }}
-                    />
-                  </div>
-                  <span className="font-semibold text-emerald-600">{passedAssessments}</span>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-600">Conditional</span>
-                <span className="font-semibold text-amber-600">
-                  {assessments.filter(a => a.status === 'conditional').length}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-600">Failed</span>
-                <span className="font-semibold text-red-600">
-                  {assessments.filter(a => a.status === 'fail').length}
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        </div>
-      </div>
-
       {/* Resource Insights */}
       <div>
         <h2 className="text-xl font-semibold text-slate-900 mb-6">Resource Insights</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="space-y-4">
           {resourceAnalytics.map(({ resource, analytics }, idx) => (
             <ResourceInsightCard
               key={resource.id || idx}
