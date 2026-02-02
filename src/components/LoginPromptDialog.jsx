@@ -10,10 +10,23 @@ import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
-export default function LoginPromptDialog({ open, onOpenChange, onClose }) {
+export default function LoginPromptDialog({ open, onOpenChange, onClose, type = 'resource' }) {
   const handleLogin = () => {
     base44.auth.redirectToLogin(window.location.href);
   };
+
+  const content = {
+    timed: {
+      title: "Join us for free",
+      description: "Signing up gives you free access to all our open tools and resources and lets you bookmark, use the tools without limits, and come back anytime. No spam. Promise."
+    },
+    resource: {
+      title: "Only for close friends. Join us",
+      description: "Signing up gives you free access to all our open tools and resources and lets you bookmark, use the tools without limits, and come back anytime."
+    }
+  };
+
+  const { title, description } = content[type];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -25,9 +38,9 @@ export default function LoginPromptDialog({ open, onOpenChange, onClose }) {
           <X className="h-4 w-4" />
         </button>
         <DialogHeader>
-          <DialogTitle className="text-2xl">Unfortunately, you can't access this unless you are logged in</DialogTitle>
+          <DialogTitle className="text-2xl">{title}</DialogTitle>
           <DialogDescription className="text-base pt-2">
-            Sign up or log in to access our tools and deep dive series.
+            {description}
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-3 pt-4">
