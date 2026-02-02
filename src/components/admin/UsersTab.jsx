@@ -16,6 +16,10 @@ import { toast } from "sonner";
 export default function UsersTab() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [showLoginHistory, setShowLoginHistory] = useState(false);
+  const [showInviteDialog, setShowInviteDialog] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteRole, setInviteRole] = useState('user');
+  const [isInviting, setIsInviting] = useState(false);
 
   const { data: users = [], isLoading: usersLoading } = useQuery({
     queryKey: ['allUsers'],
