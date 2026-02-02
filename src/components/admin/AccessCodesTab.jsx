@@ -254,12 +254,12 @@ export default function AccessCodesTab() {
 
       {/* Generate Code Dialog */}
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Generate Access Code</DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-4 py-4">
+          <div className="space-y-4">
             <div>
               <Label>Beneficiary Name (optional)</Label>
               <Input
