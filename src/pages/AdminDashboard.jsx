@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, BarChart3, LogIn, Users, FolderOpen, Layout, UserPlus, Lightbulb } from "lucide-react";
+import { ArrowLeft, BarChart3, LogIn, Users, FolderOpen, Layout, Lightbulb } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import InsightsTab from "@/components/admin/InsightsTab";
