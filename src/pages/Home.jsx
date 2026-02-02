@@ -10,7 +10,7 @@ export default function Home() {
     <div 
       className="min-h-screen relative"
       style={{
-        backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695a4c3829d04b83a5c959f0/17f483aa9_image.png)',
+        backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695a4c3829d04b83a5c959f0/00d47afc3_image.png)',
         backgroundColor: '#000',
         backgroundSize: 'cover',
         backgroundPosition: 'center'
@@ -26,8 +26,8 @@ export default function Home() {
       
       <div className="min-h-screen flex items-center px-6 sm:px-12 lg:px-20">
         <div className="relative z-10 max-w-3xl">
-          <h1 className="text-5xl sm:text-7xl lg:text-8xl font-light text-white tracking-tight mb-6 text-left">
-            Welcome to <span className="text-orange-500 font-semibold">Fire</span><span className="font-semibold">Kit</span> by <span className="font-bold">35N</span>
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight mb-6 text-left">
+            Welcome to <span className="text-orange-500">Fire</span>Kit by 35N
           </h1>
           
           <p className="text-xl sm:text-2xl text-white/90 mb-12 font-light text-left">
@@ -37,7 +37,7 @@ export default function Home() {
           <Link to={createPageUrl('Dashboard')}>
             <Button 
               size="lg" 
-              className="bg-white text-black hover:bg-slate-200 text-xl px-16 py-7 h-auto font-semibold rounded-full"
+              className="bg-white text-black hover:bg-slate-200 text-2xl px-10 py-4 h-auto font-semibold rounded-full"
             >
               Explore
             </Button>
