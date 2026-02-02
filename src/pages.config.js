@@ -51,6 +51,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import Dashboard from './pages/Dashboard';
 import Scorecard from './pages/Scorecard';
 import UserSettings from './pages/UserSettings';
+import Home from './pages/Home';
 
 
 export const PAGES = {
@@ -58,6 +59,7 @@ export const PAGES = {
     "Dashboard": Dashboard,
     "Scorecard": Scorecard,
     "UserSettings": UserSettings,
+    "Home": Home,
 }
 
 export const pagesConfig = {
