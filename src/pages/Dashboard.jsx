@@ -118,21 +118,17 @@ export default function Dashboard() {
 
   const handleLoginPromptClose = () => {
     setShowLoginPrompt(false);
-    if (!hasShownTimedPrompt) {
-      setShowConfirmDialog(true);
-    }
   };
 
   const handleConfirmSkip = () => {
     setShowConfirmDialog(false);
   };
 
-  const handleResourceClick = (e, tool) => {
+  const handleResourceClick = (tool) => {
     const isToolOrDeepDive = tool.sectionId === 'deep-dive' || 
                              tool.sectionTitle?.toLowerCase().includes('tool');
 
     if (!user && isToolOrDeepDive && tool.page) {
-      e.preventDefault();
       setShowLoginPrompt(true);
     }
   };
@@ -512,22 +508,23 @@ export default function Dashboard() {
               };
               const IconComponent = iconMap[tool.icon] || ClipboardCheck;
 
+              const isToolOrDeepDive = tool.sectionId === 'deep-dive' || 
+                                       tool.sectionTitle?.toLowerCase().includes('tool');
+              const needsLoginCheck = !user && isToolOrDeepDive && tool.page;
+
               return (
-                <div key={tool.id} onClick={(e) => handleResourceClick(e, tool)}>
-                  <ToolCard
-                    title={tool.title}
-                    description={tool.description}
-                    icon={IconComponent}
-                    href={tool.page ? createPageUrl(tool.page) : '#'}
-                    comingSoon={tool.coming_soon || tool.sectionComingSoon}
-                    fileUrl={tool.file_url}
-                    link={tool.link}
-                    actionText={getActionText(tool.sectionId)}
-                    type={tool.sectionTitle}
-                    topics={tool.topics || []}
-                    accessType={tool.access_type || 'free'}
-                  />
-                </div>
+                title={tool.title}
+                description={tool.description}
+                icon={IconComponent}
+                href={tool.page ? createPageUrl(tool.page) : '#'}
+                comingSoon={tool.coming_soon || tool.sectionComingSoon}
+                fileUrl={tool.file_url}
+                link={tool.link}
+                actionText={getActionText(tool.sectionId)}
+                type={tool.sectionTitle}
+                topics={tool.topics || []}
+                accessType={tool.access_type || 'free'}
+                />
               );
             })}
           </div>
