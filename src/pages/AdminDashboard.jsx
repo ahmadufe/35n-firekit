@@ -151,7 +151,11 @@ export default function AdminDashboard() {
           <TabsContent value="access">
             <AccessRequestsTab />
           </TabsContent>
-        </Tabs>
+
+          <TabsContent value="codes">
+            <AccessCodesTab />
+          </TabsContent>
+          </Tabs>
       </main>
     </div>
   );
