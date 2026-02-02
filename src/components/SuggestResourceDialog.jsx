@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { X } from "lucide-react";
+
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 
@@ -68,15 +68,6 @@ Description: ${description}
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-xl">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => onOpenChange(false)}
-          className="absolute top-4 right-4 h-8 w-8"
-        >
-          <X className="h-4 w-4" />
-        </Button>
-        
         <DialogHeader>
           <DialogTitle>Suggest a Resource</DialogTitle>
           <DialogDescription>

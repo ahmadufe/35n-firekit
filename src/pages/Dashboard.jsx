@@ -441,30 +441,22 @@ export default function Dashboard() {
 
         {/* Search Bar and Filters */}
         <div className="mb-8 max-w-5xl mx-auto">
-          <div className="flex gap-3 mb-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-              <Input
-                type="text"
-                placeholder="Search tools, resources, and playbooks..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="h-14 pl-12 pr-4 text-base border-slate-200 focus:border-slate-900 focus:ring-slate-900 shadow-sm"
-              />
-            </div>
-            <Button
-              onClick={handleSuggestResource}
-              variant="outline"
-              className="h-14 px-6 border-slate-200 hover:bg-slate-50"
-            >
-              Suggest a resource
-            </Button>
+          <div className="relative mb-4">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+            <Input
+              type="text"
+              placeholder="Search tools, resources, and playbooks..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="h-14 pl-12 pr-4 text-base border-slate-200 focus:border-slate-900 focus:ring-slate-900 shadow-sm"
+            />
           </div>
 
           {/* Filter Controls */}
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-slate-700">Filter by:</span>
-            <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium text-slate-700">Filter by:</span>
+              <div className="flex items-center gap-2">
               {newToolsCount > 0 && (
                 <Button
                   variant={showNewOnly ? "default" : "outline"}
