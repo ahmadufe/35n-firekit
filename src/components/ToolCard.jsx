@@ -38,8 +38,8 @@ export default function ToolCard({
   if (fileUrl || link) {
     return (
       <div onClick={handleClick} className={`${comingSoon ? 'cursor-not-allowed' : 'cursor-pointer'} h-full`}>
-        <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col ${comingSoon ? 'opacity-60' : ''}`}>
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-white" />
+         <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col`}>
+         <div className={`absolute inset-0 bg-gradient-to-br ${comingSoon ? 'from-orange-50 to-orange-50/50' : 'from-slate-50 to-white'}`} />
         <div className="absolute top-0 right-0 w-32 h-32 bg-slate-100 rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700" />
 
         <CardContent className="relative p-6 flex flex-col h-full">
