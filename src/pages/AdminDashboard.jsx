@@ -131,10 +131,6 @@ export default function AdminDashboard() {
             <FilterAttributesTab />
           </TabsContent>
 
-          <TabsContent value="invite">
-            <InviteUserTab />
-          </TabsContent>
-
           <TabsContent value="suggestions">
             <SuggestedResourcesTab />
           </TabsContent>
