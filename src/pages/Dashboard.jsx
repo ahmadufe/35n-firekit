@@ -113,7 +113,7 @@ export default function Dashboard() {
   };
 
   const handleLogout = () => {
-    base44.auth.logout();
+    base44.auth.logout(createPageUrl('Home'));
   };
 
   const handleLoginPromptClose = () => {
