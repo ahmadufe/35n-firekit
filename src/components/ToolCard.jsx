@@ -37,8 +37,8 @@ export default function ToolCard({
     }
   };
 
-  // If there's a file or link, use div with onClick; otherwise use Link
-  if (fileUrl || link) {
+  // If there's a file or link or exclusive, use div with onClick; otherwise use Link
+  if (fileUrl || link || isExclusive) {
     return (
       <div onClick={handleClick} className={`${comingSoon ? 'cursor-not-allowed' : 'cursor-pointer'} h-full`}>
         <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col ${comingSoon ? 'opacity-60' : ''}`}>
@@ -50,7 +50,11 @@ export default function ToolCard({
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <div className={`p-2 rounded-lg ${comingSoon ? 'bg-slate-100' : 'bg-slate-900'}`}>
-                <Icon className={`h-4 w-4 ${comingSoon ? 'text-slate-400' : 'text-white'}`} />
+                {isExclusive ? (
+                  <Lock className={`h-4 w-4 ${comingSoon ? 'text-slate-400' : 'text-white'}`} />
+                ) : (
+                  <Icon className={`h-4 w-4 ${comingSoon ? 'text-slate-400' : 'text-white'}`} />
+                )}
               </div>
               {type && (
                 <Badge variant="outline" className="text-xs border-slate-300 text-slate-600 px-2 py-0.5">
@@ -92,8 +96,8 @@ export default function ToolCard({
               </div>
             ) : (
               <div className="flex items-center text-slate-900 font-medium text-sm group-hover:translate-x-2 transition-transform duration-300">
-                Access
-                <ArrowRight className="ml-2 h-4 w-4" />
+                {isExclusive ? 'Request access' : 'Access'}
+                {isExclusive ? <Lock className="ml-2 h-4 w-4" /> : <ArrowRight className="ml-2 h-4 w-4" />}
               </div>
             )}
           </div>
@@ -104,8 +108,8 @@ export default function ToolCard({
   }
 
   // For pages or coming soon
-  const CardWrapper = comingSoon ? 'div' : Link;
-  const wrapperProps = comingSoon ? {} : { to: href };
+  const CardWrapper = (comingSoon || onClick) ? 'div' : Link;
+  const wrapperProps = (comingSoon || onClick) ? {} : { to: href };
 
   const cardClickHandler = onClick ? (e) => {
     e.preventDefault();
@@ -123,7 +127,11 @@ export default function ToolCard({
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <div className={`p-2 rounded-lg ${comingSoon ? 'bg-slate-100' : 'bg-slate-900'}`}>
-                <Icon className={`h-4 w-4 ${comingSoon ? 'text-slate-400' : 'text-white'}`} />
+                {isExclusive ? (
+                  <Lock className={`h-4 w-4 ${comingSoon ? 'text-slate-400' : 'text-white'}`} />
+                ) : (
+                  <Icon className={`h-4 w-4 ${comingSoon ? 'text-slate-400' : 'text-white'}`} />
+                )}
               </div>
               {type && (
                 <Badge variant="outline" className="text-xs border-slate-300 text-slate-600 px-2 py-0.5">
