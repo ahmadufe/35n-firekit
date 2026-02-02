@@ -51,6 +51,8 @@ export default function Dashboard() {
   const [showFeedbackThankYou, setShowFeedbackThankYou] = useState(false);
   const [showAccessRequestDialog, setShowAccessRequestDialog] = useState(false);
   const [selectedResource, setSelectedResource] = useState(null);
+  const [showAccessCodeDialog, setShowAccessCodeDialog] = useState(false);
+  const [selectedExclusiveResourceId, setSelectedExclusiveResourceId] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: user, isLoading: userLoading } = useQuery({
