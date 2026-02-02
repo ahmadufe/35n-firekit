@@ -20,7 +20,12 @@ export default function ToolCard({
   onExclusiveClick
 }) {
   const handleClick = () => {
-    if (comingSoon) return;
+    if (comingSoon) {
+      if (onExclusiveClick) {
+        onExclusiveClick();
+      }
+      return;
+    }
     
     if (fileUrl) {
       window.open(fileUrl, '_blank');
