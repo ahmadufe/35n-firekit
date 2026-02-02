@@ -15,6 +15,8 @@ import { createPageUrl } from "@/utils";
 import UserSetupModal from "@/components/UserSetupModal";
 import ToolCard from "@/components/ToolCard";
 import SectionHeader from "@/components/SectionHeader";
+import LoginPromptDialog from "@/components/LoginPromptDialog";
+import LoginConfirmDialog from "@/components/LoginConfirmDialog";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
@@ -27,11 +29,20 @@ export default function Dashboard() {
   const [selectedTopics, setSelectedTopics] = useState([]);
   const [selectedAccess, setSelectedAccess] = useState([]);
   const [openFilter, setOpenFilter] = useState(null);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [hasShownTimedPrompt, setHasShownTimedPrompt] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me()
+    queryFn: async () => {
+      try {
+        return await base44.auth.me();
+      } catch (error) {
+        return null;
+      }
+    }
   });
 
   const { data: userProfiles = [], isLoading: profileLoading } = useQuery({
@@ -55,6 +66,17 @@ export default function Dashboard() {
       setShowSetup(true);
     }
   }, [userProfile, profileLoading, userLoading, user]);
+
+  // Show login prompt after 10 seconds for non-logged-in users
+  useEffect(() => {
+    if (!user && !hasShownTimedPrompt) {
+      const timer = setTimeout(() => {
+        setShowLoginPrompt(true);
+        setHasShownTimedPrompt(true);
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [user, hasShownTimedPrompt]);
 
   // Track login
   useEffect(() => {
@@ -90,6 +112,24 @@ export default function Dashboard() {
 
   const handleLogout = () => {
     base44.auth.logout();
+  };
+
+  const handleLoginPromptClose = () => {
+    setShowLoginPrompt(false);
+    if (!hasShownTimedPrompt) {
+      setShowConfirmDialog(true);
+    }
+  };
+
+  const handleConfirmSkip = () => {
+    setShowConfirmDialog(false);
+  };
+
+  const handleResourceClick = (e, tool) => {
+    if (!user && (tool.file_url || tool.link || tool.page)) {
+      e.preventDefault();
+      setShowLoginPrompt(true);
+    }
   };
 
   // Extract all tools from all sections
@@ -182,7 +222,7 @@ export default function Dashboard() {
     return 'Open Tool';
   };
 
-  if (userLoading || profileLoading) {
+  if (userLoading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="animate-pulse flex flex-col items-center gap-4">
@@ -195,10 +235,24 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
-      <UserSetupModal 
-        open={showSetup} 
-        onSubmit={handleSetupSubmit}
-        isLoading={isSubmitting}
+      {user && (
+        <UserSetupModal 
+          open={showSetup} 
+          onSubmit={handleSetupSubmit}
+          isLoading={isSubmitting}
+        />
+      )}
+
+      <LoginPromptDialog 
+        open={showLoginPrompt} 
+        onOpenChange={setShowLoginPrompt}
+        onClose={handleLoginPromptClose}
+      />
+
+      <LoginConfirmDialog 
+        open={showConfirmDialog} 
+        onOpenChange={setShowConfirmDialog}
+        onSkip={handleConfirmSkip}
       />
 
       {/* Header */}
@@ -220,49 +274,58 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-2 hover:bg-slate-100">
-                  <div className="w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center">
-                    <span className="text-white text-sm font-medium">
-                      {userProfile?.name?.charAt(0) || user?.email?.charAt(0)?.toUpperCase()}
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="flex items-center gap-2 hover:bg-slate-100">
+                    <div className="w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center">
+                      <span className="text-white text-sm font-medium">
+                        {userProfile?.name?.charAt(0) || user?.email?.charAt(0)?.toUpperCase()}
+                      </span>
+                    </div>
+                    <span className="hidden sm:inline text-sm font-medium text-slate-700">
+                      {userProfile?.name || user?.email}
                     </span>
+                    <ChevronDown className="h-4 w-4 text-slate-400" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 bg-white border-slate-200 shadow-xl">
+                  <div className="px-3 py-2">
+                    <p className="text-sm font-medium text-slate-900">{userProfile?.name}</p>
+                    <p className="text-xs text-slate-500">{user?.email}</p>
                   </div>
-                  <span className="hidden sm:inline text-sm font-medium text-slate-700">
-                    {userProfile?.name || user?.email}
-                  </span>
-                  <ChevronDown className="h-4 w-4 text-slate-400" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 bg-white border-slate-200 shadow-xl">
-                <div className="px-3 py-2">
-                  <p className="text-sm font-medium text-slate-900">{userProfile?.name}</p>
-                  <p className="text-xs text-slate-500">{user?.email}</p>
-                </div>
-                <DropdownMenuSeparator />
-                <Link to={createPageUrl('UserSettings')}>
-                  <DropdownMenuItem className="cursor-pointer">
-                    <Settings className="mr-2 h-4 w-4" />
-                    User Details
+                  <DropdownMenuSeparator />
+                  <Link to={createPageUrl('UserSettings')}>
+                    <DropdownMenuItem className="cursor-pointer">
+                      <Settings className="mr-2 h-4 w-4" />
+                      User Details
+                    </DropdownMenuItem>
+                  </Link>
+                  {user?.role === 'admin' && (
+                    <>
+                      <Link to={createPageUrl('AdminDashboard')}>
+                        <DropdownMenuItem className="cursor-pointer">
+                          <Shield className="mr-2 h-4 w-4" />
+                          Admin Dashboard
+                        </DropdownMenuItem>
+                      </Link>
+                    </>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600 focus:text-red-600">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Log Out
                   </DropdownMenuItem>
-                </Link>
-                {user?.role === 'admin' && (
-                  <>
-                    <Link to={createPageUrl('AdminDashboard')}>
-                      <DropdownMenuItem className="cursor-pointer">
-                        <Shield className="mr-2 h-4 w-4" />
-                        Admin Dashboard
-                      </DropdownMenuItem>
-                    </Link>
-                  </>
-                )}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600 focus:text-red-600">
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Log Out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button 
+                onClick={() => base44.auth.redirectToLogin(window.location.href)}
+                className="bg-slate-900 hover:bg-slate-800"
+              >
+                Sign up / Login
+              </Button>
+            )}
           </div>
         </div>
       </header>
@@ -270,14 +333,16 @@ export default function Dashboard() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-12">
         {/* Hero */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl sm:text-5xl font-light text-slate-900 tracking-tight mb-4">
-            Welcome back{userProfile?.name ? `, ${userProfile.name.split(' ')[0]}` : ''}
-          </h2>
-          <p className="text-lg text-slate-500 max-w-2xl mx-auto">
-            Access tools, resources, and playbooks to help you build better products
-          </p>
-        </div>
+        {user && (
+          <div className="text-center mb-12">
+            <h2 className="text-4xl sm:text-5xl font-light text-slate-900 tracking-tight mb-4">
+              Welcome back{userProfile?.name ? `, ${userProfile.name.split(' ')[0]}` : ''}
+            </h2>
+            <p className="text-lg text-slate-500 max-w-2xl mx-auto">
+              Access tools, resources, and playbooks to help you build better products
+            </p>
+          </div>
+        )}
 
         {/* Search Bar and Filters */}
         <div className="mb-8 max-w-5xl mx-auto">
@@ -441,20 +506,21 @@ export default function Dashboard() {
               const IconComponent = iconMap[tool.icon] || ClipboardCheck;
 
               return (
-                <ToolCard
-                  key={tool.id}
-                  title={tool.title}
-                  description={tool.description}
-                  icon={IconComponent}
-                  href={tool.page ? createPageUrl(tool.page) : '#'}
-                  comingSoon={tool.coming_soon || tool.sectionComingSoon}
-                  fileUrl={tool.file_url}
-                  link={tool.link}
-                  actionText={getActionText(tool.sectionId)}
-                  type={tool.sectionTitle}
-                  topics={tool.topics || []}
-                  accessType={tool.access_type || 'free'}
-                />
+                <div key={tool.id} onClick={(e) => handleResourceClick(e, tool)}>
+                  <ToolCard
+                    title={tool.title}
+                    description={tool.description}
+                    icon={IconComponent}
+                    href={tool.page ? createPageUrl(tool.page) : '#'}
+                    comingSoon={tool.coming_soon || tool.sectionComingSoon}
+                    fileUrl={tool.file_url}
+                    link={tool.link}
+                    actionText={getActionText(tool.sectionId)}
+                    type={tool.sectionTitle}
+                    topics={tool.topics || []}
+                    accessType={tool.access_type || 'free'}
+                  />
+                </div>
               );
             })}
           </div>
