@@ -94,6 +94,25 @@ export default function AccessCodesTab() {
     });
   };
 
+  const handleSelectAll = () => {
+    setFormData({
+      ...formData,
+      resources: exclusiveResources.map(r => r.id)
+    });
+  };
+
+  const handleClearAll = () => {
+    setFormData({
+      ...formData,
+      resources: []
+    });
+  };
+
+  const filteredResources = exclusiveResources.filter(resource =>
+    resource.title.toLowerCase().includes(resourceSearch.toLowerCase()) ||
+    resource.type.toLowerCase().includes(resourceSearch.toLowerCase())
+  );
+
   const handleGenerateCode = async () => {
     if (formData.resources.length === 0) {
       toast.error('Please select at least one resource');
