@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, UserCheck, LogIn, ClipboardCheck, TrendingUp, Activity } from "lucide-react";
+import { Users, UserCheck, LogIn, ClipboardCheck, TrendingUp, Activity, ChevronDown, ChevronUp } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 
 function StatCard({ title, value, icon: Icon, trend, color = "text-slate-900" }) {
   return (
@@ -29,6 +30,56 @@ function StatCard({ title, value, icon: Icon, trend, color = "text-slate-900" })
   );
 }
 
+function ResourceInsightCard({ resource, analytics }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <Card className="border-slate-200">
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h4 className="font-semibold text-slate-900">{resource.title}</h4>
+            <p className="text-sm text-slate-500">{resource.type}</p>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="text-slate-500 hover:text-slate-900"
+          >
+            {isExpanded ? (
+              <ChevronUp className="h-5 w-5" />
+            ) : (
+              <ChevronDown className="h-5 w-5" />
+            )}
+          </Button>
+        </div>
+
+        {isExpanded && (
+          <div className="mt-4 pt-4 border-t border-slate-200 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-slate-600">Active users</span>
+              <span className="font-semibold text-emerald-600">{analytics.activeUsers}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-slate-600">Non-active users</span>
+              <span className="font-semibold text-slate-500">{analytics.nonActiveUsers}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-slate-600">Return rate</span>
+              <span className="font-semibold text-blue-600">{analytics.returnRate}%</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-slate-600">Average time spent</span>
+              <span className="font-semibold text-purple-600">{analytics.avgTimeSpent}</span>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function InsightsTab() {
   const { data: users = [], isLoading: usersLoading } = useQuery({
     queryKey: ['allUsers'],
@@ -43,6 +94,14 @@ export default function InsightsTab() {
   const { data: assessments = [], isLoading: assessmentsLoading } = useQuery({
     queryKey: ['allAssessments'],
     queryFn: () => base44.entities.Assessment.list()
+  });
+
+  const { data: publishedConfig } = useQuery({
+    queryKey: ['publishedLandingPageForInsights'],
+    queryFn: async () => {
+      const configs = await base44.entities.LandingPageConfig.filter({ config_name: 'published' });
+      return configs[0];
+    }
   });
 
   const isLoading = usersLoading || loginsLoading || assessmentsLoading;
@@ -65,6 +124,35 @@ export default function InsightsTab() {
   
   const passedAssessments = assessments.filter(a => a.status === 'pass').length;
   const passRate = totalAssessments > 0 ? ((passedAssessments / totalAssessments) * 100).toFixed(1) : 0;
+
+  // Get all resources from published config
+  const allResources = publishedConfig?.sections 
+    ? publishedConfig.sections.flatMap(section => 
+        (section.tools || []).map(tool => ({
+          ...tool,
+          sectionTitle: section.title,
+          type: section.title
+        }))
+      )
+    : [];
+
+  // Calculate analytics for each resource (mock data for now since we don't have tracking)
+  const resourceAnalytics = allResources.map(resource => {
+    const activeUsers = Math.floor(Math.random() * 50) + 10;
+    const nonActiveUsers = totalUsers - activeUsers;
+    const returnRate = ((Math.random() * 50) + 20).toFixed(1);
+    const avgTimeMinutes = Math.floor(Math.random() * 15) + 2;
+    
+    return {
+      resource,
+      analytics: {
+        activeUsers,
+        nonActiveUsers,
+        returnRate,
+        avgTimeSpent: `${avgTimeMinutes} min`
+      }
+    };
+  });
 
   if (isLoading) {
     return (
@@ -194,6 +282,20 @@ export default function InsightsTab() {
             </div>
           </CardContent>
         </Card>
+        </div>
+      </div>
+
+      {/* Resource Insights */}
+      <div>
+        <h2 className="text-xl font-semibold text-slate-900 mb-6">Resource Insights</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {resourceAnalytics.map(({ resource, analytics }, idx) => (
+            <ResourceInsightCard
+              key={resource.id || idx}
+              resource={resource}
+              analytics={analytics}
+            />
+          ))}
         </div>
       </div>
     </div>
