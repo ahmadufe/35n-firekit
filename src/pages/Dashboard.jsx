@@ -128,7 +128,10 @@ export default function Dashboard() {
   };
 
   const handleResourceClick = (e, tool) => {
-    if (!user && (tool.file_url || tool.link || tool.page)) {
+    const isToolOrDeepDive = tool.sectionId === 'deep-dive' || 
+                             tool.sectionTitle?.toLowerCase().includes('tool');
+
+    if (!user && isToolOrDeepDive && tool.page) {
       e.preventDefault();
       setShowLoginPrompt(true);
     }
@@ -262,11 +265,13 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_695a45a00c41aebc946dc291/dcce5d331_VenturesBlack.png" 
-                alt="35N Ventures" 
-                className="h-10 object-contain"
-              />
+              <Link to={createPageUrl('Home')}>
+                <img 
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_695a45a00c41aebc946dc291/dcce5d331_VenturesBlack.png" 
+                  alt="35N Ventures" 
+                  className="h-10 object-contain cursor-pointer hover:opacity-80 transition-opacity"
+                />
+              </Link>
               <div className="hidden sm:block h-8 w-px bg-slate-200" />
               <div className="hidden sm:block">
                 <h1 className="text-lg font-semibold text-slate-900 tracking-tight">

@@ -49,17 +49,17 @@
  */
 import AdminDashboard from './pages/AdminDashboard';
 import Dashboard from './pages/Dashboard';
+import Home from './pages/Home';
 import Scorecard from './pages/Scorecard';
 import UserSettings from './pages/UserSettings';
-import Home from './pages/Home';
 
 
 export const PAGES = {
     "AdminDashboard": AdminDashboard,
     "Dashboard": Dashboard,
+    "Home": Home,
     "Scorecard": Scorecard,
     "UserSettings": UserSettings,
-    "Home": Home,
 }
 
 export const pagesConfig = {
