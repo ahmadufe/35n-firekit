@@ -171,10 +171,21 @@ export default function ResourcesManagementTab() {
     };
 
     if (editingResource) {
-      // Update existing tool
-      targetSection.tools = targetSection.tools.map(t =>
-        t.id === editingResource.id ? toolData : t
+      // Update existing tool - find it across all sections if needed
+      const oldSection = sections.find(s => 
+        (s.tools || []).some(t => t.id === editingResource.id)
       );
+      
+      if (oldSection && oldSection.id !== targetSection.id) {
+        // Tool moved to different section, remove from old section
+        oldSection.tools = (oldSection.tools || []).filter(t => t.id !== editingResource.id);
+        targetSection.tools = [...(targetSection.tools || []), toolData];
+      } else {
+        // Tool stays in same section, update it
+        targetSection.tools = (targetSection.tools || []).map(t =>
+          t.id === editingResource.id ? toolData : t
+        );
+      }
     } else {
       // Add new tool
       targetSection.tools = [...(targetSection.tools || []), toolData];
