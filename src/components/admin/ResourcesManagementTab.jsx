@@ -80,10 +80,11 @@ export default function ResourcesManagementTab() {
     }))
   );
 
-  // Combine and deduplicate
-  const combinedResources = [...allResources, ...draftResources.filter(
-    draft => !allResources.find(pub => pub.id === draft.id)
-  )];
+  // Combine and deduplicate - ALWAYS prefer draft version over published
+  const combinedResources = [
+    ...draftResources,
+    ...allResources.filter(pub => !draftResources.find(draft => draft.id === pub.id))
+  ];
 
   const filteredResources = combinedResources.filter(resource => {
     const matchesView = 
