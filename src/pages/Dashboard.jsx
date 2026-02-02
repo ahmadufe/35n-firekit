@@ -168,6 +168,15 @@ export default function Dashboard() {
     }
   };
 
+  const handleExclusiveResourceClick = (resourceId) => {
+    // Check if user already has access code in session
+    const hasAccessCode = sessionStorage.getItem(`access_code_${resourceId}`);
+    if (!hasAccessCode) {
+      setSelectedExclusiveResourceId(resourceId);
+      setShowAccessCodeDialog(true);
+    }
+  };
+
   const handleSuggestResource = () => {
     if (user) {
       setShowSuggestDialog(true);
