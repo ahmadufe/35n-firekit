@@ -385,10 +385,9 @@ export default function Dashboard() {
               </Link>
               <div className="hidden sm:block h-8 w-px bg-slate-200" />
               <div className="hidden sm:block">
-                <h1 className="text-lg font-semibold text-slate-900 tracking-tight">
+                <h1 className="text-2xl font-semibold text-slate-900 tracking-tight">
                   <span className="text-orange-500">Fire</span>Kit
                 </h1>
-                <p className="text-xs text-slate-500">Tools for builders, innovators, and dreamers to build products and ventures</p>
               </div>
             </div>
 
