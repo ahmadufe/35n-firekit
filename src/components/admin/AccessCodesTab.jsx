@@ -75,6 +75,7 @@ export default function AccessCodesTab() {
 
   const handleOpenDialog = () => {
     setGeneratedCode(null);
+    setResourceSearch('');
     setFormData({
       beneficiary_name: '',
       position: '',
