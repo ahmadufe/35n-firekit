@@ -70,6 +70,27 @@ export default function UsersTab() {
     link.click();
   };
 
+  const handleInvite = async (e) => {
+    e.preventDefault();
+    
+    if (!inviteEmail.trim()) {
+      toast.error('Please enter an email address');
+      return;
+    }
+
+    setIsInviting(true);
+    try {
+      await base44.users.inviteUser(inviteEmail, inviteRole);
+      toast.success(`Invitation sent to ${inviteEmail}`);
+      setInviteEmail('');
+      setInviteRole('user');
+      setShowInviteDialog(false);
+    } catch (error) {
+      toast.error('Failed to send invitation. Please try again.');
+    }
+    setIsInviting(false);
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
