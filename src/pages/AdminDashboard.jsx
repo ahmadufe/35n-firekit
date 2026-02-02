@@ -9,7 +9,6 @@ import { createPageUrl } from "@/utils";
 import InsightsTab from "@/components/admin/InsightsTab";
 import LoginsTab from "@/components/admin/LoginsTab";
 import UsersTab from "@/components/admin/UsersTab";
-import ResourcesTab from "@/components/admin/ResourcesTab";
 import ResourcesManagementTab from "@/components/admin/ResourcesManagementTab";
 import FilterAttributesTab from "@/components/admin/FilterAttributesTab";
 import InviteUserTab from "@/components/admin/InviteUserTab";
@@ -83,10 +82,6 @@ export default function AdminDashboard() {
               <Users className="h-4 w-4" />
               Users
             </TabsTrigger>
-            <TabsTrigger value="resources" className="flex items-center gap-2">
-              <FolderOpen className="h-4 w-4" />
-              Resources
-            </TabsTrigger>
             <TabsTrigger value="manage" className="flex items-center gap-2">
               <Layout className="h-4 w-4" />
               Manage Resources
@@ -111,10 +106,6 @@ export default function AdminDashboard() {
 
           <TabsContent value="users">
             <UsersTab />
-          </TabsContent>
-
-          <TabsContent value="resources">
-            <ResourcesTab />
           </TabsContent>
 
           <TabsContent value="manage">
