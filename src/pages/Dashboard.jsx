@@ -290,13 +290,14 @@ export default function Dashboard() {
 
 
 
-  const hasActiveFilters = selectedTypes.length > 0 || selectedTopics.length > 0 || showNewOnly || showFeaturedOnly;
+  const hasActiveFilters = selectedTypes.length > 0 || selectedTopics.length > 0 || showNewOnly || showFeaturedOnly || showExclusiveOnly;
 
   const clearAllFilters = () => {
     setSelectedTypes([]);
     setSelectedTopics([]);
     setShowNewOnly(false);
     setShowFeaturedOnly(false);
+    setShowExclusiveOnly(false);
   };
 
   const toggleFilterSection = (filterName) => {
