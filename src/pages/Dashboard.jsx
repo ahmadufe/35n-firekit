@@ -499,17 +499,25 @@ export default function Dashboard() {
               >
                 Access {selectedAccess.length > 0 && `(${selectedAccess.length})`}
               </Button>
+              </div>
+              {hasActiveFilters && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={clearAllFilters}
+                  className="text-slate-600 hover:text-slate-900"
+                >
+                  Clear all
+                </Button>
+              )}
             </div>
-            {hasActiveFilters && (
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={clearAllFilters}
-                className="text-slate-600 hover:text-slate-900 ml-auto"
-              >
-                Clear all
-              </Button>
-            )}
+            
+            <button
+              onClick={handleSuggestResource}
+              className="text-sm font-medium text-slate-900 hover:text-slate-600 transition-colors underline decoration-2 underline-offset-4"
+            >
+              Suggest a resource
+            </button>
           </div>
 
           {/* Filter Options */}
