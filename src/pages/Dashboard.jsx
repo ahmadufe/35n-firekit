@@ -32,6 +32,7 @@ export default function Dashboard() {
   const [selectedAccess, setSelectedAccess] = useState([]);
   const [openFilter, setOpenFilter] = useState(null);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const [loginPromptType, setLoginPromptType] = useState('timed'); // 'timed' or 'resource'
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [hasShownTimedPrompt, setHasShownTimedPrompt] = useState(false);
   const queryClient = useQueryClient();
@@ -73,6 +74,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (!user && !hasShownTimedPrompt) {
       const timer = setTimeout(() => {
+        setLoginPromptType('timed');
         setShowLoginPrompt(true);
         setHasShownTimedPrompt(true);
       }, 10000);
@@ -129,6 +131,7 @@ export default function Dashboard() {
                              tool.sectionTitle?.toLowerCase().includes('tool');
 
     if (!user && isToolOrDeepDive && tool.page) {
+      setLoginPromptType('resource');
       setShowLoginPrompt(true);
     }
   };
@@ -248,6 +251,7 @@ export default function Dashboard() {
         open={showLoginPrompt} 
         onOpenChange={setShowLoginPrompt}
         onClose={handleLoginPromptClose}
+        type={loginPromptType}
       />
 
       <LoginConfirmDialog 
