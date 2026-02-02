@@ -700,11 +700,13 @@ export default function Dashboard() {
                                        tool.sectionTitle?.toLowerCase().includes('tool');
               const needsLoginCheck = !user && isToolOrDeepDive && tool.page;
 
+              const isExclusive = tool.access_type === 'exclusive';
+
               return (
                 <ToolCard
                   key={tool.id}
-                  onClick={needsLoginCheck ? () => handleResourceClick(tool) : undefined}
-                  onRequestAccess={() => handleRequestAccess(tool)}
+                  onClick={needsLoginCheck || isExclusive ? () => handleResourceClick(tool) : undefined}
+                  onRequestAccess={isExclusive ? () => handleRequestAccess(tool) : undefined}
                   title={tool.title}
                   description={tool.description}
                   icon={IconComponent}
