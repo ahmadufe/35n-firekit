@@ -37,14 +37,21 @@ export default function ToolCard({
         <div className="absolute top-0 right-0 w-32 h-32 bg-slate-100 rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700" />
 
         <CardContent className="relative p-6 flex flex-col h-full">
-          {/* Header: Icon and Type */}
-          <div className="flex items-center gap-2 mb-3">
-            <div className={`p-2 rounded-lg ${comingSoon ? 'bg-slate-100' : 'bg-slate-900'}`}>
-              <Icon className={`h-4 w-4 ${comingSoon ? 'text-slate-400' : 'text-white'}`} />
+          {/* Header: Icon, Type, and Exclusive Badge */}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <div className={`p-2 rounded-lg ${comingSoon ? 'bg-slate-100' : 'bg-slate-900'}`}>
+                <Icon className={`h-4 w-4 ${comingSoon ? 'text-slate-400' : 'text-white'}`} />
+              </div>
+              {type && (
+                <Badge variant="outline" className="text-xs border-slate-300 text-slate-600 px-2 py-0.5">
+                  {type}
+                </Badge>
+              )}
             </div>
-            {type && (
-              <Badge variant="outline" className="text-xs border-slate-300 text-slate-600 px-2 py-0.5">
-                {type}
+            {comingSoon && (
+              <Badge className="bg-orange-100 text-orange-700 border-orange-200 text-xs px-2 py-0.5">
+                Exclusive
               </Badge>
             )}
           </div>
@@ -70,8 +77,8 @@ export default function ToolCard({
           <div className="mt-auto">
             {comingSoon ? (
               <div className="flex items-center text-slate-600 font-medium text-sm">
-                <Bell className="mr-2 h-4 w-4" />
-                Notify me when available
+                <Lock className="mr-2 h-4 w-4" />
+                Exclusive Access
               </div>
             ) : (
               <div className="flex items-center text-slate-900 font-medium text-sm group-hover:translate-x-2 transition-transform duration-300">
