@@ -21,7 +21,7 @@ export default function LoginPromptDialog({ open, onOpenChange, onClose, type = 
       description: "Signing up gives you free access to all our open tools and resources and lets you bookmark, use the tools without limits, and come back anytime. No spam. Promise."
     },
     resource: {
-      title: "This one is for close friends. Care to Join us?",
+      title: "This one is for close friends. Join us",
       description: "Signing up gives you free access to all our open tools and resources and lets you bookmark, use the tools without limits, and come back anytime."
     }
   };
