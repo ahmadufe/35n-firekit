@@ -75,17 +75,10 @@ export default function ToolCard({
           )}
           
           <div className="mt-auto">
-            {comingSoon ? (
-              <div className="flex items-center text-slate-600 font-medium text-sm">
-                <Lock className="mr-2 h-4 w-4" />
-                Exclusive Access
-              </div>
-            ) : (
-              <div className="flex items-center text-slate-900 font-medium text-sm group-hover:translate-x-2 transition-transform duration-300">
-                Access
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </div>
-            )}
+            <div className="flex items-center text-slate-900 font-medium text-sm group-hover:translate-x-2 transition-transform duration-300">
+              Access
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -147,17 +140,10 @@ export default function ToolCard({
           )}
 
           <div className="mt-auto">
-            {comingSoon ? (
-              <div className="flex items-center text-slate-600 font-medium text-sm">
-                <Lock className="mr-2 h-4 w-4" />
-                Exclusive Access
-              </div>
-            ) : (
-              <div className="flex items-center text-slate-900 font-medium text-sm group-hover:translate-x-2 transition-transform duration-300">
-                Access
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </div>
-            )}
+            <div className="flex items-center text-slate-900 font-medium text-sm group-hover:translate-x-2 transition-transform duration-300">
+              Access
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </div>
           </div>
         </CardContent>
       </Card>
