@@ -16,7 +16,7 @@ import SuggestedResourcesTab from "@/components/admin/SuggestedResourcesTab";
 import FeedbackTab from "@/components/admin/FeedbackTab";
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState('feedback');
+  const [activeTab, setActiveTab] = useState('insights');
   const navigate = useNavigate();
 
   const { data: user, isLoading } = useQuery({
@@ -72,10 +72,6 @@ export default function AdminDashboard() {
       <main className="max-w-7xl mx-auto px-6 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
           <TabsList className="bg-white border border-slate-200 p-1">
-            <TabsTrigger value="feedback" className="flex items-center gap-2">
-              <Lightbulb className="h-4 w-4" />
-              Feedback
-            </TabsTrigger>
             <TabsTrigger value="insights" className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
               Insights
@@ -104,11 +100,11 @@ export default function AdminDashboard() {
               <Lightbulb className="h-4 w-4" />
               Suggestions
             </TabsTrigger>
+            <TabsTrigger value="feedback" className="flex items-center gap-2">
+              <Lightbulb className="h-4 w-4" />
+              Feedback
+            </TabsTrigger>
           </TabsList>
-
-          <TabsContent value="feedback">
-            <FeedbackTab />
-          </TabsContent>
 
           <TabsContent value="insights">
             <InsightsTab />
@@ -136,6 +132,10 @@ export default function AdminDashboard() {
 
           <TabsContent value="suggestions">
             <SuggestedResourcesTab />
+          </TabsContent>
+
+          <TabsContent value="feedback">
+            <FeedbackTab />
           </TabsContent>
         </Tabs>
       </main>
