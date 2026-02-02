@@ -25,9 +25,9 @@ export default function LoginPromptDialog({ open, onOpenChange, onClose }) {
           <X className="h-4 w-4" />
         </button>
         <DialogHeader>
-          <DialogTitle className="text-2xl">Sign up or Log in</DialogTitle>
+          <DialogTitle className="text-2xl">Unfortunately, you can't access this unless you are logged in</DialogTitle>
           <DialogDescription className="text-base pt-2">
-            Get free access to all our tools, resources, and frameworks. Save your progress and come back anytime.
+            Sign up or log in to access our tools and deep dive series.
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-3 pt-4">
