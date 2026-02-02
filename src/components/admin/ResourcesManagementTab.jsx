@@ -46,6 +46,7 @@ export default function ResourcesManagementTab() {
     coming_soon: false
   });
   const [filterView, setFilterView] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
   
   const queryClient = useQueryClient();
 
@@ -82,9 +83,16 @@ export default function ResourcesManagementTab() {
   )];
 
   const filteredResources = combinedResources.filter(resource => {
-    if (filterView === 'published') return resource.published;
-    if (filterView === 'draft') return !resource.published;
-    return true;
+    const matchesView = 
+      filterView === 'all' ? true :
+      filterView === 'published' ? resource.published :
+      !resource.published;
+    
+    const matchesSearch = !searchQuery || 
+      resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      resource.description.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    return matchesView && matchesSearch;
   });
 
   const handleOpenDialog = (resource = null) => {
@@ -261,6 +269,15 @@ export default function ResourcesManagementTab() {
             Add Resource
           </Button>
         </div>
+      </div>
+
+      <div className="mb-4">
+        <Input
+          placeholder="Search resources by title or description..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="max-w-md"
+        />
       </div>
 
       <div className="flex gap-2">
