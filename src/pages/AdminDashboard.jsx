@@ -110,7 +110,11 @@ export default function AdminDashboard() {
               <Users className="h-4 w-4" />
               Access Requests
             </TabsTrigger>
-          </TabsList>
+            <TabsTrigger value="codes" className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              Access Codes
+            </TabsTrigger>
+            </TabsList>
 
           <TabsContent value="insights">
             <InsightsTab />
