@@ -292,10 +292,10 @@ export default function AccessCodesTab() {
             <div>
               <Label className="text-base font-semibold">Resources *</Label>
               <p className="text-xs text-slate-500 mb-3">Select which exclusive resources this code grants access to</p>
-              <div className="space-y-2">
+              <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
                 {exclusiveResources.length > 0 ? (
                   exclusiveResources.map(resource => (
-                    <label key={resource.id} className="flex items-center gap-3 p-3 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                    <label key={resource.id} className="flex items-center gap-3 p-2 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
                       <input
                         type="checkbox"
                         checked={formData.resources.includes(resource.id)}
