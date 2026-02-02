@@ -105,6 +105,10 @@ export default function AdminDashboard() {
               <Lightbulb className="h-4 w-4" />
               Feedback
             </TabsTrigger>
+            <TabsTrigger value="access" className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              Access Requests
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="insights">
@@ -137,6 +141,10 @@ export default function AdminDashboard() {
 
           <TabsContent value="feedback">
             <FeedbackTab />
+          </TabsContent>
+
+          <TabsContent value="access">
+            <AccessRequestsTab />
           </TabsContent>
         </Tabs>
       </main>

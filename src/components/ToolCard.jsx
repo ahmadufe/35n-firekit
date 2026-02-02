@@ -17,10 +17,18 @@ export default function ToolCard({
   type,
   topics = [],
   accessType = "free",
-  onClick
+  onClick,
+  onRequestAccess
 }) {
+  const isExclusive = accessType === 'exclusive';
+  
   const handleClick = () => {
     if (comingSoon) return;
+    
+    if (isExclusive && onRequestAccess) {
+      onRequestAccess();
+      return;
+    }
     
     if (fileUrl) {
       window.open(fileUrl, '_blank');
@@ -157,8 +165,8 @@ export default function ToolCard({
               </div>
             ) : (
               <div className="flex items-center text-slate-900 font-medium text-sm group-hover:translate-x-2 transition-transform duration-300">
-                Access
-                <ArrowRight className="ml-2 h-4 w-4" />
+                {isExclusive ? 'Request access' : 'Access'}
+                {isExclusive ? <Lock className="ml-2 h-4 w-4" /> : <ArrowRight className="ml-2 h-4 w-4" />}
               </div>
             )}
           </div>
