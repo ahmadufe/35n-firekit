@@ -514,7 +514,7 @@ export default function Dashboard() {
             
             <button
               onClick={handleSuggestResource}
-              className="text-sm font-medium text-slate-900 hover:text-slate-600 transition-colors underline decoration-2 underline-offset-4"
+              className="text-sm font-medium text-slate-900 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-lg transition-colors"
             >
               Suggest a resource
             </button>
