@@ -21,6 +21,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 
+Dashboard.public = true;
+
 export default function Dashboard() {
   const [showSetup, setShowSetup] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);

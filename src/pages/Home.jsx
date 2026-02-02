@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 
+Home.public = true;
+
 export default function Home() {
   return (
     <div 
