@@ -206,9 +206,10 @@ export default function ResourcesManagementTab() {
       await base44.entities.LandingPageConfig.create(updatedConfig);
     }
 
-    queryClient.invalidateQueries({ queryKey: ['landingPageConfigs'] });
+    await queryClient.invalidateQueries({ queryKey: ['landingPageConfigs'] });
+    await queryClient.invalidateQueries({ queryKey: ['publishedLandingPage'] });
     setShowDialog(false);
-    toast.success(editingResource ? 'Resource updated' : 'Resource added');
+    toast.success(editingResource ? 'Resource updated in draft' : 'Resource added to draft');
   };
 
   const handleDeleteResource = async (resource) => {
@@ -229,8 +230,9 @@ export default function ResourcesManagementTab() {
       await base44.entities.LandingPageConfig.create(updatedConfig);
     }
 
-    queryClient.invalidateQueries({ queryKey: ['landingPageConfigs'] });
-    toast.success('Resource deleted');
+    await queryClient.invalidateQueries({ queryKey: ['landingPageConfigs'] });
+    await queryClient.invalidateQueries({ queryKey: ['publishedLandingPage'] });
+    toast.success('Resource deleted from draft');
   };
 
   const handleMoveResource = async (resource, direction) => {
@@ -267,8 +269,9 @@ export default function ResourcesManagementTab() {
       await base44.entities.LandingPageConfig.create(updatedConfig);
     }
 
-    queryClient.invalidateQueries({ queryKey: ['landingPageConfigs'] });
-    toast.success('Order updated');
+    await queryClient.invalidateQueries({ queryKey: ['landingPageConfigs'] });
+    await queryClient.invalidateQueries({ queryKey: ['publishedLandingPage'] });
+    toast.success('Order updated in draft');
   };
 
   const handlePublish = async () => {
