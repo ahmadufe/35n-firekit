@@ -14,6 +14,7 @@ import FilterAttributesTab from "@/components/admin/FilterAttributesTab";
 import InviteUserTab from "@/components/admin/InviteUserTab";
 import SuggestedResourcesTab from "@/components/admin/SuggestedResourcesTab";
 import FeedbackTab from "@/components/admin/FeedbackTab";
+import AccessRequestsTab from "@/components/admin/AccessRequestsTab";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('insights');

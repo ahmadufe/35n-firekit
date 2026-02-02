@@ -21,9 +21,11 @@ import SuggestResourceDialog from "@/components/SuggestResourceDialog";
 import ThankYouDialog from "@/components/ThankYouDialog";
 import FeedbackDialog from "@/components/FeedbackDialog";
 import FeedbackThankYouDialog from "@/components/FeedbackThankYouDialog";
+import AccessRequestDialog from "@/components/AccessRequestDialog";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 Dashboard.public = true;
 
@@ -45,6 +47,8 @@ export default function Dashboard() {
   const [showThankYouDialog, setShowThankYouDialog] = useState(false);
   const [showFeedbackDialog, setShowFeedbackDialog] = useState(false);
   const [showFeedbackThankYou, setShowFeedbackThankYou] = useState(false);
+  const [showAccessRequestDialog, setShowAccessRequestDialog] = useState(false);
+  const [selectedResource, setSelectedResource] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: user, isLoading: userLoading } = useQuery({
@@ -175,6 +179,37 @@ export default function Dashboard() {
 
   const handleFeedbackSuccess = () => {
     setShowFeedbackThankYou(true);
+  };
+
+  const handleRequestAccess = async (tool) => {
+    if (!user) {
+      setLoginPromptType('timed');
+      setShowLoginPrompt(true);
+      return;
+    }
+
+    setSelectedResource(tool);
+    
+    // Save access request
+    await base44.entities.AccessRequest.create({
+      user_email: user.email,
+      user_name: userProfile?.name || user.full_name,
+      resource_title: tool.title,
+      resource_type: tool.sectionTitle
+    });
+
+    // Send email notification to admin
+    try {
+      await base44.integrations.Core.SendEmail({
+        to: 'hello@35nventures.com',
+        subject: 'New Access Request - FireKit',
+        body: `A new access request has been submitted:\n\nUser: ${userProfile?.name || user.full_name} (${user.email})\nResource: ${tool.title}\nType: ${tool.sectionTitle}\nDate: ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Dubai' })}`
+      });
+    } catch (error) {
+      console.error('Failed to send email:', error);
+    }
+
+    setShowAccessRequestDialog(true);
   };
 
   // Extract all tools from all sections
@@ -367,6 +402,11 @@ export default function Dashboard() {
       <FeedbackThankYouDialog
         open={showFeedbackThankYou}
         onOpenChange={setShowFeedbackThankYou}
+      />
+
+      <AccessRequestDialog
+        open={showAccessRequestDialog}
+        onOpenChange={setShowAccessRequestDialog}
       />
 
       {/* Header */}
@@ -664,6 +704,7 @@ export default function Dashboard() {
                 <ToolCard
                   key={tool.id}
                   onClick={needsLoginCheck ? () => handleResourceClick(tool) : undefined}
+                  onRequestAccess={() => handleRequestAccess(tool)}
                   title={tool.title}
                   description={tool.description}
                   icon={IconComponent}
