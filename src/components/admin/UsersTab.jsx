@@ -299,6 +299,79 @@ export default function UsersTab() {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
-  );
-}
+
+      {/* Invite User Dialog */}
+      <Dialog open={showInviteDialog} onOpenChange={setShowInviteDialog}>
+       <DialogContent className="sm:max-w-md bg-white">
+         <DialogHeader>
+           <DialogTitle className="flex items-center gap-2">
+             <Mail className="h-5 w-5" />
+             Add New User
+           </DialogTitle>
+         </DialogHeader>
+         <form onSubmit={handleInvite} className="space-y-6 pt-4">
+           <div className="space-y-2">
+             <Label htmlFor="invite-email" className="text-sm font-medium text-slate-700">
+               Email Address
+             </Label>
+             <Input
+               id="invite-email"
+               type="email"
+               value={inviteEmail}
+               onChange={(e) => setInviteEmail(e.target.value)}
+               placeholder="user@example.com"
+               className="h-10 border-slate-200 focus:border-slate-900 focus:ring-slate-900"
+             />
+           </div>
+
+           <div className="space-y-2">
+             <Label htmlFor="invite-role" className="text-sm font-medium text-slate-700">
+               Role
+             </Label>
+             <Select value={inviteRole} onValueChange={setInviteRole}>
+               <SelectTrigger className="h-10 border-slate-200">
+                 <SelectValue placeholder="Select role" />
+               </SelectTrigger>
+               <SelectContent>
+                 <SelectItem value="user">User</SelectItem>
+                 <SelectItem value="admin">Admin</SelectItem>
+               </SelectContent>
+             </Select>
+             <p className="text-xs text-slate-500">
+               Admin users can access this dashboard and manage the platform.
+             </p>
+           </div>
+
+           <div className="flex gap-3">
+             <Button 
+               type="button"
+               variant="outline"
+               onClick={() => setShowInviteDialog(false)}
+               className="flex-1"
+             >
+               Cancel
+             </Button>
+             <Button 
+               type="submit" 
+               disabled={isInviting}
+               className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+             >
+               {isInviting ? (
+                 <>
+                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                   Sending...
+                 </>
+               ) : (
+                 <>
+                   <UserPlus className="mr-2 h-4 w-4" />
+                   Send Invitation
+                 </>
+               )}
+             </Button>
+           </div>
+         </form>
+       </DialogContent>
+      </Dialog>
+      </div>
+      );
+      }
