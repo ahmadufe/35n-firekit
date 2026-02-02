@@ -442,10 +442,10 @@ export default function ResourcesManagementTab() {
                       {resource.sectionTitle}
                     </Badge>
                     {resource.coming_soon && (
-                      <Badge variant="outline" className="border-amber-300 text-amber-600 text-xs">
-                        Coming Soon
-                      </Badge>
-                    )}
+                       <Badge className="bg-orange-100 text-orange-700 border-orange-200 text-xs">
+                         Exclusive
+                       </Badge>
+                     )}
                     {resource.featured && (
                       <Badge className="bg-purple-100 text-purple-700 border-purple-200 text-xs">
                         Featured
