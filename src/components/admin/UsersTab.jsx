@@ -106,10 +106,19 @@ export default function UsersTab() {
           <h2 className="text-2xl font-semibold text-slate-900">Users</h2>
           <p className="text-sm text-slate-500 mt-1">Total users: {users.length}</p>
         </div>
-        <Button onClick={handleExport} className="bg-slate-900 hover:bg-slate-800">
-          <Download className="mr-2 h-4 w-4" />
-          Export to Excel
-        </Button>
+        <div className="flex gap-3">
+          <Button 
+            onClick={() => setShowInviteDialog(true)}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
+            <UserPlus className="mr-2 h-4 w-4" />
+            Add User
+          </Button>
+          <Button onClick={handleExport} className="bg-slate-900 hover:bg-slate-800">
+            <Download className="mr-2 h-4 w-4" />
+            Export to Excel
+          </Button>
+        </div>
       </div>
 
       <Card className="border-0 shadow-md">
