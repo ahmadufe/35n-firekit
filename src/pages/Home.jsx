@@ -18,7 +18,7 @@ export default function Home() {
     >
       <div className="absolute top-6 left-6 sm:top-8 sm:left-8 z-20">
         <img 
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_695a45a00c41aebc946dc291/dcce5d331_VenturesBlack.png" 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695a4c3829d04b83a5c959f0/928d5846e_VenturesBlack.png" 
           alt="35N Ventures" 
           className="h-8 sm:h-10 object-contain"
         />
