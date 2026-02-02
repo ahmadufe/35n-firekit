@@ -369,7 +369,7 @@ export default function Dashboard() {
               </DropdownMenu>
             ) : (
               <Button 
-                onClick={() => base44.auth.redirectToLogin(window.location.href)}
+                onClick={() => base44.auth.redirectToLogin()}
                 className="bg-slate-900 hover:bg-slate-800"
               >
                 Sign up / Login
