@@ -662,6 +662,7 @@ export default function Dashboard() {
                 <ToolCard
                   key={tool.id}
                   onClick={needsLoginCheck ? () => handleResourceClick(tool) : undefined}
+                  onExclusiveClick={() => handleExclusiveResourceClick(tool.id)}
                   title={tool.title}
                   description={tool.description}
                   icon={IconComponent}
