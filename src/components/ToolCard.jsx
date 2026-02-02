@@ -16,7 +16,8 @@ export default function ToolCard({
   actionText = "Open Tool",
   type,
   topics = [],
-  onClick
+  onClick,
+  onExclusiveClick
 }) {
   const handleClick = () => {
     if (comingSoon) return;
