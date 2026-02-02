@@ -159,7 +159,8 @@ export default function ResourcesManagementTab() {
       file_url: formData.file_url,
       coming_soon: formData.coming_soon,
       topics: formData.topics,
-      access_type: formData.access_type
+      access_type: formData.access_type,
+      published_date: editingResource?.published_date || new Date().toISOString()
     };
 
     if (editingResource) {

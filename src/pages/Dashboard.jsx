@@ -177,8 +177,13 @@ export default function Dashboard() {
   const cutoffDate = getNewResourcesCutoff();
   
   const newToolsCount = allTools.filter(tool => {
-    if (!tool.published_date && !tool.created_date) return false;
-    const toolDate = new Date(tool.published_date || tool.created_date);
+    const toolDate = tool.published_date 
+      ? new Date(tool.published_date) 
+      : publishedConfig?.updated_date 
+        ? new Date(publishedConfig.updated_date)
+        : null;
+    
+    if (!toolDate) return false;
     return toolDate > cutoffDate;
   }).length;
 
@@ -223,8 +228,13 @@ export default function Dashboard() {
 
     // New resources filter
     const matchesNew = !showNewOnly || (() => {
-      if (!tool.published_date && !tool.created_date) return false;
-      const toolDate = new Date(tool.published_date || tool.created_date);
+      const toolDate = tool.published_date 
+        ? new Date(tool.published_date) 
+        : publishedConfig?.updated_date 
+          ? new Date(publishedConfig.updated_date)
+          : null;
+      
+      if (!toolDate) return false;
       return toolDate > cutoffDate;
     })();
 
