@@ -31,12 +31,6 @@ export default function LoginPromptDialog({ open, onOpenChange, onClose, type = 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-xl p-8">
-        <button
-          onClick={onClose}
-          className="absolute right-6 top-6 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-        >
-          <X className="h-4 w-4" />
-        </button>
         <DialogHeader className="space-y-4">
           <DialogTitle className="text-xl text-center">{title}</DialogTitle>
           <DialogDescription className="text-sm pt-2 px-4">
