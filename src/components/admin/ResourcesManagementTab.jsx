@@ -235,24 +235,41 @@ export default function ResourcesManagementTab() {
     const config = draftConfig || publishedConfig;
     const sections = JSON.parse(JSON.stringify(config?.sections || []));
     
-    // Find section by checking which one actually contains this resource
-    const section = sections.find(s => 
-      (s.tools || []).some(t => t.id === resource.id)
-    );
-    if (!section || !section.tools) return;
+    // Flatten all resources with their section reference
+    const flatResources = [];
+    sections.forEach(section => {
+      (section.tools || []).forEach(tool => {
+        flatResources.push({ tool, sectionId: section.id });
+      });
+    });
 
-    const toolIndex = section.tools.findIndex(t => t.id === resource.id);
-    if (toolIndex === -1) return;
+    const resourceIndex = flatResources.findIndex(r => r.tool.id === resource.id);
+    if (resourceIndex === -1) return;
 
-    if (direction === 'up' && toolIndex > 0) {
-      [section.tools[toolIndex], section.tools[toolIndex - 1]] = 
-        [section.tools[toolIndex - 1], section.tools[toolIndex]];
-    } else if (direction === 'down' && toolIndex < section.tools.length - 1) {
-      [section.tools[toolIndex], section.tools[toolIndex + 1]] = 
-        [section.tools[toolIndex + 1], section.tools[toolIndex]];
+    let newIndex = resourceIndex;
+    if (direction === 'up' && resourceIndex > 0) {
+      newIndex = resourceIndex - 1;
+    } else if (direction === 'down' && resourceIndex < flatResources.length - 1) {
+      newIndex = resourceIndex + 1;
     } else {
       return;
     }
+
+    // Swap
+    [flatResources[resourceIndex], flatResources[newIndex]] = 
+      [flatResources[newIndex], flatResources[resourceIndex]];
+
+    // Reconstruct sections with new order
+    sections.forEach(section => {
+      section.tools = [];
+    });
+
+    flatResources.forEach(({ tool, sectionId }) => {
+      const section = sections.find(s => s.id === sectionId);
+      if (section) {
+        section.tools.push(tool);
+      }
+    });
 
     const updatedConfig = {
       config_name: 'draft',
