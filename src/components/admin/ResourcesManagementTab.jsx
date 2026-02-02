@@ -402,16 +402,12 @@ export default function ResourcesManagementTab() {
 
       <div className="grid gap-4">
         {filteredResources.map((resource, index) => {
-          // Calculate position based on actual config, not filtered view
+          // Calculate position based on actual global order
           const config = draftConfig || publishedConfig;
-          // Find section by checking which one actually contains this resource
-          const section = config?.sections?.find(s => 
-            (s.tools || []).some(t => t.id === resource.id)
-          );
-          const toolsInSection = section?.tools || [];
-          const indexInSection = toolsInSection.findIndex(t => t.id === resource.id);
-          const isFirst = indexInSection <= 0;
-          const isLast = indexInSection === -1 || indexInSection >= toolsInSection.length - 1;
+          const allTools = config?.sections?.flatMap(s => s.tools || []) || [];
+          const globalIndex = allTools.findIndex(t => t.id === resource.id);
+          const isFirst = globalIndex <= 0;
+          const isLast = globalIndex === -1 || globalIndex >= allTools.length - 1;
 
           return (
           <Card key={resource.id} className="border-slate-200">
