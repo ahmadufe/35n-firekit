@@ -650,7 +650,7 @@ export default function ResourcesManagementTab() {
                   onChange={(e) => setFormData({ ...formData, coming_soon: e.target.checked })}
                   className="rounded"
                 />
-                <Label htmlFor="coming-soon">Mark as Coming Soon</Label>
+                <Label htmlFor="coming-soon">Mark as Exclusive</Label>
               </div>
               
               <div className="flex items-center gap-2">
