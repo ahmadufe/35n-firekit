@@ -360,10 +360,13 @@ export default function ResourcesManagementTab() {
 
       <div className="grid gap-4">
         {filteredResources.map((resource, index) => {
-          const sameTypeResources = filteredResources.filter(r => r.sectionTitle === resource.sectionTitle);
-          const indexInSection = sameTypeResources.findIndex(r => r.id === resource.id);
+          // Calculate position based on actual config, not filtered view
+          const config = draftConfig || publishedConfig;
+          const section = config?.sections?.find(s => s.title === resource.sectionTitle);
+          const toolsInSection = section?.tools || [];
+          const indexInSection = toolsInSection.findIndex(t => t.id === resource.id);
           const isFirst = indexInSection === 0;
-          const isLast = indexInSection === sameTypeResources.length - 1;
+          const isLast = indexInSection === toolsInSection.length - 1;
 
           return (
           <Card key={resource.id} className="border-slate-200">
