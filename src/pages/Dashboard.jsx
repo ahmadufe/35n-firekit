@@ -503,6 +503,14 @@ export default function Dashboard() {
                 Featured
               </Button>
               <Button
+                variant={showExclusiveOnly ? "default" : "outline"}
+                size="sm"
+                onClick={() => setShowExclusiveOnly(!showExclusiveOnly)}
+                className={`${showExclusiveOnly ? 'bg-orange-500 hover:bg-orange-600 text-white' : 'bg-white text-orange-600 border-orange-300 hover:bg-orange-50'}`}
+              >
+                Exclusive
+              </Button>
+              <Button
                 variant={openFilter === 'topic' || selectedTopics.length > 0 ? "default" : "outline"}
                 size="sm"
                 onClick={() => toggleFilterSection('topic')}
