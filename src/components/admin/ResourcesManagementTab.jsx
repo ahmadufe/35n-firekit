@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Plus, Edit2, Trash2, Eye, EyeOff, Upload, X, ExternalLink, ChevronUp, ChevronDown } from "lucide-react";
+import { Plus, Edit2, Trash2, Eye, EyeOff, Upload, X, ExternalLink, ChevronUp, ChevronDown, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 const AVAILABLE_TYPES = ['Tools', 'Guides & Insights', 'Playbooks', 'Deep Dive'];
@@ -33,6 +33,7 @@ const ICON_OPTIONS = ['ClipboardCheck', 'BookOpen', 'Wrench'];
 export default function ResourcesManagementTab() {
   const [editingResource, setEditingResource] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -276,20 +277,28 @@ export default function ResourcesManagementTab() {
       return;
     }
 
-    const publishData = {
-      config_name: 'published',
-      sections: draftConfig.sections
-    };
+    try {
+      setIsPublishing(true);
+      const publishData = {
+        config_name: 'published',
+        sections: draftConfig.sections
+      };
 
-    if (publishedConfig) {
-      await base44.entities.LandingPageConfig.update(publishedConfig.id, publishData);
-    } else {
-      await base44.entities.LandingPageConfig.create(publishData);
+      if (publishedConfig) {
+        await base44.entities.LandingPageConfig.update(publishedConfig.id, publishData);
+      } else {
+        await base44.entities.LandingPageConfig.create(publishData);
+      }
+
+      await queryClient.invalidateQueries({ queryKey: ['landingPageConfigs'] });
+      await queryClient.invalidateQueries({ queryKey: ['publishedLandingPage'] });
+      toast.success('Changes published successfully!');
+    } catch (error) {
+      console.error('Publish error:', error);
+      toast.error('Failed to publish changes');
+    } finally {
+      setIsPublishing(false);
     }
-
-    queryClient.invalidateQueries({ queryKey: ['landingPageConfigs'] });
-    queryClient.invalidateQueries({ queryKey: ['publishedLandingPage'] });
-    toast.success('Changes published!');
   };
 
   const handleFileUpload = async (file) => {
@@ -321,8 +330,19 @@ export default function ResourcesManagementTab() {
           <p className="text-sm text-slate-500 mt-1">Manage all tools, guides, and resources</p>
         </div>
         <div className="flex gap-2">
-          <Button onClick={handlePublish} className="bg-emerald-600 hover:bg-emerald-700">
-            Publish Changes
+          <Button 
+            onClick={handlePublish} 
+            disabled={isPublishing || !draftConfig}
+            className="bg-emerald-600 hover:bg-emerald-700"
+          >
+            {isPublishing ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Publishing...
+              </>
+            ) : (
+              'Publish Changes'
+            )}
           </Button>
           <Button onClick={() => handleOpenDialog()}>
             <Plus className="mr-2 h-4 w-4" />
