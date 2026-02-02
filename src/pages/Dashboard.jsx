@@ -31,6 +31,7 @@ export default function Dashboard() {
   const [selectedTopics, setSelectedTopics] = useState([]);
   const [selectedAccess, setSelectedAccess] = useState([]);
   const [showNewOnly, setShowNewOnly] = useState(false);
+  const [showFeaturedOnly, setShowFeaturedOnly] = useState(false);
   const [openFilter, setOpenFilter] = useState(null);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [loginPromptType, setLoginPromptType] = useState('timed'); // 'timed' or 'resource'
@@ -233,12 +234,15 @@ export default function Dashboard() {
         : publishedConfig?.updated_date 
           ? new Date(publishedConfig.updated_date)
           : null;
-      
+
       if (!toolDate) return false;
       return toolDate > cutoffDate;
     })();
 
-    return matchesSearch && matchesType && matchesTopic && matchesAccess && matchesNew;
+    // Featured filter
+    const matchesFeatured = !showFeaturedOnly || tool.featured;
+
+    return matchesSearch && matchesType && matchesTopic && matchesAccess && matchesNew && matchesFeatured;
   });
 
   const toggleType = (type) => {
@@ -259,13 +263,14 @@ export default function Dashboard() {
     );
   };
 
-  const hasActiveFilters = selectedTypes.length > 0 || selectedTopics.length > 0 || selectedAccess.length > 0 || showNewOnly;
+  const hasActiveFilters = selectedTypes.length > 0 || selectedTopics.length > 0 || selectedAccess.length > 0 || showNewOnly || showFeaturedOnly;
 
   const clearAllFilters = () => {
     setSelectedTypes([]);
     setSelectedTopics([]);
     setSelectedAccess([]);
     setShowNewOnly(false);
+    setShowFeaturedOnly(false);
   };
 
   const toggleFilterSection = (filterName) => {
@@ -427,9 +432,17 @@ export default function Dashboard() {
                   onClick={() => setShowNewOnly(!showNewOnly)}
                   className={`${showNewOnly ? 'bg-orange-500 hover:bg-orange-600 text-white' : 'bg-white text-orange-600 border-orange-300 hover:bg-orange-50'}`}
                 >
-                  New resources {showNewOnly && `(${newToolsCount})`}
+                  Newly added {showNewOnly && `(${newToolsCount})`}
                 </Button>
               )}
+              <Button
+                variant={showFeaturedOnly ? "default" : "outline"}
+                size="sm"
+                onClick={() => setShowFeaturedOnly(!showFeaturedOnly)}
+                className={`${showFeaturedOnly ? 'bg-purple-500 hover:bg-purple-600 text-white' : 'bg-white text-purple-600 border-purple-300 hover:bg-purple-50'}`}
+              >
+                Featured
+              </Button>
               <Button
                 variant={openFilter === 'topic' || selectedTopics.length > 0 ? "default" : "outline"}
                 size="sm"

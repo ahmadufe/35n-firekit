@@ -44,7 +44,8 @@ export default function ResourcesManagementTab() {
     link: '',
     file_url: '',
     coming_soon: false,
-    published_date: ''
+    published_date: '',
+    featured: false
   });
   const [filterView, setFilterView] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -110,7 +111,8 @@ export default function ResourcesManagementTab() {
         link: resource.link || '',
         file_url: resource.file_url || '',
         coming_soon: resource.coming_soon || false,
-        published_date: resource.published_date || ''
+        published_date: resource.published_date || '',
+        featured: resource.featured || false
       });
     } else {
       setEditingResource(null);
@@ -125,7 +127,8 @@ export default function ResourcesManagementTab() {
         link: '',
         file_url: '',
         coming_soon: false,
-        published_date: ''
+        published_date: '',
+        featured: false
       });
     }
     setShowDialog(true);
@@ -163,7 +166,8 @@ export default function ResourcesManagementTab() {
       coming_soon: formData.coming_soon,
       topics: formData.topics,
       access_type: formData.access_type,
-      published_date: formData.published_date || new Date().toISOString()
+      published_date: formData.published_date || new Date().toISOString(),
+      featured: formData.featured
     };
 
     if (editingResource) {
@@ -327,6 +331,11 @@ export default function ResourcesManagementTab() {
                     {resource.coming_soon && (
                       <Badge variant="outline" className="border-amber-300 text-amber-600 text-xs">
                         Coming Soon
+                      </Badge>
+                    )}
+                    {resource.featured && (
+                      <Badge className="bg-purple-100 text-purple-700 border-purple-200 text-xs">
+                        Featured
                       </Badge>
                     )}
                     {resource.published ? (
@@ -532,15 +541,28 @@ export default function ResourcesManagementTab() {
               <p className="text-xs text-slate-500 mt-1">Used to determine "New resources" on dashboard</p>
             </div>
 
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="coming-soon"
-                checked={formData.coming_soon}
-                onChange={(e) => setFormData({ ...formData, coming_soon: e.target.checked })}
-                className="rounded"
-              />
-              <Label htmlFor="coming-soon">Mark as Coming Soon</Label>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="coming-soon"
+                  checked={formData.coming_soon}
+                  onChange={(e) => setFormData({ ...formData, coming_soon: e.target.checked })}
+                  className="rounded"
+                />
+                <Label htmlFor="coming-soon">Mark as Coming Soon</Label>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="featured"
+                  checked={formData.featured}
+                  onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                  className="rounded"
+                />
+                <Label htmlFor="featured">Mark as Featured</Label>
+              </div>
             </div>
           </div>
 
