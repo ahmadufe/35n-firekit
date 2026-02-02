@@ -17,6 +17,8 @@ import ToolCard from "@/components/ToolCard";
 import SectionHeader from "@/components/SectionHeader";
 import LoginPromptDialog from "@/components/LoginPromptDialog";
 import LoginConfirmDialog from "@/components/LoginConfirmDialog";
+import SuggestResourceDialog from "@/components/SuggestResourceDialog";
+import ThankYouDialog from "@/components/ThankYouDialog";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
@@ -37,6 +39,8 @@ export default function Dashboard() {
   const [loginPromptType, setLoginPromptType] = useState('timed'); // 'timed' or 'resource'
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [hasShownTimedPrompt, setHasShownTimedPrompt] = useState(false);
+  const [showSuggestDialog, setShowSuggestDialog] = useState(false);
+  const [showThankYouDialog, setShowThankYouDialog] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: user, isLoading: userLoading } = useQuery({
@@ -150,6 +154,19 @@ export default function Dashboard() {
       setLoginPromptType('resource');
       setShowLoginPrompt(true);
     }
+  };
+
+  const handleSuggestResource = () => {
+    if (user) {
+      setShowSuggestDialog(true);
+    } else {
+      setLoginPromptType('timed');
+      setShowLoginPrompt(true);
+    }
+  };
+
+  const handleSuggestSuccess = () => {
+    setShowThankYouDialog(true);
   };
 
   // Extract all tools from all sections
@@ -317,6 +334,20 @@ export default function Dashboard() {
         onSkip={handleConfirmSkip}
       />
 
+      {user && userProfile && (
+        <SuggestResourceDialog
+          open={showSuggestDialog}
+          onOpenChange={setShowSuggestDialog}
+          onSuccess={handleSuggestSuccess}
+          userProfile={userProfile}
+        />
+      )}
+
+      <ThankYouDialog
+        open={showThankYouDialog}
+        onOpenChange={setShowThankYouDialog}
+      />
+
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-6 py-4">
@@ -410,15 +441,24 @@ export default function Dashboard() {
 
         {/* Search Bar and Filters */}
         <div className="mb-8 max-w-5xl mx-auto">
-          <div className="relative mb-4">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-            <Input
-              type="text"
-              placeholder="Search tools, resources, and playbooks..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-14 pl-12 pr-4 text-base border-slate-200 focus:border-slate-900 focus:ring-slate-900 shadow-sm"
-            />
+          <div className="flex gap-3 mb-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+              <Input
+                type="text"
+                placeholder="Search tools, resources, and playbooks..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="h-14 pl-12 pr-4 text-base border-slate-200 focus:border-slate-900 focus:ring-slate-900 shadow-sm"
+              />
+            </div>
+            <Button
+              onClick={handleSuggestResource}
+              variant="outline"
+              className="h-14 px-6 border-slate-200 hover:bg-slate-50"
+            >
+              Suggest a resource
+            </Button>
           </div>
 
           {/* Filter Controls */}
