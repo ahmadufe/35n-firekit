@@ -38,6 +38,7 @@ export default function Dashboard() {
 
   const [showNewOnly, setShowNewOnly] = useState(false);
   const [showFeaturedOnly, setShowFeaturedOnly] = useState(false);
+  const [showExclusiveOnly, setShowExclusiveOnly] = useState(false);
   const [openFilter, setOpenFilter] = useState(null);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [loginPromptType, setLoginPromptType] = useState('timed'); // 'timed' or 'resource'
