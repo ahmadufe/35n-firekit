@@ -26,7 +26,7 @@ export default function Home() {
       
       <div className="min-h-screen flex items-center px-6 sm:px-12 lg:px-20">
         <div className="relative z-10 max-w-3xl">
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white tracking-tight mb-6 text-left">
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white tracking-tight mb-10 text-left">
             Welcome to <span className="text-orange-500">Fire</span>Kit by 35N
           </h1>
           
