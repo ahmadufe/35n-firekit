@@ -32,6 +32,7 @@ export default function AccessCodesTab() {
     resources: []
   });
   const [searchQuery, setSearchQuery] = useState('');
+  const [resourceSearch, setResourceSearch] = useState('');
 
   const queryClient = useQueryClient();
 
