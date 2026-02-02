@@ -270,7 +270,10 @@ export default function Dashboard() {
     // Featured filter
     const matchesFeatured = !showFeaturedOnly || tool.featured;
 
-    return matchesSearch && matchesType && matchesTopic && matchesNew && matchesFeatured;
+    // Exclusive filter
+    const matchesExclusive = !showExclusiveOnly || tool.coming_soon;
+
+    return matchesSearch && matchesType && matchesTopic && matchesNew && matchesFeatured && matchesExclusive;
   });
 
   const toggleType = (type) => {
