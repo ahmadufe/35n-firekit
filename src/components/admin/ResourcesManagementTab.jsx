@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Plus, Edit2, Trash2, Eye, EyeOff, Upload, X, ExternalLink } from "lucide-react";
+import { Plus, Edit2, Trash2, Eye, EyeOff, Upload, X, ExternalLink, ChevronUp, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 
 const AVAILABLE_TYPES = ['Tools', 'Guides & Insights', 'Playbooks', 'Deep Dive'];
@@ -218,6 +218,41 @@ export default function ResourcesManagementTab() {
     toast.success('Resource deleted');
   };
 
+  const handleMoveResource = async (resource, direction) => {
+    const config = draftConfig || publishedConfig;
+    const sections = JSON.parse(JSON.stringify(config?.sections || []));
+    
+    const section = sections.find(s => s.title === resource.sectionTitle);
+    if (!section || !section.tools) return;
+
+    const toolIndex = section.tools.findIndex(t => t.id === resource.id);
+    if (toolIndex === -1) return;
+
+    if (direction === 'up' && toolIndex > 0) {
+      [section.tools[toolIndex], section.tools[toolIndex - 1]] = 
+        [section.tools[toolIndex - 1], section.tools[toolIndex]];
+    } else if (direction === 'down' && toolIndex < section.tools.length - 1) {
+      [section.tools[toolIndex], section.tools[toolIndex + 1]] = 
+        [section.tools[toolIndex + 1], section.tools[toolIndex]];
+    } else {
+      return;
+    }
+
+    const updatedConfig = {
+      config_name: 'draft',
+      sections
+    };
+
+    if (draftConfig) {
+      await base44.entities.LandingPageConfig.update(draftConfig.id, updatedConfig);
+    } else {
+      await base44.entities.LandingPageConfig.create(updatedConfig);
+    }
+
+    queryClient.invalidateQueries({ queryKey: ['landingPageConfigs'] });
+    toast.success('Order updated');
+  };
+
   const handlePublish = async () => {
     if (!draftConfig) {
       toast.error('No draft to publish');
@@ -313,10 +348,38 @@ export default function ResourcesManagementTab() {
       </div>
 
       <div className="grid gap-4">
-        {filteredResources.map((resource) => (
+        {filteredResources.map((resource, index) => {
+          const sameTypeResources = filteredResources.filter(r => r.sectionTitle === resource.sectionTitle);
+          const indexInSection = sameTypeResources.findIndex(r => r.id === resource.id);
+          const isFirst = indexInSection === 0;
+          const isLast = indexInSection === sameTypeResources.length - 1;
+
+          return (
           <Card key={resource.id} className="border-slate-200">
             <CardContent className="p-4">
               <div className="flex items-start justify-between gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="flex flex-col gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6"
+                      onClick={() => handleMoveResource(resource, 'up')}
+                      disabled={isFirst}
+                    >
+                      <ChevronUp className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6"
+                      onClick={() => handleMoveResource(resource, 'down')}
+                      disabled={isLast}
+                    >
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-2">
                     <h3 className="text-lg font-semibold text-slate-900 truncate">{resource.title}</h3>
@@ -387,7 +450,8 @@ export default function ResourcesManagementTab() {
               </div>
             </CardContent>
           </Card>
-        ))}
+        );
+        })}
       </div>
 
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
