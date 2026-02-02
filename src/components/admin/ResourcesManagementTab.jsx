@@ -43,7 +43,8 @@ export default function ResourcesManagementTab() {
     page: '',
     link: '',
     file_url: '',
-    coming_soon: false
+    coming_soon: false,
+    published_date: ''
   });
   const [filterView, setFilterView] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -108,7 +109,8 @@ export default function ResourcesManagementTab() {
         page: resource.page || '',
         link: resource.link || '',
         file_url: resource.file_url || '',
-        coming_soon: resource.coming_soon || false
+        coming_soon: resource.coming_soon || false,
+        published_date: resource.published_date || ''
       });
     } else {
       setEditingResource(null);
@@ -122,7 +124,8 @@ export default function ResourcesManagementTab() {
         page: '',
         link: '',
         file_url: '',
-        coming_soon: false
+        coming_soon: false,
+        published_date: ''
       });
     }
     setShowDialog(true);
@@ -160,7 +163,7 @@ export default function ResourcesManagementTab() {
       coming_soon: formData.coming_soon,
       topics: formData.topics,
       access_type: formData.access_type,
-      published_date: editingResource?.published_date || new Date().toISOString()
+      published_date: formData.published_date || new Date().toISOString()
     };
 
     if (editingResource) {
@@ -517,6 +520,16 @@ export default function ResourcesManagementTab() {
                   </div>
                 )}
               </div>
+            </div>
+
+            <div>
+              <Label>Published Date</Label>
+              <Input
+                type="datetime-local"
+                value={formData.published_date ? new Date(formData.published_date).toISOString().slice(0, 16) : ''}
+                onChange={(e) => setFormData({ ...formData, published_date: e.target.value ? new Date(e.target.value).toISOString() : '' })}
+              />
+              <p className="text-xs text-slate-500 mt-1">Used to determine "New resources" on dashboard</p>
             </div>
 
             <div className="flex items-center gap-2">
