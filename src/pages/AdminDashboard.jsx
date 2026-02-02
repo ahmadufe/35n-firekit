@@ -93,10 +93,6 @@ export default function AdminDashboard() {
               <Layout className="h-4 w-4" />
               Filter Attributes
             </TabsTrigger>
-            <TabsTrigger value="invite" className="flex items-center gap-2">
-              <UserPlus className="h-4 w-4" />
-              Invite Users
-            </TabsTrigger>
             <TabsTrigger value="suggestions" className="flex items-center gap-2">
               <Lightbulb className="h-4 w-4" />
               Suggestions
