@@ -201,6 +201,7 @@ export default function FeedbackTab() {
                     <p className="text-slate-700 whitespace-pre-wrap">{item.message}</p>
                   </div>
                 </div>
+              </div>
               </CardContent>
             </Card>
           ))
