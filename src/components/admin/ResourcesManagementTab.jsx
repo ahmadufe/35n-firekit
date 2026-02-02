@@ -233,7 +233,10 @@ export default function ResourcesManagementTab() {
     const config = draftConfig || publishedConfig;
     const sections = JSON.parse(JSON.stringify(config?.sections || []));
     
-    const section = sections.find(s => s.title === resource.sectionTitle);
+    // Find section by checking which one actually contains this resource
+    const section = sections.find(s => 
+      (s.tools || []).some(t => t.id === resource.id)
+    );
     if (!section || !section.tools) return;
 
     const toolIndex = section.tools.findIndex(t => t.id === resource.id);
@@ -362,11 +365,14 @@ export default function ResourcesManagementTab() {
         {filteredResources.map((resource, index) => {
           // Calculate position based on actual config, not filtered view
           const config = draftConfig || publishedConfig;
-          const section = config?.sections?.find(s => s.title === resource.sectionTitle);
+          // Find section by checking which one actually contains this resource
+          const section = config?.sections?.find(s => 
+            (s.tools || []).some(t => t.id === resource.id)
+          );
           const toolsInSection = section?.tools || [];
           const indexInSection = toolsInSection.findIndex(t => t.id === resource.id);
-          const isFirst = indexInSection === 0;
-          const isLast = indexInSection === toolsInSection.length - 1;
+          const isFirst = indexInSection === 0 || indexInSection === -1;
+          const isLast = indexInSection === toolsInSection.length - 1 || indexInSection === -1;
 
           return (
           <Card key={resource.id} className="border-slate-200">
