@@ -197,11 +197,11 @@ export default function FeedbackTab() {
                       })}
                     </p>
                   </div>
-                  <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
-                    <p className="text-slate-700 whitespace-pre-wrap">{item.message}</p>
+                    <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                      <p className="text-slate-700 whitespace-pre-wrap">{item.message}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
               </CardContent>
             </Card>
           ))
