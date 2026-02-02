@@ -393,8 +393,8 @@ export default function ResourcesManagementTab() {
           );
           const toolsInSection = section?.tools || [];
           const indexInSection = toolsInSection.findIndex(t => t.id === resource.id);
-          const isFirst = indexInSection === 0 || indexInSection === -1;
-          const isLast = indexInSection === toolsInSection.length - 1 || indexInSection === -1;
+          const isFirst = indexInSection <= 0;
+          const isLast = indexInSection === -1 || indexInSection >= toolsInSection.length - 1;
 
           return (
           <Card key={resource.id} className="border-slate-200">
