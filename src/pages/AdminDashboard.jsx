@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, BarChart3, LogIn, Users, FolderOpen, Layout, UserPlus } from "lucide-react";
+import { ArrowLeft, BarChart3, LogIn, Users, FolderOpen, Layout, UserPlus, Lightbulb } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import InsightsTab from "@/components/admin/InsightsTab";
@@ -95,6 +95,10 @@ export default function AdminDashboard() {
               <UserPlus className="h-4 w-4" />
               Invite Users
             </TabsTrigger>
+            <TabsTrigger value="suggestions" className="flex items-center gap-2">
+              <Lightbulb className="h-4 w-4" />
+              Suggestions
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="insights">
@@ -119,6 +123,10 @@ export default function AdminDashboard() {
 
           <TabsContent value="invite">
             <InviteUserTab />
+          </TabsContent>
+
+          <TabsContent value="suggestions">
+            <SuggestedResourcesTab />
           </TabsContent>
         </Tabs>
       </main>
