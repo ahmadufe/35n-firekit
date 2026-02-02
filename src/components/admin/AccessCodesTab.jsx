@@ -313,9 +313,37 @@ export default function AccessCodesTab() {
             <div>
               <Label className="text-base font-semibold">Resources *</Label>
               <p className="text-xs text-slate-500 mb-3">Select which exclusive resources this code grants access to</p>
+
+              <div className="mb-3 space-y-2">
+                <Input
+                  placeholder="Search resources..."
+                  value={resourceSearch}
+                  onChange={(e) => setResourceSearch(e.target.value)}
+                  className="text-sm"
+                />
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleSelectAll}
+                    className="text-xs"
+                  >
+                    Select All
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleClearAll}
+                    className="text-xs"
+                  >
+                    Clear All
+                  </Button>
+                </div>
+              </div>
+
               <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
-                {exclusiveResources.length > 0 ? (
-                  exclusiveResources.map(resource => (
+                {filteredResources.length > 0 ? (
+                  filteredResources.map(resource => (
                     <label key={resource.id} className="flex items-center gap-3 p-2 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
                       <input
                         type="checkbox"
