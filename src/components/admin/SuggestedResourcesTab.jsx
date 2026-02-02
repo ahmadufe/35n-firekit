@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CheckCircle2, XCircle, Clock } from "lucide-react";
 import { toast } from "sonner";
+import { toZonedTime } from "date-fns-tz";
+import { format } from "date-fns";
 
 export default function SuggestedResourcesTab() {
   const [filterStatus, setFilterStatus] = useState('all');
@@ -124,13 +126,7 @@ export default function SuggestedResourcesTab() {
                       </div>
                       
                       <p className="text-xs text-slate-400 mt-3">
-                        Submitted on {new Date(suggestion.created_date).toLocaleDateString('en-US', { 
-                          year: 'numeric', 
-                          month: 'long', 
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
+                        Submitted on {format(toZonedTime(new Date(suggestion.created_date), 'Asia/Dubai'), 'MMMM d, yyyy, HH:mm')}
                       </p>
                     </div>
                     

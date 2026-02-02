@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Download, Loader2, LogIn } from "lucide-react";
 import { format } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 
 export default function LoginsTab() {
   const { data: logins = [], isLoading } = useQuery({
@@ -16,13 +17,16 @@ export default function LoginsTab() {
 
   const handleExport = () => {
     const headers = ['Date', 'Time', 'User Email', 'User Name', 'Login Type'];
-    const rows = logins.map(login => [
-      format(new Date(login.created_date), 'MMM d, yyyy'),
-      format(new Date(login.created_date), 'HH:mm:ss'),
-      login.user_email,
-      login.user_name || 'N/A',
-      login.login_type
-    ]);
+    const rows = logins.map(login => {
+      const abuDhabiTime = toZonedTime(new Date(login.created_date), 'Asia/Dubai');
+      return [
+        format(abuDhabiTime, 'MMM d, yyyy'),
+        format(abuDhabiTime, 'HH:mm:ss'),
+        login.user_email,
+        login.user_name || 'N/A',
+        login.login_type
+      ];
+    });
 
     const csvContent = [
       headers.join(','),
@@ -81,10 +85,10 @@ export default function LoginsTab() {
                   <TableCell>
                     <div className="flex flex-col">
                       <span className="font-medium text-slate-900">
-                        {format(new Date(login.created_date), 'MMM d, yyyy')}
+                        {format(toZonedTime(new Date(login.created_date), 'Asia/Dubai'), 'MMM d, yyyy')}
                       </span>
                       <span className="text-xs text-slate-500">
-                        {format(new Date(login.created_date), 'HH:mm:ss')}
+                        {format(toZonedTime(new Date(login.created_date), 'Asia/Dubai'), 'HH:mm:ss')}
                       </span>
                     </div>
                   </TableCell>
