@@ -30,6 +30,7 @@ export default function Dashboard() {
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [selectedTopics, setSelectedTopics] = useState([]);
   const [selectedAccess, setSelectedAccess] = useState([]);
+  const [showNewOnly, setShowNewOnly] = useState(false);
   const [openFilter, setOpenFilter] = useState(null);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [loginPromptType, setLoginPromptType] = useState('timed'); // 'timed' or 'resource'
@@ -62,6 +63,20 @@ export default function Dashboard() {
       const configs = await base44.entities.LandingPageConfig.filter({ config_name: 'published' });
       return configs[0];
     }
+  });
+
+  const { data: lastLogin } = useQuery({
+    queryKey: ['lastLogin', user?.email],
+    queryFn: async () => {
+      if (!user?.email) return null;
+      const logins = await base44.entities.LoginHistory.filter(
+        { user_email: user.email },
+        '-created_date',
+        2
+      );
+      return logins.length > 1 ? logins[1] : null;
+    },
+    enabled: !!user?.email
   });
 
   useEffect(() => {
@@ -148,6 +163,25 @@ export default function Dashboard() {
       )
     : [];
 
+  // Calculate cutoff date for new resources
+  const getNewResourcesCutoff = () => {
+    if (user && lastLogin?.created_date) {
+      return new Date(lastLogin.created_date);
+    }
+    // For non-logged-in users, show items from past week
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    return oneWeekAgo;
+  };
+
+  const cutoffDate = getNewResourcesCutoff();
+  
+  const newToolsCount = allTools.filter(tool => {
+    if (!tool.published_date && !tool.created_date) return false;
+    const toolDate = new Date(tool.published_date || tool.created_date);
+    return toolDate > cutoffDate;
+  }).length;
+
   // Get unique types (section titles)
   const availableTypes = publishedConfig?.sections 
     ? [...new Set(publishedConfig.sections.map(s => s.title))]
@@ -187,7 +221,14 @@ export default function Dashboard() {
     // For now, all tools are free
     const matchesAccess = selectedAccess.length === 0 || selectedAccess.includes('free');
 
-    return matchesSearch && matchesType && matchesTopic && matchesAccess;
+    // New resources filter
+    const matchesNew = !showNewOnly || (() => {
+      if (!tool.published_date && !tool.created_date) return false;
+      const toolDate = new Date(tool.published_date || tool.created_date);
+      return toolDate > cutoffDate;
+    })();
+
+    return matchesSearch && matchesType && matchesTopic && matchesAccess && matchesNew;
   });
 
   const toggleType = (type) => {
@@ -208,12 +249,13 @@ export default function Dashboard() {
     );
   };
 
-  const hasActiveFilters = selectedTypes.length > 0 || selectedTopics.length > 0 || selectedAccess.length > 0;
+  const hasActiveFilters = selectedTypes.length > 0 || selectedTopics.length > 0 || selectedAccess.length > 0 || showNewOnly;
 
   const clearAllFilters = () => {
     setSelectedTypes([]);
     setSelectedTopics([]);
     setSelectedAccess([]);
+    setShowNewOnly(false);
   };
 
   const toggleFilterSection = (filterName) => {
@@ -368,6 +410,16 @@ export default function Dashboard() {
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium text-slate-700">Filter by:</span>
             <div className="flex items-center gap-2">
+              {newToolsCount > 0 && (
+                <Button
+                  variant={showNewOnly ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setShowNewOnly(!showNewOnly)}
+                  className={`${showNewOnly ? 'bg-orange-500 hover:bg-orange-600 text-white' : 'bg-white text-orange-600 border-orange-300 hover:bg-orange-50'}`}
+                >
+                  New resources {showNewOnly && `(${newToolsCount})`}
+                </Button>
+              )}
               <Button
                 variant={openFilter === 'topic' || selectedTopics.length > 0 ? "default" : "outline"}
                 size="sm"
