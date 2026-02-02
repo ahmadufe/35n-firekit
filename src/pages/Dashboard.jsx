@@ -513,17 +513,20 @@ export default function Dashboard() {
               const needsLoginCheck = !user && isToolOrDeepDive && tool.page;
 
               return (
-                title={tool.title}
-                description={tool.description}
-                icon={IconComponent}
-                href={tool.page ? createPageUrl(tool.page) : '#'}
-                comingSoon={tool.coming_soon || tool.sectionComingSoon}
-                fileUrl={tool.file_url}
-                link={tool.link}
-                actionText={getActionText(tool.sectionId)}
-                type={tool.sectionTitle}
-                topics={tool.topics || []}
-                accessType={tool.access_type || 'free'}
+                <ToolCard
+                  key={tool.id}
+                  onClick={needsLoginCheck ? () => handleResourceClick(tool) : undefined}
+                  title={tool.title}
+                  description={tool.description}
+                  icon={IconComponent}
+                  href={tool.page ? createPageUrl(tool.page) : '#'}
+                  comingSoon={tool.coming_soon || tool.sectionComingSoon}
+                  fileUrl={tool.file_url}
+                  link={tool.link}
+                  actionText={getActionText(tool.sectionId)}
+                  type={tool.sectionTitle}
+                  topics={tool.topics || []}
+                  accessType={tool.access_type || 'free'}
                 />
               );
             })}
