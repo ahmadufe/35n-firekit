@@ -70,30 +70,30 @@ export default function ResourcesManagementTab() {
   const publishedConfig = configs.find(c => c.config_name === 'published');
   const draftConfig = configs.find(c => c.config_name === 'draft');
 
-  // Flatten all resources from sections
-  const allResources = (publishedConfig?.sections || []).flatMap(section =>
-    (section.tools || []).map(tool => ({
-      ...tool,
-      sectionTitle: section.title,
-      sectionId: section.id,
-      published: true
-    }))
-  );
+  // Flatten all resources from sections with explicit ordering
+  const flattenWithOrder = (config, isPublished) => {
+    const resources = [];
+    (config?.sections || []).forEach(section => {
+      (section.tools || []).forEach(tool => {
+        resources.push({
+          ...tool,
+          type: tool.type || section.title, // Use tool.type if available, fallback to section title
+          published: isPublished,
+          order: tool.order !== undefined ? tool.order : resources.length
+        });
+      });
+    });
+    return resources.sort((a, b) => a.order - b.order);
+  };
 
-  const draftResources = (draftConfig?.sections || []).flatMap(section =>
-    (section.tools || []).map(tool => ({
-      ...tool,
-      sectionTitle: section.title,
-      sectionId: section.id,
-      published: false
-    }))
-  );
+  const allResources = flattenWithOrder(publishedConfig, true);
+  const draftResources = flattenWithOrder(draftConfig, false);
 
   // Combine and deduplicate - ALWAYS prefer draft version over published
   const combinedResources = [
     ...draftResources,
     ...allResources.filter(pub => !draftResources.find(draft => draft.id === pub.id))
-  ];
+  ].sort((a, b) => a.order - b.order);
 
   const filteredResources = combinedResources.filter(resource => {
     const matchesView = 
@@ -114,7 +114,7 @@ export default function ResourcesManagementTab() {
       setFormData({
         title: resource.title || '',
         description: resource.description || '',
-        type: resource.sectionTitle || 'Tools',
+        type: resource.type || 'Tools',
         topics: resource.topics || [],
         icon: resource.icon || 'ClipboardCheck',
         page: resource.page || '',
@@ -150,24 +150,13 @@ export default function ResourcesManagementTab() {
     }
 
     const config = draftConfig || publishedConfig;
-    const sections = JSON.parse(JSON.stringify(config?.sections || []));
-
-    let targetSection = sections.find(s => s.title === formData.type);
-    
-    if (!targetSection) {
-      targetSection = {
-        id: `section_${Date.now()}`,
-        title: formData.type,
-        coming_soon: false,
-        tools: []
-      };
-      sections.push(targetSection);
-    }
+    const allCurrentResources = flattenWithOrder(config, false);
 
     const toolData = {
       id: editingResource?.id || `tool_${Date.now()}`,
       title: formData.title,
       description: formData.description,
+      type: formData.type,
       topics: Array.isArray(formData.topics) ? formData.topics : [],
       icon: formData.icon,
       page: formData.page || null,
@@ -175,34 +164,37 @@ export default function ResourcesManagementTab() {
       file_url: formData.file_url || null,
       coming_soon: formData.coming_soon,
       published_date: formData.published_date || new Date().toISOString(),
-      featured: formData.featured
+      featured: formData.featured,
+      order: editingResource?.order !== undefined ? editingResource.order : allCurrentResources.length
     };
 
-    console.log('Saving resource with topics:', toolData.topics);
-
+    let updatedResources;
     if (editingResource) {
-      // Update existing tool - find it across all sections if needed
-      const oldSection = sections.find(s => 
-        (s.tools || []).some(t => t.id === editingResource.id)
+      // Update existing resource
+      updatedResources = allCurrentResources.map(r =>
+        r.id === editingResource.id ? toolData : r
       );
-      
-      if (oldSection && oldSection.title !== formData.type) {
-        // Tool moved to different section, remove from old section
-        oldSection.tools = (oldSection.tools || []).filter(t => t.id !== editingResource.id);
-        targetSection.tools = [...(targetSection.tools || []), toolData];
-      } else if (oldSection) {
-        // Tool stays in same section, update it
-        oldSection.tools = (oldSection.tools || []).map(t =>
-          t.id === editingResource.id ? toolData : t
-        );
-      } else {
-        // Fallback: just add to target section
-        targetSection.tools = [...(targetSection.tools || []), toolData];
-      }
     } else {
-      // Add new tool
-      targetSection.tools = [...(targetSection.tools || []), toolData];
+      // Add new resource at the end
+      updatedResources = [...allCurrentResources, toolData];
     }
+
+    // Group by type to create sections structure
+    const sectionMap = {};
+    updatedResources.forEach(resource => {
+      const sectionTitle = resource.type || 'Tools';
+      if (!sectionMap[sectionTitle]) {
+        sectionMap[sectionTitle] = {
+          id: `section_${Date.now()}_${sectionTitle.toLowerCase().replace(/\s+/g, '_')}`,
+          title: sectionTitle,
+          coming_soon: false,
+          tools: []
+        };
+      }
+      sectionMap[sectionTitle].tools.push(resource);
+    });
+
+    const sections = Object.values(sectionMap);
 
     const updatedConfig = {
       config_name: 'draft',
@@ -223,10 +215,30 @@ export default function ResourcesManagementTab() {
 
   const handleDeleteResource = async (resource) => {
     const config = draftConfig || publishedConfig;
-    const sections = (config?.sections || []).map(section => ({
-      ...section,
-      tools: (section.tools || []).filter(t => t.id !== resource.id)
-    }));
+    let allResources = flattenWithOrder(config, false);
+    
+    // Remove the resource
+    allResources = allResources.filter(r => r.id !== resource.id);
+    
+    // Reorder remaining resources
+    allResources = allResources.map((r, index) => ({ ...r, order: index }));
+
+    // Group by type to create sections structure
+    const sectionMap = {};
+    allResources.forEach(r => {
+      const sectionTitle = r.type || 'Tools';
+      if (!sectionMap[sectionTitle]) {
+        sectionMap[sectionTitle] = {
+          id: `section_${Date.now()}_${sectionTitle.toLowerCase().replace(/\s+/g, '_')}`,
+          title: sectionTitle,
+          coming_soon: false,
+          tools: []
+        };
+      }
+      sectionMap[sectionTitle].tools.push(r);
+    });
+
+    const sections = Object.values(sectionMap);
 
     const updatedConfig = {
       config_name: 'draft',
@@ -247,44 +259,43 @@ export default function ResourcesManagementTab() {
 
   const handleMoveResource = async (resource, direction) => {
     const config = draftConfig || publishedConfig;
-    const sections = JSON.parse(JSON.stringify(config?.sections || []));
-    
-    // Flatten all resources with their section reference
-    const flatResources = [];
-    sections.forEach(section => {
-      (section.tools || []).forEach(tool => {
-        flatResources.push({ tool, sectionId: section.id });
-      });
-    });
+    let allResources = flattenWithOrder(config, false);
 
-    const resourceIndex = flatResources.findIndex(r => r.tool.id === resource.id);
+    const resourceIndex = allResources.findIndex(r => r.id === resource.id);
     if (resourceIndex === -1) return;
 
     let newIndex = resourceIndex;
     if (direction === 'up' && resourceIndex > 0) {
       newIndex = resourceIndex - 1;
-    } else if (direction === 'down' && resourceIndex < flatResources.length - 1) {
+    } else if (direction === 'down' && resourceIndex < allResources.length - 1) {
       newIndex = resourceIndex + 1;
     } else {
       return;
     }
 
-    // Swap only the tools, keep sectionIds in place
-    const tempTool = flatResources[resourceIndex].tool;
-    flatResources[resourceIndex].tool = flatResources[newIndex].tool;
-    flatResources[newIndex].tool = tempTool;
+    // Swap the resources
+    [allResources[resourceIndex], allResources[newIndex]] = 
+      [allResources[newIndex], allResources[resourceIndex]];
 
-    // Reconstruct sections with new order
-    sections.forEach(section => {
-      section.tools = [];
-    });
+    // Update order field for all resources
+    allResources = allResources.map((r, index) => ({ ...r, order: index }));
 
-    flatResources.forEach(({ tool, sectionId }) => {
-      const section = sections.find(s => s.id === sectionId);
-      if (section) {
-        section.tools.push(tool);
+    // Group by type to create sections structure
+    const sectionMap = {};
+    allResources.forEach(r => {
+      const sectionTitle = r.type || 'Tools';
+      if (!sectionMap[sectionTitle]) {
+        sectionMap[sectionTitle] = {
+          id: `section_${Date.now()}_${sectionTitle.toLowerCase().replace(/\s+/g, '_')}`,
+          title: sectionTitle,
+          coming_soon: false,
+          tools: []
+        };
       }
+      sectionMap[sectionTitle].tools.push(r);
     });
+
+    const sections = Object.values(sectionMap);
 
     const updatedConfig = {
       config_name: 'draft',
@@ -435,12 +446,8 @@ export default function ResourcesManagementTab() {
 
       <div className="grid gap-4">
         {filteredResources.map((resource, index) => {
-          // Calculate position based on actual global order
-          const config = draftConfig || publishedConfig;
-          const allTools = config?.sections?.flatMap(s => s.tools || []) || [];
-          const globalIndex = allTools.findIndex(t => t.id === resource.id);
-          const isFirst = globalIndex <= 0;
-          const isLast = globalIndex === -1 || globalIndex >= allTools.length - 1;
+          const isFirst = resource.order <= 0;
+          const isLast = resource.order >= combinedResources.length - 1;
 
           return (
           <Card key={resource.id} className="border-slate-200">
@@ -472,7 +479,7 @@ export default function ResourcesManagementTab() {
                   <div className="flex items-center gap-2 mb-2">
                     <h3 className="text-lg font-semibold text-slate-900 truncate">{resource.title}</h3>
                     <Badge variant="outline" className="text-xs">
-                      {resource.sectionTitle}
+                      {resource.type}
                     </Badge>
                     {resource.coming_soon && (
                        <Badge className="bg-orange-100 text-orange-700 border-orange-200 text-xs">
