@@ -171,11 +171,19 @@ export default function ResourcesManagementTab() {
 
     let updatedResources;
     if (editingResource) {
-      updatedResources = allCurrentResources.map(r =>
-        r.id === editingResource.id ? toolData : r
-      );
+      updatedResources = allCurrentResources.map(r => {
+        if (r.id === editingResource.id) {
+          return toolData;
+        }
+        // Remove published field from other resources
+        const { published, ...cleanResource } = r;
+        return cleanResource;
+      });
     } else {
-      updatedResources = [...allCurrentResources, toolData];
+      updatedResources = [...allCurrentResources.map(r => {
+        const { published, ...cleanResource } = r;
+        return cleanResource;
+      }), toolData];
     }
 
     const updatedConfig = {
@@ -202,7 +210,12 @@ export default function ResourcesManagementTab() {
 
   const handleDeleteResource = async (resource) => {
     const config = draftConfig || publishedConfig;
-    const allResources = getResources(config, false).filter(r => r.id !== resource.id);
+    const allResources = getResources(config, false)
+      .filter(r => r.id !== resource.id)
+      .map(r => {
+        const { published, ...cleanResource } = r;
+        return cleanResource;
+      });
 
     const updatedConfig = {
       config_name: 'draft',
@@ -236,13 +249,19 @@ export default function ResourcesManagementTab() {
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
+    // Clean published field before saving
+    const cleanedItems = items.map(r => {
+      const { published, ...cleanResource } = r;
+      return cleanResource;
+    });
+
     const updatedConfig = {
       config_name: 'draft',
       sections: [{
         id: 'all',
         title: 'All Resources',
         coming_soon: false,
-        tools: items.filter(r => r && typeof r === 'object' && r.id)
+        tools: cleanedItems.filter(r => r && typeof r === 'object' && r.id)
       }]
     };
 
