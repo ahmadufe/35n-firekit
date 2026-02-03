@@ -48,20 +48,22 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import AdminDashboard from './pages/AdminDashboard';
+import Bookmarks from './pages/Bookmarks';
 import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import Scorecard from './pages/Scorecard';
 import UserSettings from './pages/UserSettings';
-import Bookmarks from './pages/Bookmarks';
+import CloudRegulationsMap from './pages/CloudRegulationsMap';
 
 
 export const PAGES = {
     "AdminDashboard": AdminDashboard,
+    "Bookmarks": Bookmarks,
     "Dashboard": Dashboard,
     "Home": Home,
     "Scorecard": Scorecard,
     "UserSettings": UserSettings,
-    "Bookmarks": Bookmarks,
+    "CloudRegulationsMap": CloudRegulationsMap,
 }
 
 export const pagesConfig = {
