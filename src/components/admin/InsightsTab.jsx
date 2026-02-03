@@ -138,6 +138,19 @@ export default function InsightsTab() {
 
   // Filter only active resources (not coming_soon)
   const activeResources = allResources.filter(resource => !resource.coming_soon);
+  
+  // Note: Analytics data below is placeholder until tracking is implemented
+  const resourceAnalytics = activeResources.map(resource => {
+    return {
+      resource,
+      analytics: {
+        activeUsers: 0,
+        nonActiveUsers: totalUsers,
+        returnRate: '0',
+        avgTimeSpent: 'N/A'
+      }
+    };
+  });
 
   if (isLoading) {
     return (
@@ -188,23 +201,24 @@ export default function InsightsTab() {
         />
       </div>
 
-      {/* Active Resources Count */}
+      {/* Resource Insights */}
       <div>
-        <h2 className="text-xl font-semibold text-slate-900 mb-4">Active Resources</h2>
-        <Card className="border-slate-200">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-slate-500 mb-2">Total Active Resources</p>
-                <p className="text-3xl font-bold text-slate-900">{activeResources.length}</p>
-                <p className="text-xs text-slate-500 mt-2">Resources available to users</p>
-              </div>
-              <div className="p-3 bg-slate-100 rounded-xl">
-                <Activity className="h-5 w-5 text-slate-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold text-slate-900">Resource Insights</h2>
+          <Badge variant="outline" className="text-xs">
+            {activeResources.length} Active Resources
+          </Badge>
+        </div>
+        <p className="text-sm text-slate-500 mb-4">Analytics tracking not yet implemented - showing active resources only</p>
+        <div className="space-y-4">
+          {resourceAnalytics.map(({ resource, analytics }, idx) => (
+            <ResourceInsightCard
+              key={resource.id || idx}
+              resource={resource}
+              analytics={analytics}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
