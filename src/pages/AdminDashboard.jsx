@@ -17,7 +17,7 @@ import AccessRequestsTab from "@/components/admin/AccessRequestsTab";
 import AccessCodesTab from "@/components/admin/AccessCodesTab";
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState('insights');
+  const [activeTab, setActiveTab] = useState('manage');
   const navigate = useNavigate();
 
   const { data: user, isLoading } = useQuery({
@@ -73,33 +73,25 @@ export default function AdminDashboard() {
       <main className="max-w-7xl mx-auto px-6 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
           <TabsList className="bg-white border border-slate-200 p-1">
+            <TabsTrigger value="manage" className="flex items-center gap-2">
+              <Layout className="h-4 w-4" />
+              Resources
+            </TabsTrigger>
             <TabsTrigger value="insights" className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
               Insights
-            </TabsTrigger>
-            <TabsTrigger value="logins" className="flex items-center gap-2">
-              <LogIn className="h-4 w-4" />
-              Logins
             </TabsTrigger>
             <TabsTrigger value="users" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
               Users
             </TabsTrigger>
-            <TabsTrigger value="manage" className="flex items-center gap-2">
-              <Layout className="h-4 w-4" />
-              Resources
+            <TabsTrigger value="logins" className="flex items-center gap-2">
+              <LogIn className="h-4 w-4" />
+              Logins
             </TabsTrigger>
             <TabsTrigger value="filters" className="flex items-center gap-2">
               <Layout className="h-4 w-4" />
               Filters
-            </TabsTrigger>
-            <TabsTrigger value="suggestions" className="flex items-center gap-2">
-              <Lightbulb className="h-4 w-4" />
-              Suggestions
-            </TabsTrigger>
-            <TabsTrigger value="feedback" className="flex items-center gap-2">
-              <Lightbulb className="h-4 w-4" />
-              Feedback
             </TabsTrigger>
             <TabsTrigger value="access" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
@@ -108,6 +100,14 @@ export default function AdminDashboard() {
             <TabsTrigger value="codes" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
               Access Codes
+            </TabsTrigger>
+            <TabsTrigger value="feedback" className="flex items-center gap-2">
+              <Lightbulb className="h-4 w-4" />
+              Feedback
+            </TabsTrigger>
+            <TabsTrigger value="suggestions" className="flex items-center gap-2">
+              <Lightbulb className="h-4 w-4" />
+              Suggestions
             </TabsTrigger>
             </TabsList>
 
