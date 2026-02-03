@@ -12,21 +12,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Plus, Edit2, Trash2, Eye, EyeOff, Upload, X, ExternalLink, ChevronUp, ChevronDown, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
-const AVAILABLE_TYPES = ['Tools', 'Guides & Insights', 'Playbooks', 'Deep Dive'];
-const AVAILABLE_TOPICS = [
-  'Fintech',
-  'Trade & Logistics',
-  'Gov-tech',
-  'SaaS',
-  'Banking technology',
-  'AI',
-  'Digital transformation & platforms',
-  'Product building',
-  'Venture building',
-  'Africa startups & tech',
-  'Middle East startups & tech',
-  'Emerging markets startups & tech'
-];
 const ICON_OPTIONS = ['ClipboardCheck', 'BookOpen', 'Wrench'];
 
 export default function ResourcesManagementTab() {
@@ -55,6 +40,30 @@ export default function ResourcesManagementTab() {
     queryKey: ['landingPageConfigs'],
     queryFn: () => base44.entities.LandingPageConfig.list()
   });
+
+  const { data: filterConfig } = useQuery({
+    queryKey: ['filterConfig'],
+    queryFn: async () => {
+      const configs = await base44.entities.FilterConfig.filter({ config_name: 'published' });
+      return configs.length > 0 ? configs[0] : null;
+    }
+  });
+
+  const AVAILABLE_TYPES = filterConfig?.filters?.type || ['Tools', 'Guides & Insights', 'Playbooks', 'Deep Dive'];
+  const AVAILABLE_TOPICS = filterConfig?.filters?.topic || [
+    'Fintech',
+    'Trade & Logistics',
+    'Gov-tech',
+    'SaaS',
+    'Banking technology',
+    'AI',
+    'Digital transformation & platforms',
+    'Product building',
+    'Venture building',
+    'Africa startups & tech',
+    'Middle East startups & tech',
+    'Emerging markets startups & tech'
+  ];
 
   const publishedConfig = configs.find(c => c.config_name === 'published');
   const draftConfig = configs.find(c => c.config_name === 'draft');
