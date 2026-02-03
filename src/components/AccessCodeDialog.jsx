@@ -45,10 +45,12 @@ export default function AccessCodeDialog({ open, onOpenChange, resourceId }) {
       // Store the code in session storage so the user can access the resource
       sessionStorage.setItem(`access_code_${resourceId}`, code.trim());
       
-      // Close dialog after brief delay
+      // Close dialog and trigger a refresh
       setTimeout(() => {
         onOpenChange(false);
         toast.success('Access granted!');
+        // Trigger a page reload to refresh the state
+        window.location.reload();
       }, 1000);
     } catch (err) {
       setError('Something went wrong. Please try again.');

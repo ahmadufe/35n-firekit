@@ -263,9 +263,9 @@ export default function Dashboard() {
     // Type filter
     const matchesType = selectedTypes.length === 0 || selectedTypes.includes(tool.sectionTitle);
 
-    // Topic filter - for now, show all if no topics selected
-    // In the future, you might want to add topic metadata to tools
-    const matchesTopic = selectedTopics.length === 0;
+    // Topic filter
+    const matchesTopic = selectedTopics.length === 0 || 
+      (tool.topics && tool.topics.some(topic => selectedTopics.includes(topic)));
 
     // New resources filter
     const matchesNew = !showNewOnly || (() => {
