@@ -10,7 +10,6 @@ import { Plus, Trash2, Edit2, X, Check, Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
 
 const DEFAULT_FILTERS = {
-  type: ['Tools', 'Guides & Insights', 'Playbooks', 'Deep Dive'],
   topic: [
     'Fintech',
     'Trade & Logistics',
@@ -101,7 +100,7 @@ export default function FilterAttributesTab() {
   };
 
   const handleDeleteFilter = (filterKey) => {
-    if (['type', 'topic', 'access'].includes(filterKey)) {
+    if (['topic', 'access'].includes(filterKey)) {
       toast.error('Cannot delete default filters');
       return;
     }
@@ -210,7 +209,7 @@ export default function FilterAttributesTab() {
             <CardHeader className="border-b border-slate-100">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg">{formatFilterName(filterKey)}</CardTitle>
-                {!['type', 'topic', 'access'].includes(filterKey) && (
+                {!['topic', 'access'].includes(filterKey) && (
                   <Button
                     variant="ghost"
                     size="sm"
