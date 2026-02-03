@@ -61,17 +61,17 @@ export default function ToolCard({
     };
 
     return (
-      <div onClick={actualClickHandler} className={`${(comingSoon && !hasAccessCode) ? 'cursor-not-allowed' : 'cursor-pointer'} h-full`}>
+      <div onClick={actualClickHandler} className="cursor-pointer h-full">
          <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col`}>
-         <div className={`absolute inset-0 bg-gradient-to-br ${(comingSoon && !hasAccessCode) ? 'from-orange-50 to-orange-50/50' : 'from-slate-50 to-white'}`} />
+         <div className={`absolute inset-0 bg-gradient-to-br ${comingSoon ? 'from-orange-50 to-orange-50/50' : 'from-slate-50 to-white'}`} />
         <div className="absolute top-0 right-0 w-32 h-32 bg-slate-100 rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700" />
 
         <CardContent className="relative p-6 flex flex-col h-full">
          {/* Header: Icon, Type, and Exclusive Badge */}
          <div className="flex items-center justify-between mb-3">
            <div className="flex items-center gap-2">
-             <div className={`p-2 rounded-lg ${((comingSoon && !hasAccessCode)) ? 'bg-slate-100' : 'bg-slate-900'}`}>
-               <Icon className={`h-4 w-4 ${((comingSoon && !hasAccessCode)) ? 'text-slate-400' : 'text-white'}`} />
+             <div className={`p-2 rounded-lg bg-slate-900`}>
+               <Icon className={`h-4 w-4 text-white`} />
              </div>
              {type && (
                <Badge variant="outline" className="text-xs border-slate-300 text-slate-600 px-2 py-0.5">
@@ -79,9 +79,9 @@ export default function ToolCard({
                </Badge>
              )}
            </div>
-           {comingSoon && !hasAccessCode && (
+           {comingSoon && (
              <Badge className="bg-orange-100 text-orange-700 border-orange-200 text-xs px-2 py-0.5">
-               Exclusive
+               {hasAccessCode ? 'Unlocked' : 'Exclusive'}
              </Badge>
            )}
          </div>
@@ -134,16 +134,16 @@ export default function ToolCard({
 
   return (
     <CardWrapper {...wrapperProps} onClick={cardClickHandler} className="h-full">
-      <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col ${shouldBlock ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
-         <div className={`absolute inset-0 bg-gradient-to-br ${shouldBlock ? 'from-orange-50 to-orange-50/50' : 'from-slate-50 to-white'}`} />
+      <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col cursor-pointer`}>
+         <div className={`absolute inset-0 bg-gradient-to-br ${comingSoon ? 'from-orange-50 to-orange-50/50' : 'from-slate-50 to-white'}`} />
         <div className="absolute top-0 right-0 w-32 h-32 bg-slate-100 rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700" />
 
         <CardContent className="relative p-6 flex flex-col h-full">
           {/* Header: Icon, Type, and Exclusive Badge */}
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <div className={`p-2 rounded-lg ${shouldBlock ? 'bg-slate-100' : 'bg-slate-900'}`}>
-                <Icon className={`h-4 w-4 ${shouldBlock ? 'text-slate-400' : 'text-white'}`} />
+              <div className={`p-2 rounded-lg bg-slate-900`}>
+                <Icon className={`h-4 w-4 text-white`} />
               </div>
               {type && (
                 <Badge variant="outline" className="text-xs border-slate-300 text-slate-600 px-2 py-0.5">
@@ -151,9 +151,9 @@ export default function ToolCard({
                 </Badge>
               )}
             </div>
-            {shouldBlock && (
+            {comingSoon && (
               <Badge className="bg-orange-100 text-orange-700 border-orange-200 text-xs px-2 py-0.5">
-                Exclusive
+                {hasAccessCode ? 'Unlocked' : 'Exclusive'}
               </Badge>
             )}
           </div>
