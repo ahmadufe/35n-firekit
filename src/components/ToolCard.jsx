@@ -172,16 +172,32 @@ export default function ToolCard({
          )}
 
          <div className="mt-auto">
-           <div className="flex items-center text-slate-900 font-medium text-sm group-hover:translate-x-2 transition-transform duration-300">
-             Access
-             <ArrowRight className="ml-2 h-4 w-4" />
+           <div className="flex items-center justify-between">
+             <div className="flex items-center text-slate-900 font-medium text-sm group-hover:translate-x-2 transition-transform duration-300">
+               Access
+               <ArrowRight className="ml-2 h-4 w-4" />
+             </div>
+             {showBookmark && (
+               <Button
+                 variant="ghost"
+                 size="icon"
+                 onClick={handleBookmarkClick}
+                 className="h-8 w-8 hover:bg-slate-200 z-10"
+               >
+                 {isBookmarked ? (
+                   <BookmarkCheck className="h-4 w-4 text-slate-900 fill-slate-900" />
+                 ) : (
+                   <Bookmark className="h-4 w-4 text-slate-500" />
+                 )}
+               </Button>
+             )}
            </div>
          </div>
-        </CardContent>
-        </Card>
-        </div>
-        );
-        }
+         </CardContent>
+         </Card>
+         </div>
+         );
+         }
 
   // For pages or coming soon
   const hasAccessCode = comingSoon && resourceId ? sessionStorage.getItem(`access_code_${resourceId}`) : null;
