@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { base44 } from "@/api/base44Client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Trash2, Edit2, X, Check } from "lucide-react";
+import { Plus, Trash2, Edit2, X, Check, Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
 
 const DEFAULT_FILTERS = {
@@ -27,11 +29,55 @@ const DEFAULT_FILTERS = {
 };
 
 export default function FilterAttributesTab() {
-  const [filters, setFilters] = useState(DEFAULT_FILTERS);
+  const queryClient = useQueryClient();
   const [newFilterName, setNewFilterName] = useState('');
   const [editingFilter, setEditingFilter] = useState(null);
   const [newValue, setNewValue] = useState('');
   const [editingValue, setEditingValue] = useState({ filter: null, index: null, value: '' });
+
+  const { data: filterConfig, isLoading } = useQuery({
+    queryKey: ['filterConfig'],
+    queryFn: async () => {
+      const configs = await base44.entities.FilterConfig.filter({ config_name: 'published' });
+      if (configs.length > 0) {
+        return configs[0];
+      }
+      // Create default config if none exists
+      const newConfig = await base44.entities.FilterConfig.create({
+        config_name: 'published',
+        filters: DEFAULT_FILTERS
+      });
+      return newConfig;
+    }
+  });
+
+  const filters = filterConfig?.filters || DEFAULT_FILTERS;
+
+  const saveFiltersMutation = useMutation({
+    mutationFn: async (newFilters) => {
+      if (filterConfig?.id) {
+        return await base44.entities.FilterConfig.update(filterConfig.id, {
+          filters: newFilters
+        });
+      } else {
+        return await base44.entities.FilterConfig.create({
+          config_name: 'published',
+          filters: newFilters
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['filterConfig'] });
+      toast.success('Filters saved successfully');
+    },
+    onError: () => {
+      toast.error('Failed to save filters');
+    }
+  });
+
+  const setFilters = (newFilters) => {
+    saveFiltersMutation.mutate(newFilters);
+  };
 
   const handleAddFilter = () => {
     if (!newFilterName.trim()) {
@@ -123,11 +169,19 @@ export default function FilterAttributesTab() {
     return key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-semibold text-slate-900">Filter Attributes</h2>
-        <p className="text-sm text-slate-500 mt-1">Manage filter categories and their values</p>
+        <p className="text-sm text-slate-500 mt-1">Manage filter categories and their values (changes are saved automatically)</p>
       </div>
 
       <Card className="border-slate-200">

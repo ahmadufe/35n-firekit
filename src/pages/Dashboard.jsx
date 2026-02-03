@@ -237,8 +237,17 @@ export default function Dashboard() {
     ? [...new Set(publishedConfig.sections.map(s => s.title))]
     : [];
 
-  // Topics from user setup form
-  const availableTopics = [
+  // Fetch filter configuration
+  const { data: filterConfig } = useQuery({
+    queryKey: ['filterConfig'],
+    queryFn: async () => {
+      const configs = await base44.entities.FilterConfig.filter({ config_name: 'published' });
+      return configs.length > 0 ? configs[0] : null;
+    }
+  });
+
+  // Topics from filter configuration or fallback to defaults
+  const availableTopics = filterConfig?.filters?.topic || [
     'Fintech',
     'Trade & Logistics',
     'Gov-tech',
