@@ -71,29 +71,14 @@ export default function ResourcesManagementTab() {
   const publishedConfig = configs.find(c => c.config_name === 'published');
   const draftConfig = configs.find(c => c.config_name === 'draft');
 
-  // Flatten all resources - maintain flat order list by _position field
-  const flattenResources = (config, isPublished) => {
-    const resources = [];
-    (config?.sections || []).forEach(section => {
-      (section.tools || []).forEach(tool => {
-        resources.push({
-          ...tool,
-          type: tool.type || section.title,
-          published: isPublished
-        });
-      });
-    });
-    // Sort by _position if available, otherwise maintain current order
-    return resources.sort((a, b) => {
-      if (a._position !== undefined && b._position !== undefined) {
-        return a._position - b._position;
-      }
-      return 0;
-    });
+  // Get resources from flat list structure
+  const getResources = (config, isPublished) => {
+    const tools = config?.sections?.[0]?.tools || [];
+    return tools.map(tool => ({ ...tool, published: isPublished }));
   };
 
-  const allResources = flattenResources(publishedConfig, true);
-  const draftResources = flattenResources(draftConfig, false);
+  const allResources = getResources(publishedConfig, true);
+  const draftResources = getResources(draftConfig, false);
 
   // Combine and deduplicate - ALWAYS prefer draft version
   const combinedResources = [
@@ -156,7 +141,7 @@ export default function ResourcesManagementTab() {
     }
 
     const config = draftConfig || publishedConfig;
-    const allCurrentResources = flattenResources(config, false);
+    const allCurrentResources = getResources(config, false);
 
     const toolData = {
       id: editingResource?.id || `tool_${Date.now()}`,
@@ -182,37 +167,14 @@ export default function ResourcesManagementTab() {
       updatedResources = [...allCurrentResources, toolData];
     }
 
-    // Add position index to maintain order across sections
-    const resourcesWithPosition = updatedResources.map((r, idx) => ({
-      ...r,
-      _position: idx
-    }));
-
-    // Group by type for sections structure
-    const sectionMap = {};
-    resourcesWithPosition.forEach(resource => {
-      const sectionTitle = resource.type || 'Tools';
-      if (!sectionMap[sectionTitle]) {
-        sectionMap[sectionTitle] = {
-          id: `section_${sectionTitle.toLowerCase().replace(/\s+/g, '_')}`,
-          title: sectionTitle,
-          coming_soon: false,
-          tools: []
-        };
-      }
-      sectionMap[sectionTitle].tools.push(resource);
-    });
-
-    // Sort tools within each section by position
-    Object.values(sectionMap).forEach(section => {
-      section.tools.sort((a, b) => a._position - b._position);
-    });
-
-    const sections = Object.values(sectionMap);
-
     const updatedConfig = {
       config_name: 'draft',
-      sections
+      sections: [{
+        id: 'all',
+        title: 'All Resources',
+        coming_soon: false,
+        tools: updatedResources
+      }]
     };
 
     if (draftConfig) {
@@ -229,39 +191,16 @@ export default function ResourcesManagementTab() {
 
   const handleDeleteResource = async (resource) => {
     const config = draftConfig || publishedConfig;
-    const allResources = flattenResources(config, false).filter(r => r.id !== resource.id);
-
-    // Add position index
-    const resourcesWithPosition = allResources.map((r, idx) => ({
-      ...r,
-      _position: idx
-    }));
-
-    // Group by type for sections structure
-    const sectionMap = {};
-    resourcesWithPosition.forEach(r => {
-      const sectionTitle = r.type || 'Tools';
-      if (!sectionMap[sectionTitle]) {
-        sectionMap[sectionTitle] = {
-          id: `section_${sectionTitle.toLowerCase().replace(/\s+/g, '_')}`,
-          title: sectionTitle,
-          coming_soon: false,
-          tools: []
-        };
-      }
-      sectionMap[sectionTitle].tools.push(r);
-    });
-
-    // Sort tools within each section by position
-    Object.values(sectionMap).forEach(section => {
-      section.tools.sort((a, b) => a._position - b._position);
-    });
-
-    const sections = Object.values(sectionMap);
+    const allResources = getResources(config, false).filter(r => r.id !== resource.id);
 
     const updatedConfig = {
       config_name: 'draft',
-      sections
+      sections: [{
+        id: 'all',
+        title: 'All Resources',
+        coming_soon: false,
+        tools: allResources
+      }]
     };
 
     if (draftConfig) {
@@ -280,43 +219,20 @@ export default function ResourcesManagementTab() {
     if (!result.destination) return;
 
     const config = draftConfig || publishedConfig;
-    const allResources = flattenResources(config, false);
+    const allResources = getResources(config, false);
     
     const items = Array.from(allResources);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    // Add position index
-    const resourcesWithPosition = items.map((r, idx) => ({
-      ...r,
-      _position: idx
-    }));
-
-    // Group by type for sections structure
-    const sectionMap = {};
-    resourcesWithPosition.forEach(r => {
-      const sectionTitle = r.type || 'Tools';
-      if (!sectionMap[sectionTitle]) {
-        sectionMap[sectionTitle] = {
-          id: `section_${sectionTitle.toLowerCase().replace(/\s+/g, '_')}`,
-          title: sectionTitle,
-          coming_soon: false,
-          tools: []
-        };
-      }
-      sectionMap[sectionTitle].tools.push(r);
-    });
-
-    // Sort tools within each section by position
-    Object.values(sectionMap).forEach(section => {
-      section.tools.sort((a, b) => a._position - b._position);
-    });
-
-    const sections = Object.values(sectionMap);
-
     const updatedConfig = {
       config_name: 'draft',
-      sections
+      sections: [{
+        id: 'all',
+        title: 'All Resources',
+        coming_soon: false,
+        tools: items
+      }]
     };
 
     if (draftConfig) {
