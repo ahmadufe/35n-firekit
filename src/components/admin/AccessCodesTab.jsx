@@ -27,10 +27,12 @@ export default function AccessCodesTab() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [formData, setFormData] = useState({
     beneficiary_name: '',
+    beneficiary_email: '',
     position: '',
     organization: '',
     resources: []
   });
+  const [editingCode, setEditingCode] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [resourceSearch, setResourceSearch] = useState('');
 
@@ -68,6 +70,7 @@ export default function AccessCodesTab() {
     if (!searchQuery) return true;
     return (
       (code.beneficiary_name && code.beneficiary_name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (code.beneficiary_email && code.beneficiary_email.toLowerCase().includes(searchQuery.toLowerCase())) ||
       code.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (code.organization && code.organization.toLowerCase().includes(searchQuery.toLowerCase()))
     );
@@ -76,11 +79,27 @@ export default function AccessCodesTab() {
   const handleOpenDialog = () => {
     setGeneratedCode(null);
     setResourceSearch('');
+    setEditingCode(null);
     setFormData({
       beneficiary_name: '',
+      beneficiary_email: '',
       position: '',
       organization: '',
       resources: []
+    });
+    setShowDialog(true);
+  };
+
+  const handleEditCode = (code) => {
+    setEditingCode(code);
+    setGeneratedCode(null);
+    setResourceSearch('');
+    setFormData({
+      beneficiary_name: code.beneficiary_name || '',
+      beneficiary_email: code.beneficiary_email || '',
+      position: code.position || '',
+      organization: code.organization || '',
+      resources: code.resources || []
     });
     setShowDialog(true);
   };
@@ -121,25 +140,41 @@ export default function AccessCodesTab() {
 
     try {
       setIsGenerating(true);
-      const newCode = generateRandomCode();
 
-      const user = await base44.auth.me();
+      if (editingCode) {
+        // Update existing code
+        await base44.entities.AccessCode.update(editingCode.id, {
+          beneficiary_name: formData.beneficiary_name || null,
+          beneficiary_email: formData.beneficiary_email || null,
+          position: formData.position || null,
+          organization: formData.organization || null,
+          resources: formData.resources
+        });
+        toast.success('Access code updated successfully');
+        setShowDialog(false);
+      } else {
+        // Create new code
+        const newCode = generateRandomCode();
+        const user = await base44.auth.me();
 
-      await base44.entities.AccessCode.create({
-        code: newCode,
-        beneficiary_name: formData.beneficiary_name || null,
-        position: formData.position || null,
-        organization: formData.organization || null,
-        resources: formData.resources,
-        created_by_admin: user.email,
-        is_used: false
-      });
+        await base44.entities.AccessCode.create({
+          code: newCode,
+          beneficiary_name: formData.beneficiary_name || null,
+          beneficiary_email: formData.beneficiary_email || null,
+          position: formData.position || null,
+          organization: formData.organization || null,
+          resources: formData.resources,
+          created_by_admin: user.email,
+          is_used: false
+        });
 
-      setGeneratedCode(newCode);
+        setGeneratedCode(newCode);
+        toast.success('Access code generated successfully');
+      }
+
       await queryClient.invalidateQueries({ queryKey: ['accessCodes'] });
-      toast.success('Access code generated successfully');
     } catch (error) {
-      toast.error('Failed to generate access code');
+      toast.error(editingCode ? 'Failed to update access code' : 'Failed to generate access code');
     } finally {
       setIsGenerating(false);
     }
@@ -179,7 +214,7 @@ export default function AccessCodesTab() {
 
       <div className="mb-4">
         <Input
-          placeholder="Search by beneficiary name, code, or organization..."
+          placeholder="Search by beneficiary name, email, code, or organization..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="max-w-md"
@@ -216,6 +251,10 @@ export default function AccessCodesTab() {
                         </p>
                       )}
                       
+                      {code.beneficiary_email && (
+                        <p className="text-sm text-slate-600">{code.beneficiary_email}</p>
+                      )}
+                      
                       {code.organization && (
                         <p className="text-sm text-slate-600 mb-2">{code.organization}</p>
                       )}
@@ -246,11 +285,22 @@ export default function AccessCodesTab() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={handleCopyCode}
+                        onClick={() => {
+                          navigator.clipboard.writeText(code.code);
+                          toast.success('Code copied to clipboard');
+                        }}
                         title="Copy code"
                         className="text-slate-600 hover:text-slate-900"
                       >
                         <Copy className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleEditCode(code)}
+                        className="text-slate-600 hover:text-slate-900"
+                      >
+                        Edit
                       </Button>
                       <Button
                         variant="ghost"
@@ -277,7 +327,7 @@ export default function AccessCodesTab() {
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Generate Access Code</DialogTitle>
+            <DialogTitle>{editingCode ? 'Edit Access Code' : 'Generate Access Code'}</DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4">
@@ -287,6 +337,16 @@ export default function AccessCodesTab() {
                 value={formData.beneficiary_name}
                 onChange={(e) => setFormData({ ...formData, beneficiary_name: e.target.value })}
                 placeholder="Enter beneficiary name"
+              />
+            </div>
+
+            <div>
+              <Label>Beneficiary Email (optional)</Label>
+              <Input
+                type="email"
+                value={formData.beneficiary_email}
+                onChange={(e) => setFormData({ ...formData, beneficiary_email: e.target.value })}
+                placeholder="Enter beneficiary email"
               />
             </div>
 
@@ -396,10 +456,10 @@ export default function AccessCodesTab() {
                 {isGenerating ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Generating...
+                    {editingCode ? 'Updating...' : 'Generating...'}
                   </>
                 ) : (
-                  'Generate Code'
+                  editingCode ? 'Update Code' : 'Generate Code'
                 )}
               </Button>
             )}
