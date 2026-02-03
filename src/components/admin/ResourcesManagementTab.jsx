@@ -74,7 +74,9 @@ export default function ResourcesManagementTab() {
   // Get resources from flat list structure
   const getResources = (config, isPublished) => {
     const tools = config?.sections?.[0]?.tools || [];
-    return tools.map(tool => ({ ...tool, published: isPublished }));
+    return tools
+      .filter(tool => tool && typeof tool === 'object' && tool.id)
+      .map(tool => ({ ...tool, published: isPublished }));
   };
 
   const allResources = getResources(publishedConfig, true);
@@ -173,7 +175,7 @@ export default function ResourcesManagementTab() {
         id: 'all',
         title: 'All Resources',
         coming_soon: false,
-        tools: updatedResources
+        tools: updatedResources.filter(r => r && typeof r === 'object' && r.id)
       }]
     };
 
@@ -199,7 +201,7 @@ export default function ResourcesManagementTab() {
         id: 'all',
         title: 'All Resources',
         coming_soon: false,
-        tools: allResources
+        tools: allResources.filter(r => r && typeof r === 'object' && r.id)
       }]
     };
 
@@ -231,7 +233,7 @@ export default function ResourcesManagementTab() {
         id: 'all',
         title: 'All Resources',
         coming_soon: false,
-        tools: items
+        tools: items.filter(r => r && typeof r === 'object' && r.id)
       }]
     };
 
