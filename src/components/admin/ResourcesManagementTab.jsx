@@ -567,6 +567,18 @@ export default function ResourcesManagementTab() {
             <div>
               <Label>Topics</Label>
               <div className="flex flex-wrap gap-2 mt-2">
+                {/* Show outdated topics first */}
+                {formData.topics.filter(t => !AVAILABLE_TOPICS.includes(t)).map(topic => (
+                  <Badge
+                    key={topic}
+                    variant="default"
+                    className="cursor-pointer bg-orange-500 hover:bg-orange-600"
+                    onClick={() => toggleTopic(topic)}
+                  >
+                    {topic} ⚠️ (outdated)
+                  </Badge>
+                ))}
+                {/* Show current available topics */}
                 {AVAILABLE_TOPICS.map(topic => (
                   <Badge
                     key={topic}
