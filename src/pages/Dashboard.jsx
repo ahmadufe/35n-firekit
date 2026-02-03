@@ -516,7 +516,7 @@ export default function Dashboard() {
                   variant={showNewOnly ? "default" : "outline"}
                   size="sm"
                   onClick={() => setShowNewOnly(!showNewOnly)}
-                  className={`${showNewOnly ? 'bg-orange-500 hover:bg-orange-600 text-white' : 'bg-white text-orange-600 border-orange-300 hover:bg-orange-50'}`}
+                  className={`${showNewOnly ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-white text-green-600 border-green-300 hover:bg-green-50'}`}
                 >
                   Newly added {showNewOnly && `(${newToolsCount})`}
                 </Button>
