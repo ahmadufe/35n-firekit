@@ -136,23 +136,8 @@ export default function InsightsTab() {
       )
     : [];
 
-  // Calculate analytics for each resource (mock data for now since we don't have tracking)
-  const resourceAnalytics = allResources.map(resource => {
-    const activeUsers = Math.floor(Math.random() * 50) + 10;
-    const nonActiveUsers = totalUsers - activeUsers;
-    const returnRate = ((Math.random() * 50) + 20).toFixed(1);
-    const avgTimeMinutes = Math.floor(Math.random() * 15) + 2;
-    
-    return {
-      resource,
-      analytics: {
-        activeUsers,
-        nonActiveUsers,
-        returnRate,
-        avgTimeSpent: `${avgTimeMinutes} min`
-      }
-    };
-  });
+  // Filter only active resources (not coming_soon)
+  const activeResources = allResources.filter(resource => !resource.coming_soon);
 
   if (isLoading) {
     return (
@@ -203,18 +188,23 @@ export default function InsightsTab() {
         />
       </div>
 
-      {/* Resource Insights */}
+      {/* Active Resources Count */}
       <div>
-        <h2 className="text-xl font-semibold text-slate-900 mb-6">Resource Insights</h2>
-        <div className="space-y-4">
-          {resourceAnalytics.map(({ resource, analytics }, idx) => (
-            <ResourceInsightCard
-              key={resource.id || idx}
-              resource={resource}
-              analytics={analytics}
-            />
-          ))}
-        </div>
+        <h2 className="text-xl font-semibold text-slate-900 mb-4">Active Resources</h2>
+        <Card className="border-slate-200">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-500 mb-2">Total Active Resources</p>
+                <p className="text-3xl font-bold text-slate-900">{activeResources.length}</p>
+                <p className="text-xs text-slate-500 mt-2">Resources available to users</p>
+              </div>
+              <div className="p-3 bg-slate-100 rounded-xl">
+                <Activity className="h-5 w-5 text-slate-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
