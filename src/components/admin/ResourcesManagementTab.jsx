@@ -459,11 +459,19 @@ export default function ResourcesManagementTab() {
                             
                             {resource.topics?.length > 0 && (
                               <div className="flex flex-wrap gap-1 mt-2">
-                                {resource.topics.map((topic, idx) => (
-                                  <Badge key={idx} variant="outline" className="text-xs">
-                                    {topic}
-                                  </Badge>
-                                ))}
+                                {resource.topics.map((topic, idx) => {
+                                  const isValidTopic = AVAILABLE_TOPICS.includes(topic);
+                                  return (
+                                    <Badge 
+                                      key={idx} 
+                                      variant="outline" 
+                                      className={`text-xs ${!isValidTopic ? 'border-orange-300 bg-orange-50 text-orange-700' : ''}`}
+                                    >
+                                      {topic}
+                                      {!isValidTopic && ' ⚠️'}
+                                    </Badge>
+                                  );
+                                })}
                               </div>
                             )}
                           </div>
