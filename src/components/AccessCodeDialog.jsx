@@ -5,12 +5,17 @@ import { Input } from "@/components/ui/input";
 import { base44 } from "@/api/base44Client";
 import { Loader2, AlertCircle, CheckCircle2, Copy } from "lucide-react";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 
-export default function AccessCodeDialog({ open, onOpenChange, resourceId }) {
+export default function AccessCodeDialog({ open, onOpenChange, resource }) {
+  const navigate = useNavigate();
   const [code, setCode] = useState('');
   const [isChecking, setIsChecking] = useState(false);
   const [error, setError] = useState('');
   const [isValid, setIsValid] = useState(false);
+  
+  const resourceId = resource?.id;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,12 +50,19 @@ export default function AccessCodeDialog({ open, onOpenChange, resourceId }) {
       // Store the code in session storage so the user can access the resource
       sessionStorage.setItem(`access_code_${resourceId}`, code.trim());
       
-      // Close dialog and trigger a refresh
+      // Close dialog and redirect to resource
       setTimeout(() => {
         onOpenChange(false);
         toast.success('Access granted!');
-        // Trigger a page reload to refresh the state
-        window.location.reload();
+        
+        // Redirect based on resource type
+        if (resource.file_url) {
+          window.open(resource.file_url, '_blank');
+        } else if (resource.link) {
+          window.open(resource.link, '_blank');
+        } else if (resource.page) {
+          navigate(createPageUrl(resource.page));
+        }
       }, 1000);
     } catch (err) {
       setError('Something went wrong. Please try again.');

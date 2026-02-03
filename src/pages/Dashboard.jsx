@@ -52,7 +52,7 @@ export default function Dashboard() {
   const [showAccessRequestDialog, setShowAccessRequestDialog] = useState(false);
   const [selectedResource, setSelectedResource] = useState(null);
   const [showAccessCodeDialog, setShowAccessCodeDialog] = useState(false);
-  const [selectedExclusiveResourceId, setSelectedExclusiveResourceId] = useState(null);
+  const [selectedExclusiveResource, setSelectedExclusiveResource] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: user, isLoading: userLoading } = useQuery({
@@ -168,11 +168,11 @@ export default function Dashboard() {
     }
   };
 
-  const handleExclusiveResourceClick = (resourceId) => {
+  const handleExclusiveResourceClick = (resource) => {
     // Check if user already has access code in session
-    const hasAccessCode = sessionStorage.getItem(`access_code_${resourceId}`);
+    const hasAccessCode = sessionStorage.getItem(`access_code_${resource.id}`);
     if (!hasAccessCode) {
-      setSelectedExclusiveResourceId(resourceId);
+      setSelectedExclusiveResource(resource);
       setShowAccessCodeDialog(true);
     }
   };
@@ -400,7 +400,7 @@ export default function Dashboard() {
       <AccessCodeDialog
         open={showAccessCodeDialog}
         onOpenChange={setShowAccessCodeDialog}
-        resourceId={selectedExclusiveResourceId}
+        resource={selectedExclusiveResource}
       />
 
       {/* Header */}
@@ -671,7 +671,7 @@ export default function Dashboard() {
                 <ToolCard
                   key={tool.id}
                   onClick={needsLoginCheck ? () => handleResourceClick(tool) : undefined}
-                  onExclusiveClick={() => handleExclusiveResourceClick(tool.id)}
+                  onExclusiveClick={() => handleExclusiveResourceClick(tool)}
                   title={tool.title}
                   description={tool.description}
                   icon={IconComponent}
