@@ -70,8 +70,13 @@ export default function AccessCodeDialog({ open, onOpenChange, resource }) {
         onOpenChange(false);
         toast.success('Access granted!');
         
+        // Store access code in session for the resource
+        sessionStorage.setItem(`access_code_${resourceId}`, 'true');
+        
         // Redirect based on resource type
-        if (resource.file_url) {
+        if (resource.id === 'cloud-regulations-map') {
+          navigate(createPageUrl('CloudRegulationsMap'));
+        } else if (resource.file_url) {
           window.open(resource.file_url, '_blank');
         } else if (resource.link) {
           window.open(resource.link, '_blank');
