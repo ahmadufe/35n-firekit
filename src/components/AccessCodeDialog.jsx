@@ -17,6 +17,16 @@ export default function AccessCodeDialog({ open, onOpenChange, resource }) {
   
   const resourceId = resource?.id;
 
+  // Reset state when dialog opens or resource changes
+  React.useEffect(() => {
+    if (open) {
+      setCode('');
+      setIsChecking(false);
+      setError('');
+      setIsValid(false);
+    }
+  }, [open, resourceId]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
