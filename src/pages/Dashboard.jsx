@@ -682,6 +682,7 @@ export default function Dashboard() {
                   actionText={getActionText(tool.sectionId)}
                   type={tool.sectionTitle}
                   topics={tool.topics || []}
+                  resourceId={tool.id}
                 />
               );
             })}

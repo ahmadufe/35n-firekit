@@ -17,7 +17,8 @@ export default function ToolCard({
   type,
   topics = [],
   onClick,
-  onExclusiveClick
+  onExclusiveClick,
+  resourceId
 }) {
   const handleClick = () => {
     if (comingSoon) {
@@ -34,12 +35,35 @@ export default function ToolCard({
     }
   };
 
+  // Check access code for exclusive resources
+  React.useEffect(() => {
+    if (comingSoon && resourceId) {
+      const hasAccess = sessionStorage.getItem(`access_code_${resourceId}`);
+      if (hasAccess) {
+        // Resource can be accessed
+      }
+    }
+  }, [comingSoon, resourceId]);
+
   // If there's a file or link, use div with onClick; otherwise use Link
   if (fileUrl || link) {
+    // Check if user has access to exclusive resource
+    const hasAccessCode = comingSoon && resourceId ? sessionStorage.getItem(`access_code_${resourceId}`) : null;
+    
+    const actualClickHandler = () => {
+      if (comingSoon && !hasAccessCode) {
+        if (onExclusiveClick) {
+          onExclusiveClick();
+        }
+        return;
+      }
+      handleClick();
+    };
+
     return (
-      <div onClick={handleClick} className={`${comingSoon ? 'cursor-not-allowed' : 'cursor-pointer'} h-full`}>
+      <div onClick={actualClickHandler} className={`${(comingSoon && !hasAccessCode) ? 'cursor-not-allowed' : 'cursor-pointer'} h-full`}>
          <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col`}>
-         <div className={`absolute inset-0 bg-gradient-to-br ${comingSoon ? 'from-orange-50 to-orange-50/50' : 'from-slate-50 to-white'}`} />
+         <div className={`absolute inset-0 bg-gradient-to-br ${(comingSoon && !hasAccessCode) ? 'from-orange-50 to-orange-50/50' : 'from-slate-50 to-white'}`} />
         <div className="absolute top-0 right-0 w-32 h-32 bg-slate-100 rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700" />
 
         <CardContent className="relative p-6 flex flex-col h-full">
@@ -93,26 +117,33 @@ export default function ToolCard({
   }
 
   // For pages or coming soon
-  const CardWrapper = (comingSoon || onClick) ? 'div' : Link;
-  const wrapperProps = (comingSoon || onClick) ? {} : { to: href };
+  const hasAccessCode = comingSoon && resourceId ? sessionStorage.getItem(`access_code_${resourceId}`) : null;
+  const shouldBlock = comingSoon && !hasAccessCode;
+  
+  const CardWrapper = (shouldBlock || onClick) ? 'div' : Link;
+  const wrapperProps = (shouldBlock || onClick) ? {} : { to: href };
 
-  const cardClickHandler = onClick ? (e) => {
+  const cardClickHandler = shouldBlock ? () => {
+    if (onExclusiveClick) {
+      onExclusiveClick();
+    }
+  } : onClick ? (e) => {
     e.preventDefault();
     onClick();
   } : undefined;
 
   return (
     <CardWrapper {...wrapperProps} onClick={cardClickHandler} className="h-full">
-      <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col ${comingSoon ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
-         <div className={`absolute inset-0 bg-gradient-to-br ${comingSoon ? 'from-orange-50 to-orange-50/50' : 'from-slate-50 to-white'}`} />
+      <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col ${shouldBlock ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+         <div className={`absolute inset-0 bg-gradient-to-br ${shouldBlock ? 'from-orange-50 to-orange-50/50' : 'from-slate-50 to-white'}`} />
         <div className="absolute top-0 right-0 w-32 h-32 bg-slate-100 rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700" />
 
         <CardContent className="relative p-6 flex flex-col h-full">
           {/* Header: Icon, Type, and Exclusive Badge */}
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <div className={`p-2 rounded-lg ${comingSoon ? 'bg-slate-100' : 'bg-slate-900'}`}>
-                <Icon className={`h-4 w-4 ${comingSoon ? 'text-slate-400' : 'text-white'}`} />
+              <div className={`p-2 rounded-lg ${shouldBlock ? 'bg-slate-100' : 'bg-slate-900'}`}>
+                <Icon className={`h-4 w-4 ${shouldBlock ? 'text-slate-400' : 'text-white'}`} />
               </div>
               {type && (
                 <Badge variant="outline" className="text-xs border-slate-300 text-slate-600 px-2 py-0.5">
@@ -120,7 +151,7 @@ export default function ToolCard({
                 </Badge>
               )}
             </div>
-            {comingSoon && (
+            {shouldBlock && (
               <Badge className="bg-orange-100 text-orange-700 border-orange-200 text-xs px-2 py-0.5">
                 Exclusive
               </Badge>
