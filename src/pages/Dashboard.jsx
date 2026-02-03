@@ -169,19 +169,17 @@ export default function Dashboard() {
   };
 
   const handleExclusiveResourceClick = (resource) => {
-    // If user is not logged in, prompt them to login first
-    if (!user) {
-      setLoginPromptType('resource');
-      setShowLoginPrompt(true);
-      return;
+    // For authenticated users, check if they already have access code in session
+    if (user) {
+      const hasAccessCode = sessionStorage.getItem(`access_code_${resource.id}`);
+      if (hasAccessCode) {
+        return; // Already have access, let the card handle the navigation
+      }
     }
     
-    // Check if user already has access code in session
-    const hasAccessCode = sessionStorage.getItem(`access_code_${resource.id}`);
-    if (!hasAccessCode) {
-      setSelectedExclusiveResource(resource);
-      setShowAccessCodeDialog(true);
-    }
+    // Show access code dialog for everyone (authenticated or not)
+    setSelectedExclusiveResource(resource);
+    setShowAccessCodeDialog(true);
   };
 
   const handleSuggestResource = () => {

@@ -35,16 +35,6 @@ export default function AccessCodeDialog({ open, onOpenChange, resource }) {
     try {
       // Check if user is authenticated
       const user = await base44.auth.me().catch(() => null);
-      
-      if (!user) {
-        setError('Please log in to use an access code');
-        setIsChecking(false);
-        // Redirect to login after a short delay
-        setTimeout(() => {
-          base44.auth.redirectToLogin();
-        }, 1500);
-        return;
-      }
 
       // Find the access code in database
       const accessCodes = await base44.entities.AccessCode.filter({
@@ -70,8 +60,10 @@ export default function AccessCodeDialog({ open, onOpenChange, resource }) {
       setIsValid(true);
       setError('');
       
-      // Store the code in session storage so the user can access the resource
-      sessionStorage.setItem(`access_code_${resourceId}`, code.trim());
+      // Only store in session for authenticated users
+      if (user) {
+        sessionStorage.setItem(`access_code_${resourceId}`, code.trim());
+      }
       
       // Close dialog and redirect to resource
       setTimeout(() => {
