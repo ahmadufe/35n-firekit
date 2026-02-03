@@ -269,9 +269,10 @@ export default function ResourcesManagementTab() {
       return;
     }
 
-    // Swap
-    [flatResources[resourceIndex], flatResources[newIndex]] = 
-      [flatResources[newIndex], flatResources[resourceIndex]];
+    // Swap only the tools, keep sectionIds in place
+    const tempTool = flatResources[resourceIndex].tool;
+    flatResources[resourceIndex].tool = flatResources[newIndex].tool;
+    flatResources[newIndex].tool = tempTool;
 
     // Reconstruct sections with new order
     sections.forEach(section => {
