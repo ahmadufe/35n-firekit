@@ -168,11 +168,11 @@ export default function ResourcesManagementTab() {
       title: formData.title,
       description: formData.description,
       icon: formData.icon,
-      page: formData.page,
-      link: formData.link,
-      file_url: formData.file_url,
+      page: formData.page || null,
+      link: formData.link || null,
+      file_url: formData.file_url || null,
       coming_soon: formData.coming_soon,
-      topics: formData.topics,
+      topics: formData.topics || [],
       published_date: formData.published_date || new Date().toISOString(),
       featured: formData.featured
     };
