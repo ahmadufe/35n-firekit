@@ -71,7 +71,7 @@ export default function ResourcesManagementTab() {
   const publishedConfig = configs.find(c => c.config_name === 'published');
   const draftConfig = configs.find(c => c.config_name === 'draft');
 
-  // Flatten all resources - maintain flat order list
+  // Flatten all resources - maintain flat order list by _position field
   const flattenResources = (config, isPublished) => {
     const resources = [];
     (config?.sections || []).forEach(section => {
@@ -83,7 +83,13 @@ export default function ResourcesManagementTab() {
         });
       });
     });
-    return resources;
+    // Sort by _position if available, otherwise maintain current order
+    return resources.sort((a, b) => {
+      if (a._position !== undefined && b._position !== undefined) {
+        return a._position - b._position;
+      }
+      return 0;
+    });
   };
 
   const allResources = flattenResources(publishedConfig, true);
@@ -176,13 +182,37 @@ export default function ResourcesManagementTab() {
       updatedResources = [...allCurrentResources, toolData];
     }
 
+    // Add position index to maintain order across sections
+    const resourcesWithPosition = updatedResources.map((r, idx) => ({
+      ...r,
+      _position: idx
+    }));
+
+    // Group by type for sections structure
+    const sectionMap = {};
+    resourcesWithPosition.forEach(resource => {
+      const sectionTitle = resource.type || 'Tools';
+      if (!sectionMap[sectionTitle]) {
+        sectionMap[sectionTitle] = {
+          id: `section_${sectionTitle.toLowerCase().replace(/\s+/g, '_')}`,
+          title: sectionTitle,
+          coming_soon: false,
+          tools: []
+        };
+      }
+      sectionMap[sectionTitle].tools.push(resource);
+    });
+
+    // Sort tools within each section by position
+    Object.values(sectionMap).forEach(section => {
+      section.tools.sort((a, b) => a._position - b._position);
+    });
+
+    const sections = Object.values(sectionMap);
+
     const updatedConfig = {
       config_name: 'draft',
-      sections: [{
-        id: 'main',
-        title: 'Resources',
-        tools: updatedResources
-      }]
+      sections
     };
 
     if (draftConfig) {
@@ -201,13 +231,37 @@ export default function ResourcesManagementTab() {
     const config = draftConfig || publishedConfig;
     const allResources = flattenResources(config, false).filter(r => r.id !== resource.id);
 
+    // Add position index
+    const resourcesWithPosition = allResources.map((r, idx) => ({
+      ...r,
+      _position: idx
+    }));
+
+    // Group by type for sections structure
+    const sectionMap = {};
+    resourcesWithPosition.forEach(r => {
+      const sectionTitle = r.type || 'Tools';
+      if (!sectionMap[sectionTitle]) {
+        sectionMap[sectionTitle] = {
+          id: `section_${sectionTitle.toLowerCase().replace(/\s+/g, '_')}`,
+          title: sectionTitle,
+          coming_soon: false,
+          tools: []
+        };
+      }
+      sectionMap[sectionTitle].tools.push(r);
+    });
+
+    // Sort tools within each section by position
+    Object.values(sectionMap).forEach(section => {
+      section.tools.sort((a, b) => a._position - b._position);
+    });
+
+    const sections = Object.values(sectionMap);
+
     const updatedConfig = {
       config_name: 'draft',
-      sections: [{
-        id: 'main',
-        title: 'Resources',
-        tools: allResources
-      }]
+      sections
     };
 
     if (draftConfig) {
@@ -232,13 +286,37 @@ export default function ResourcesManagementTab() {
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
+    // Add position index
+    const resourcesWithPosition = items.map((r, idx) => ({
+      ...r,
+      _position: idx
+    }));
+
+    // Group by type for sections structure
+    const sectionMap = {};
+    resourcesWithPosition.forEach(r => {
+      const sectionTitle = r.type || 'Tools';
+      if (!sectionMap[sectionTitle]) {
+        sectionMap[sectionTitle] = {
+          id: `section_${sectionTitle.toLowerCase().replace(/\s+/g, '_')}`,
+          title: sectionTitle,
+          coming_soon: false,
+          tools: []
+        };
+      }
+      sectionMap[sectionTitle].tools.push(r);
+    });
+
+    // Sort tools within each section by position
+    Object.values(sectionMap).forEach(section => {
+      section.tools.sort((a, b) => a._position - b._position);
+    });
+
+    const sections = Object.values(sectionMap);
+
     const updatedConfig = {
       config_name: 'draft',
-      sections: [{
-        id: 'main',
-        title: 'Resources',
-        tools: items
-      }]
+      sections
     };
 
     if (draftConfig) {
