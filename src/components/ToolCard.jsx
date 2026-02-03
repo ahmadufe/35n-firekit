@@ -80,9 +80,15 @@ export default function ToolCard({
              )}
            </div>
            {comingSoon && (
-             <Badge className="bg-orange-100 text-orange-700 border-orange-200 text-xs px-2 py-0.5">
-               {hasAccessCode ? 'Unlocked' : 'Exclusive'}
-             </Badge>
+             hasAccessCode ? (
+               <Badge className="bg-green-100 text-green-700 border-green-200 text-xs px-2 py-0.5">
+                 Unlocked
+               </Badge>
+             ) : (
+               <Badge className="bg-orange-100 text-orange-700 border-orange-200 text-xs px-2 py-0.5">
+                 Exclusive
+               </Badge>
+             )
            )}
          </div>
 
@@ -120,14 +126,15 @@ export default function ToolCard({
   const hasAccessCode = comingSoon && resourceId ? sessionStorage.getItem(`access_code_${resourceId}`) : null;
   const shouldBlock = comingSoon && !hasAccessCode;
   
-  const CardWrapper = (shouldBlock || onClick) ? 'div' : Link;
-  const wrapperProps = (shouldBlock || onClick) ? {} : { to: href };
+  // If unlocked, treat it like a normal card
+  const CardWrapper = (shouldBlock || (onClick && !hasAccessCode)) ? 'div' : Link;
+  const wrapperProps = (shouldBlock || (onClick && !hasAccessCode)) ? {} : { to: href };
 
   const cardClickHandler = shouldBlock ? () => {
     if (onExclusiveClick) {
       onExclusiveClick();
     }
-  } : onClick ? (e) => {
+  } : (onClick && !hasAccessCode) ? (e) => {
     e.preventDefault();
     onClick();
   } : undefined;
@@ -152,9 +159,15 @@ export default function ToolCard({
               )}
             </div>
             {comingSoon && (
-              <Badge className="bg-orange-100 text-orange-700 border-orange-200 text-xs px-2 py-0.5">
-                {hasAccessCode ? 'Unlocked' : 'Exclusive'}
-              </Badge>
+              hasAccessCode ? (
+                <Badge className="bg-green-100 text-green-700 border-green-200 text-xs px-2 py-0.5">
+                  Unlocked
+                </Badge>
+              ) : (
+                <Badge className="bg-orange-100 text-orange-700 border-orange-200 text-xs px-2 py-0.5">
+                  Exclusive
+                </Badge>
+              )
             )}
           </div>
 
