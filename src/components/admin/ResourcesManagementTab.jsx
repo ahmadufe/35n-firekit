@@ -33,6 +33,7 @@ export default function ResourcesManagementTab() {
   });
   const [filterView, setFilterView] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [expandedResources, setExpandedResources] = useState({});
   
   const queryClient = useQueryClient();
 
@@ -356,6 +357,24 @@ export default function ResourcesManagementTab() {
         </div>
         <div className="flex gap-2">
           <Button 
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const allExpanded = {};
+              filteredResources.forEach(r => { allExpanded[r.id] = true; });
+              setExpandedResources(allExpanded);
+            }}
+          >
+            Expand All
+          </Button>
+          <Button 
+            variant="outline"
+            size="sm"
+            onClick={() => setExpandedResources({})}
+          >
+            Collapse All
+          </Button>
+          <Button 
             onClick={handlePublish} 
             disabled={isPublishing || !draftConfig}
             className="bg-emerald-600 hover:bg-emerald-700"
@@ -471,22 +490,64 @@ export default function ResourcesManagementTab() {
                         Draft
                       </Badge>
                     )}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6 ml-auto"
+                      onClick={() => setExpandedResources({
+                        ...expandedResources,
+                        [resource.id]: !expandedResources[resource.id]
+                      })}
+                    >
+                      {expandedResources[resource.id] ? (
+                        <ChevronUp className="h-4 w-4" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4" />
+                      )}
+                    </Button>
                   </div>
-                  <p className="text-sm text-slate-600 mb-2 line-clamp-2">{resource.description}</p>
-                  {resource.topics?.length > 0 && (
-                    <div className="flex flex-wrap gap-1">
-                      {resource.topics.map((topic, idx) => (
-                        <span key={idx} className="text-xs text-slate-500">
-                          #{topic.toLowerCase().replace(/\s+/g, '')}
-                        </span>
-                      ))}
-                    </div>
+                  
+                  {!expandedResources[resource.id] && (
+                    <p className="text-sm text-slate-600 mb-2 line-clamp-2">{resource.description}</p>
                   )}
-                  {(resource.page || resource.link || resource.file_url) && (
-                    <div className="flex items-center gap-2 mt-2 text-xs text-slate-500">
-                      {resource.page && <span>Page: {resource.page}</span>}
-                      {resource.link && <ExternalLink className="h-3 w-3" />}
-                      {resource.file_url && <span>Has attachment</span>}
+                  
+                  {expandedResources[resource.id] && (
+                    <div className="space-y-3 mt-3">
+                      <div>
+                        <p className="text-xs font-medium text-slate-500 mb-1">Description</p>
+                        <p className="text-sm text-slate-600">{resource.description}</p>
+                      </div>
+                      
+                      {resource.topics?.length > 0 && (
+                        <div>
+                          <p className="text-xs font-medium text-slate-500 mb-1">Topics</p>
+                          <div className="flex flex-wrap gap-1">
+                            {resource.topics.map((topic, idx) => (
+                              <Badge key={idx} variant="outline" className="text-xs">
+                                {topic}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {(resource.page || resource.link || resource.file_url) && (
+                        <div>
+                          <p className="text-xs font-medium text-slate-500 mb-1">Links & Files</p>
+                          <div className="space-y-1 text-xs text-slate-600">
+                            {resource.page && <p>Page: {resource.page}</p>}
+                            {resource.link && <p className="flex items-center gap-1"><ExternalLink className="h-3 w-3" /> {resource.link}</p>}
+                            {resource.file_url && <p>Attachment: {resource.file_url.split('/').pop()}</p>}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {resource.published_date && (
+                        <div>
+                          <p className="text-xs font-medium text-slate-500 mb-1">Published Date</p>
+                          <p className="text-xs text-slate-600">{new Date(resource.published_date).toLocaleDateString()}</p>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
