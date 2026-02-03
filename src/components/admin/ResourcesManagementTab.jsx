@@ -172,18 +172,19 @@ export default function ResourcesManagementTab() {
     let updatedResources;
     if (editingResource) {
       updatedResources = allCurrentResources.map(r => {
+        if (!r) return null;
         if (r.id === editingResource.id) {
           return toolData;
         }
-        // Remove published field from other resources
         const { published, ...cleanResource } = r;
         return cleanResource;
-      });
+      }).filter(Boolean);
     } else {
       updatedResources = [...allCurrentResources.map(r => {
+        if (!r) return null;
         const { published, ...cleanResource } = r;
         return cleanResource;
-      }), toolData];
+      }).filter(Boolean), toolData];
     }
 
     const updatedConfig = {
@@ -211,11 +212,13 @@ export default function ResourcesManagementTab() {
   const handleDeleteResource = async (resource) => {
     const config = draftConfig || publishedConfig;
     const allResources = getResources(config, false)
-      .filter(r => r.id !== resource.id)
+      .filter(r => r && r.id !== resource.id)
       .map(r => {
+        if (!r) return null;
         const { published, ...cleanResource } = r;
         return cleanResource;
-      });
+      })
+      .filter(Boolean);
 
     const updatedConfig = {
       config_name: 'draft',
@@ -251,9 +254,10 @@ export default function ResourcesManagementTab() {
 
     // Clean published field before saving
     const cleanedItems = items.map(r => {
+      if (!r) return null;
       const { published, ...cleanResource } = r;
       return cleanResource;
-    });
+    }).filter(Boolean);
 
     const updatedConfig = {
       config_name: 'draft',
