@@ -672,16 +672,18 @@ export default function Dashboard() {
                                        tool.sectionTitle?.toLowerCase().includes('tool');
               const needsLoginCheck = !user && isToolOrDeepDive && tool.page;
 
+              const isExclusive = tool.coming_soon || tool.sectionComingSoon;
+              
               return (
                 <ToolCard
                   key={tool.id}
                   onClick={needsLoginCheck ? () => handleResourceClick(tool) : undefined}
-                  onExclusiveClick={() => handleExclusiveResourceClick(tool)}
+                  onExclusiveClick={isExclusive ? () => handleExclusiveResourceClick(tool) : undefined}
                   title={tool.title}
                   description={tool.description}
                   icon={IconComponent}
                   href={tool.page ? createPageUrl(tool.page) : '#'}
-                  comingSoon={tool.coming_soon || tool.sectionComingSoon}
+                  comingSoon={isExclusive}
                   fileUrl={tool.file_url}
                   link={tool.link}
                   actionText={getActionText(tool.sectionId)}
