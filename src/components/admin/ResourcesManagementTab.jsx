@@ -22,7 +22,6 @@ export default function ResourcesManagementTab() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    type: 'Tools',
     topics: [],
     icon: 'ClipboardCheck',
     page: '',
@@ -52,7 +51,6 @@ export default function ResourcesManagementTab() {
     }
   });
 
-  const AVAILABLE_TYPES = filterConfig?.filters?.type || ['Tools', 'Guides & Insights', 'Playbooks', 'Deep dive series'];
   const AVAILABLE_TOPICS = filterConfig?.filters?.topic || [
     'Fintech',
     'Trade & Logistics',
@@ -79,7 +77,6 @@ export default function ResourcesManagementTab() {
         if (tool && typeof tool === 'object' && tool.id) {
           resources.push({
             ...tool,
-            type: tool.type || section.title, // Preserve type from section as fallback
             published: isPublished
           });
         }
@@ -116,7 +113,6 @@ export default function ResourcesManagementTab() {
       setFormData({
         title: resource.title || '',
         description: resource.description || '',
-        type: resource.type || 'Tools',
         topics: resource.topics || [],
         icon: resource.icon || 'ClipboardCheck',
         page: resource.page || '',
@@ -131,7 +127,6 @@ export default function ResourcesManagementTab() {
       setFormData({
         title: '',
         description: '',
-        type: 'Tools',
         topics: [],
         icon: 'ClipboardCheck',
         page: '',
@@ -158,7 +153,6 @@ export default function ResourcesManagementTab() {
       id: editingResource?.id || `tool_${Date.now()}`,
       title: formData.title,
       description: formData.description,
-      type: formData.type,
       topics: Array.isArray(formData.topics) ? formData.topics : [],
       icon: formData.icon,
       page: formData.page || null,
@@ -438,9 +432,6 @@ export default function ResourcesManagementTab() {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-2 flex-wrap">
                               <h3 className="text-lg font-semibold text-slate-900">{resource.title}</h3>
-                              <Badge variant="outline" className="text-xs">
-                                {resource.type}
-                              </Badge>
                               {resource.coming_soon && (
                                 <Badge className="bg-orange-100 text-orange-700 border-orange-200 text-xs">
                                   Exclusive
@@ -551,34 +542,18 @@ export default function ResourcesManagementTab() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Type *</Label>
-                <Select value={formData.type} onValueChange={(value) => setFormData({ ...formData, type: value })}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {AVAILABLE_TYPES.map(type => (
-                      <SelectItem key={type} value={type}>{type}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label>Icon</Label>
-                <Select value={formData.icon} onValueChange={(value) => setFormData({ ...formData, icon: value })}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {ICON_OPTIONS.map(icon => (
-                      <SelectItem key={icon} value={icon}>{icon}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+            <div>
+              <Label>Icon</Label>
+              <Select value={formData.icon} onValueChange={(value) => setFormData({ ...formData, icon: value })}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {ICON_OPTIONS.map(icon => (
+                    <SelectItem key={icon} value={icon}>{icon}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div>

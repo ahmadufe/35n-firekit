@@ -34,7 +34,6 @@ export default function Dashboard() {
   const [showSetup, setShowSetup] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTypes, setSelectedTypes] = useState([]);
   const [selectedTopics, setSelectedTopics] = useState([]);
 
   const [showNewOnly, setShowNewOnly] = useState(false);
@@ -237,10 +236,7 @@ export default function Dashboard() {
     return toolDate > cutoffDate;
   }).length;
 
-  // Get unique types (section titles)
-  const availableTypes = publishedConfig?.sections 
-    ? [...new Set(publishedConfig.sections.map(s => s.title))]
-    : [];
+
 
   // Fetch filter configuration
   const { data: filterConfig } = useQuery({
@@ -274,9 +270,6 @@ export default function Dashboard() {
       tool.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       tool.description.toLowerCase().includes(searchQuery.toLowerCase());
 
-    // Type filter
-    const matchesType = selectedTypes.length === 0 || selectedTypes.includes(tool.sectionTitle);
-
     // Topic filter
     const matchesTopic = selectedTopics.length === 0 || 
       (tool.topics && tool.topics.some(topic => selectedTopics.includes(topic)));
@@ -299,14 +292,8 @@ export default function Dashboard() {
     // Exclusive filter
     const matchesExclusive = !showExclusiveOnly || tool.coming_soon;
 
-    return matchesSearch && matchesType && matchesTopic && matchesNew && matchesFeatured && matchesExclusive;
+    return matchesSearch && matchesTopic && matchesNew && matchesFeatured && matchesExclusive;
   });
-
-  const toggleType = (type) => {
-    setSelectedTypes(prev => 
-      prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
-    );
-  };
 
   const toggleTopic = (topic) => {
     setSelectedTopics(prev => 
@@ -316,10 +303,9 @@ export default function Dashboard() {
 
 
 
-  const hasActiveFilters = selectedTypes.length > 0 || selectedTopics.length > 0 || showNewOnly || showFeaturedOnly || showExclusiveOnly;
+  const hasActiveFilters = selectedTopics.length > 0 || showNewOnly || showFeaturedOnly || showExclusiveOnly;
 
   const clearAllFilters = () => {
-    setSelectedTypes([]);
     setSelectedTopics([]);
     setShowNewOnly(false);
     setShowFeaturedOnly(false);
@@ -550,14 +536,6 @@ export default function Dashboard() {
               >
                 Topic {selectedTopics.length > 0 && `(${selectedTopics.length})`}
               </Button>
-              <Button
-                variant={openFilter === 'type' || selectedTypes.length > 0 ? "default" : "outline"}
-                size="sm"
-                onClick={() => toggleFilterSection('type')}
-                className={`${openFilter === 'type' || selectedTypes.length > 0 ? 'bg-slate-900 text-white' : 'bg-white text-slate-700 border-slate-300'}`}
-              >
-                Type {selectedTypes.length > 0 && `(${selectedTypes.length})`}
-              </Button>
 
               </div>
               {hasActiveFilters && (
@@ -612,35 +590,6 @@ export default function Dashboard() {
                     onClick={() => toggleTopic(topic)}
                   >
                     {topic}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {openFilter === 'type' && availableTypes.length > 0 && (
-            <div className="mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200 relative">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setOpenFilter(null)}
-                className="absolute top-2 right-2 h-6 w-6 text-slate-500 hover:text-slate-900"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-              <div className="flex flex-wrap gap-2">
-                {availableTypes.map(type => (
-                  <Badge
-                    key={type}
-                    variant={selectedTypes.includes(type) ? "default" : "outline"}
-                    className={`cursor-pointer px-3 py-1.5 text-xs transition-all ${
-                      selectedTypes.includes(type)
-                        ? 'bg-slate-900 text-white hover:bg-slate-800'
-                        : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-300'
-                    }`}
-                    onClick={() => toggleType(type)}
-                  >
-                    {type}
                   </Badge>
                 ))}
               </div>
