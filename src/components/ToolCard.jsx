@@ -96,10 +96,15 @@ export default function ToolCard({
          {topics.length > 0 && (
            <div className="flex flex-wrap gap-1.5 mb-3 min-h-[1.5rem]">
              {topics.slice(0, 3).map((topic, index) => (
-               <span key={index} className="text-xs text-slate-500">
+               <span key={index} className="text-xs text-blue-600 font-medium">
                  #{topic.toLowerCase().replace(/\s+/g, '')}
                </span>
              ))}
+             {topics.length > 3 && (
+               <span className="text-xs text-blue-600 font-medium">
+                 +{topics.length - 3}
+               </span>
+             )}
            </div>
          )}
 
@@ -175,10 +180,15 @@ export default function ToolCard({
           {topics.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mb-3 min-h-[1.5rem]">
               {topics.slice(0, 3).map((topic, index) => (
-                <span key={index} className="text-xs text-slate-500">
+                <span key={index} className="text-xs text-blue-600 font-medium">
                   #{topic.toLowerCase().replace(/\s+/g, '')}
                 </span>
               ))}
+              {topics.length > 3 && (
+                <span className="text-xs text-blue-600 font-medium">
+                  +{topics.length - 3}
+                </span>
+              )}
             </div>
           )}
 
