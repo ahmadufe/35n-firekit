@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
-import { ClipboardCheck, BookOpen, Wrench, User, LogOut, Settings, ChevronDown, Shield, Bookmark as BookmarkIcon, Trash2 } from "lucide-react";
+import { ClipboardCheck, BookOpen, Wrench, User, LogOut, Settings, ChevronDown, Shield, Bookmark as BookmarkIcon, Trash2, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import ToolCard from "@/components/ToolCard";
@@ -156,6 +156,12 @@ export default function Bookmarks() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-12">
         <div className="mb-12">
+          <Link to={createPageUrl('Dashboard')}>
+            <Button variant="ghost" className="mb-4 -ml-2 hover:bg-slate-100">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Dashboard
+            </Button>
+          </Link>
           <h2 className="text-4xl sm:text-5xl font-light text-slate-900 tracking-tight mb-4">
             My Bookmarks
           </h2>
