@@ -214,7 +214,11 @@ export default function ToolCard({
   } : (onClick && !hasAccessCode) ? (e) => {
     e.preventDefault();
     onClick();
-  } : undefined;
+  } : () => {
+    if (hasAccessCode) {
+      sessionStorage.setItem(`access_code_${resourceId}`, 'true');
+    }
+  };
 
   return (
     <CardWrapper {...wrapperProps} onClick={cardClickHandler} className="h-full">
