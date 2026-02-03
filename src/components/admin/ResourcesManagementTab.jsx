@@ -149,7 +149,7 @@ export default function ResourcesManagementTab() {
     }
 
     const config = draftConfig || publishedConfig;
-    const sections = config?.sections || [];
+    const sections = JSON.parse(JSON.stringify(config?.sections || []));
 
     let targetSection = sections.find(s => s.title === formData.type);
     
@@ -176,6 +176,8 @@ export default function ResourcesManagementTab() {
       published_date: formData.published_date || new Date().toISOString(),
       featured: formData.featured
     };
+
+    console.log('Saving resource with topics:', toolData.topics);
 
     if (editingResource) {
       // Update existing tool - find it across all sections if needed
