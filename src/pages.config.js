@@ -53,6 +53,7 @@ import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import Scorecard from './pages/Scorecard';
 import UserSettings from './pages/UserSettings';
+import CloudRegulationsMap from './pages/CloudRegulationsMap';
 
 
 export const PAGES = {
@@ -62,6 +63,7 @@ export const PAGES = {
     "Home": Home,
     "Scorecard": Scorecard,
     "UserSettings": UserSettings,
+    "CloudRegulationsMap": CloudRegulationsMap,
 }
 
 export const pagesConfig = {
