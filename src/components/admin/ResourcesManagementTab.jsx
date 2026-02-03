@@ -34,6 +34,7 @@ export default function ResourcesManagementTab() {
   const [filterView, setFilterView] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedResources, setExpandedResources] = useState({});
+  const [deleteConfirmResource, setDeleteConfirmResource] = useState(null);
   
   const queryClient = useQueryClient();
 
@@ -240,6 +241,7 @@ export default function ResourcesManagementTab() {
 
     await queryClient.invalidateQueries({ queryKey: ['landingPageConfigs'] });
     await queryClient.invalidateQueries({ queryKey: ['publishedLandingPage'] });
+    setDeleteConfirmResource(null);
     toast.success('Resource deleted from draft');
   };
 
@@ -564,7 +566,7 @@ export default function ResourcesManagementTab() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => handleDeleteResource(resource)}
+                    onClick={() => setDeleteConfirmResource(resource)}
                   >
                     <Trash2 className="h-4 w-4 text-red-500" />
                   </Button>
@@ -575,6 +577,26 @@ export default function ResourcesManagementTab() {
         );
         })}
       </div>
+
+      <Dialog open={!!deleteConfirmResource} onOpenChange={() => setDeleteConfirmResource(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Resource</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-slate-600 py-4">
+            Are you sure you want to delete <span className="font-semibold">"{deleteConfirmResource?.title}"</span>? This action cannot be undone.
+          </p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteConfirmResource(null)}>Cancel</Button>
+            <Button 
+              variant="destructive" 
+              onClick={() => handleDeleteResource(deleteConfirmResource)}
+            >
+              Delete Resource
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
