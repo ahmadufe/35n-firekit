@@ -54,6 +54,7 @@ import Home from './pages/Home';
 import Scorecard from './pages/Scorecard';
 import UserSettings from './pages/UserSettings';
 import CloudRegulationsMap from './pages/CloudRegulationsMap';
+import cloudregulationsmapCss from './pages/CloudRegulationsMap.css';
 
 
 export const PAGES = {
@@ -64,6 +65,7 @@ export const PAGES = {
     "Scorecard": Scorecard,
     "UserSettings": UserSettings,
     "CloudRegulationsMap": CloudRegulationsMap,
+    "CloudRegulationsMap.css": cloudregulationsmapCss,
 }
 
 export const pagesConfig = {
