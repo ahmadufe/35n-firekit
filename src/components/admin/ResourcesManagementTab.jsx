@@ -9,8 +9,9 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Plus, Edit2, Trash2, Eye, EyeOff, Upload, X, ExternalLink, ChevronUp, ChevronDown, Loader2 } from "lucide-react";
+import { Plus, Edit2, Trash2, Eye, EyeOff, Upload, X, ExternalLink, GripVertical, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 const ICON_OPTIONS = ['ClipboardCheck', 'BookOpen', 'Wrench'];
 
@@ -70,30 +71,29 @@ export default function ResourcesManagementTab() {
   const publishedConfig = configs.find(c => c.config_name === 'published');
   const draftConfig = configs.find(c => c.config_name === 'draft');
 
-  // Flatten all resources from sections with explicit ordering
-  const flattenWithOrder = (config, isPublished) => {
+  // Flatten all resources - maintain flat order list
+  const flattenResources = (config, isPublished) => {
     const resources = [];
     (config?.sections || []).forEach(section => {
       (section.tools || []).forEach(tool => {
         resources.push({
           ...tool,
-          type: tool.type || section.title, // Use tool.type if available, fallback to section title
-          published: isPublished,
-          order: tool.order !== undefined ? tool.order : resources.length
+          type: tool.type || section.title,
+          published: isPublished
         });
       });
     });
-    return resources.sort((a, b) => a.order - b.order);
+    return resources;
   };
 
-  const allResources = flattenWithOrder(publishedConfig, true);
-  const draftResources = flattenWithOrder(draftConfig, false);
+  const allResources = flattenResources(publishedConfig, true);
+  const draftResources = flattenResources(draftConfig, false);
 
-  // Combine and deduplicate - ALWAYS prefer draft version over published
+  // Combine and deduplicate - ALWAYS prefer draft version
   const combinedResources = [
     ...draftResources,
     ...allResources.filter(pub => !draftResources.find(draft => draft.id === pub.id))
-  ].sort((a, b) => a.order - b.order);
+  ];
 
   const filteredResources = combinedResources.filter(resource => {
     const matchesView = 
@@ -150,7 +150,7 @@ export default function ResourcesManagementTab() {
     }
 
     const config = draftConfig || publishedConfig;
-    const allCurrentResources = flattenWithOrder(config, false);
+    const allCurrentResources = flattenResources(config, false);
 
     const toolData = {
       id: editingResource?.id || `tool_${Date.now()}`,
@@ -164,41 +164,25 @@ export default function ResourcesManagementTab() {
       file_url: formData.file_url || null,
       coming_soon: formData.coming_soon,
       published_date: formData.published_date || new Date().toISOString(),
-      featured: formData.featured,
-      order: editingResource?.order !== undefined ? editingResource.order : allCurrentResources.length
+      featured: formData.featured
     };
 
     let updatedResources;
     if (editingResource) {
-      // Update existing resource
       updatedResources = allCurrentResources.map(r =>
         r.id === editingResource.id ? toolData : r
       );
     } else {
-      // Add new resource at the end
       updatedResources = [...allCurrentResources, toolData];
     }
 
-    // Group by type to create sections structure
-    const sectionMap = {};
-    updatedResources.forEach(resource => {
-      const sectionTitle = resource.type || 'Tools';
-      if (!sectionMap[sectionTitle]) {
-        sectionMap[sectionTitle] = {
-          id: `section_${Date.now()}_${sectionTitle.toLowerCase().replace(/\s+/g, '_')}`,
-          title: sectionTitle,
-          coming_soon: false,
-          tools: []
-        };
-      }
-      sectionMap[sectionTitle].tools.push(resource);
-    });
-
-    const sections = Object.values(sectionMap);
-
     const updatedConfig = {
       config_name: 'draft',
-      sections
+      sections: [{
+        id: 'main',
+        title: 'Resources',
+        tools: updatedResources
+      }]
     };
 
     if (draftConfig) {
@@ -215,34 +199,15 @@ export default function ResourcesManagementTab() {
 
   const handleDeleteResource = async (resource) => {
     const config = draftConfig || publishedConfig;
-    let allResources = flattenWithOrder(config, false);
-    
-    // Remove the resource
-    allResources = allResources.filter(r => r.id !== resource.id);
-    
-    // Reorder remaining resources
-    allResources = allResources.map((r, index) => ({ ...r, order: index }));
-
-    // Group by type to create sections structure
-    const sectionMap = {};
-    allResources.forEach(r => {
-      const sectionTitle = r.type || 'Tools';
-      if (!sectionMap[sectionTitle]) {
-        sectionMap[sectionTitle] = {
-          id: `section_${Date.now()}_${sectionTitle.toLowerCase().replace(/\s+/g, '_')}`,
-          title: sectionTitle,
-          coming_soon: false,
-          tools: []
-        };
-      }
-      sectionMap[sectionTitle].tools.push(r);
-    });
-
-    const sections = Object.values(sectionMap);
+    const allResources = flattenResources(config, false).filter(r => r.id !== resource.id);
 
     const updatedConfig = {
       config_name: 'draft',
-      sections
+      sections: [{
+        id: 'main',
+        title: 'Resources',
+        tools: allResources
+      }]
     };
 
     if (draftConfig) {
@@ -257,49 +222,23 @@ export default function ResourcesManagementTab() {
     toast.success('Resource deleted from draft');
   };
 
-  const handleMoveResource = async (resource, direction) => {
+  const handleDragEnd = async (result) => {
+    if (!result.destination) return;
+
     const config = draftConfig || publishedConfig;
-    let allResources = flattenWithOrder(config, false);
-
-    const resourceIndex = allResources.findIndex(r => r.id === resource.id);
-    if (resourceIndex === -1) return;
-
-    let newIndex = resourceIndex;
-    if (direction === 'up' && resourceIndex > 0) {
-      newIndex = resourceIndex - 1;
-    } else if (direction === 'down' && resourceIndex < allResources.length - 1) {
-      newIndex = resourceIndex + 1;
-    } else {
-      return;
-    }
-
-    // Swap the resources
-    [allResources[resourceIndex], allResources[newIndex]] = 
-      [allResources[newIndex], allResources[resourceIndex]];
-
-    // Update order field for all resources
-    allResources = allResources.map((r, index) => ({ ...r, order: index }));
-
-    // Group by type to create sections structure
-    const sectionMap = {};
-    allResources.forEach(r => {
-      const sectionTitle = r.type || 'Tools';
-      if (!sectionMap[sectionTitle]) {
-        sectionMap[sectionTitle] = {
-          id: `section_${Date.now()}_${sectionTitle.toLowerCase().replace(/\s+/g, '_')}`,
-          title: sectionTitle,
-          coming_soon: false,
-          tools: []
-        };
-      }
-      sectionMap[sectionTitle].tools.push(r);
-    });
-
-    const sections = Object.values(sectionMap);
+    const allResources = flattenResources(config, false);
+    
+    const items = Array.from(allResources);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
 
     const updatedConfig = {
       config_name: 'draft',
-      sections
+      sections: [{
+        id: 'main',
+        title: 'Resources',
+        tools: items
+      }]
     };
 
     if (draftConfig) {
@@ -310,7 +249,6 @@ export default function ResourcesManagementTab() {
 
     await queryClient.invalidateQueries({ queryKey: ['landingPageConfigs'] });
     await queryClient.invalidateQueries({ queryKey: ['publishedLandingPage'] });
-    toast.success('Order updated in draft');
   };
 
   const handlePublish = async () => {
@@ -444,147 +382,100 @@ export default function ResourcesManagementTab() {
         </Button>
       </div>
 
-      <div className="grid gap-4">
-        {filteredResources.map((resource, index) => {
-          const isFirst = resource.order <= 0;
-          const isLast = resource.order >= combinedResources.length - 1;
-
-          return (
-          <Card key={resource.id} className="border-slate-200">
-            <CardContent className="p-4">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex items-center gap-2">
-                  <div className="flex flex-col gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={() => handleMoveResource(resource, 'up')}
-                      disabled={isFirst}
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId="resources">
+          {(provided) => (
+            <div 
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className="grid gap-4"
+            >
+              {filteredResources.map((resource, index) => (
+                <Draggable key={resource.id} draggableId={resource.id} index={index}>
+                  {(provided, snapshot) => (
+                    <Card 
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      className={`border-slate-200 ${snapshot.isDragging ? 'shadow-lg' : ''}`}
                     >
-                      <ChevronUp className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={() => handleMoveResource(resource, 'down')}
-                      disabled={isLast}
-                    >
-                      <ChevronDown className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h3 className="text-lg font-semibold text-slate-900 truncate">{resource.title}</h3>
-                    <Badge variant="outline" className="text-xs">
-                      {resource.type}
-                    </Badge>
-                    {resource.coming_soon && (
-                       <Badge className="bg-orange-100 text-orange-700 border-orange-200 text-xs">
-                         Exclusive
-                       </Badge>
-                     )}
-                    {resource.featured && (
-                      <Badge className="bg-purple-100 text-purple-700 border-purple-200 text-xs">
-                        Featured
-                      </Badge>
-                    )}
-                    {resource.published ? (
-                      <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 text-xs">
-                        <Eye className="h-3 w-3 mr-1" />
-                        Published
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline" className="text-xs">
-                        <EyeOff className="h-3 w-3 mr-1" />
-                        Draft
-                      </Badge>
-                    )}
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6 ml-auto"
-                      onClick={() => setExpandedResources({
-                        ...expandedResources,
-                        [resource.id]: !expandedResources[resource.id]
-                      })}
-                    >
-                      {expandedResources[resource.id] ? (
-                        <ChevronUp className="h-4 w-4" />
-                      ) : (
-                        <ChevronDown className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </div>
-                  
-                  {!expandedResources[resource.id] && (
-                    <p className="text-sm text-slate-600 mb-2 line-clamp-2">{resource.description}</p>
-                  )}
-                  
-                  {expandedResources[resource.id] && (
-                    <div className="space-y-3 mt-3">
-                      <div>
-                        <p className="text-xs font-medium text-slate-500 mb-1">Description</p>
-                        <p className="text-sm text-slate-600">{resource.description}</p>
-                      </div>
-                      
-                      {resource.topics?.length > 0 && (
-                        <div>
-                          <p className="text-xs font-medium text-slate-500 mb-1">Topics</p>
-                          <div className="flex flex-wrap gap-1">
-                            {resource.topics.map((topic, idx) => (
-                              <Badge key={idx} variant="outline" className="text-xs">
-                                {topic}
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-4">
+                          <div 
+                            {...provided.dragHandleProps}
+                            className="flex items-center cursor-grab active:cursor-grabbing pt-2"
+                          >
+                            <GripVertical className="h-5 w-5 text-slate-400" />
+                          </div>
+                          
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-2 flex-wrap">
+                              <h3 className="text-lg font-semibold text-slate-900">{resource.title}</h3>
+                              <Badge variant="outline" className="text-xs">
+                                {resource.type}
                               </Badge>
-                            ))}
+                              {resource.coming_soon && (
+                                <Badge className="bg-orange-100 text-orange-700 border-orange-200 text-xs">
+                                  Exclusive
+                                </Badge>
+                              )}
+                              {resource.featured && (
+                                <Badge className="bg-purple-100 text-purple-700 border-purple-200 text-xs">
+                                  Featured
+                                </Badge>
+                              )}
+                              {resource.published ? (
+                                <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 text-xs">
+                                  <Eye className="h-3 w-3 mr-1" />
+                                  Published
+                                </Badge>
+                              ) : (
+                                <Badge variant="outline" className="text-xs">
+                                  <EyeOff className="h-3 w-3 mr-1" />
+                                  Draft
+                                </Badge>
+                              )}
+                            </div>
+                            
+                            <p className="text-sm text-slate-600 mb-2">{resource.description}</p>
+                            
+                            {resource.topics?.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mt-2">
+                                {resource.topics.map((topic, idx) => (
+                                  <Badge key={idx} variant="outline" className="text-xs">
+                                    {topic}
+                                  </Badge>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                          
+                          <div className="flex gap-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleOpenDialog(resource)}
+                            >
+                              <Edit2 className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setDeleteConfirmResource(resource)}
+                            >
+                              <Trash2 className="h-4 w-4 text-red-500" />
+                            </Button>
                           </div>
                         </div>
-                      )}
-                      
-                      {(resource.page || resource.link || resource.file_url) && (
-                        <div>
-                          <p className="text-xs font-medium text-slate-500 mb-1">Links & Files</p>
-                          <div className="space-y-1 text-xs text-slate-600">
-                            {resource.page && <p>Page: {resource.page}</p>}
-                            {resource.link && <p className="flex items-center gap-1"><ExternalLink className="h-3 w-3" /> {resource.link}</p>}
-                            {resource.file_url && <p>Attachment: {resource.file_url.split('/').pop()}</p>}
-                          </div>
-                        </div>
-                      )}
-                      
-                      {resource.published_date && (
-                        <div>
-                          <p className="text-xs font-medium text-slate-500 mb-1">Published Date</p>
-                          <p className="text-xs text-slate-600">{new Date(resource.published_date).toLocaleDateString()}</p>
-                        </div>
-                      )}
-                    </div>
+                      </CardContent>
+                    </Card>
                   )}
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleOpenDialog(resource)}
-                  >
-                    <Edit2 className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setDeleteConfirmResource(resource)}
-                  >
-                    <Trash2 className="h-4 w-4 text-red-500" />
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        );
-        })}
-      </div>
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
 
       <Dialog open={!!deleteConfirmResource} onOpenChange={() => setDeleteConfirmResource(null)}>
         <DialogContent>
