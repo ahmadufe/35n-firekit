@@ -169,6 +169,13 @@ export default function Dashboard() {
   };
 
   const handleExclusiveResourceClick = (resource) => {
+    // If user is not logged in, prompt them to login first
+    if (!user) {
+      setLoginPromptType('resource');
+      setShowLoginPrompt(true);
+      return;
+    }
+    
     // Check if user already has access code in session
     const hasAccessCode = sessionStorage.getItem(`access_code_${resource.id}`);
     if (!hasAccessCode) {
