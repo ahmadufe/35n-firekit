@@ -33,6 +33,19 @@ export default function AccessCodeDialog({ open, onOpenChange, resource }) {
     setIsChecking(true);
 
     try {
+      // Check if user is authenticated
+      const user = await base44.auth.me().catch(() => null);
+      
+      if (!user) {
+        setError('Please log in to use an access code');
+        setIsChecking(false);
+        // Redirect to login after a short delay
+        setTimeout(() => {
+          base44.auth.redirectToLogin();
+        }, 1500);
+        return;
+      }
+
       // Find the access code in database
       const accessCodes = await base44.entities.AccessCode.filter({
         code: code.trim()
