@@ -71,12 +71,21 @@ export default function ResourcesManagementTab() {
   const publishedConfig = configs.find(c => c.config_name === 'published');
   const draftConfig = configs.find(c => c.config_name === 'draft');
 
-  // Get resources from flat list structure
+  // Get resources from all sections (flatten for display)
   const getResources = (config, isPublished) => {
-    const tools = config?.sections?.[0]?.tools || [];
-    return tools
-      .filter(tool => tool && typeof tool === 'object' && tool.id)
-      .map(tool => ({ ...tool, published: isPublished }));
+    const resources = [];
+    (config?.sections || []).forEach(section => {
+      (section.tools || []).forEach(tool => {
+        if (tool && typeof tool === 'object' && tool.id) {
+          resources.push({
+            ...tool,
+            type: tool.type || section.title, // Preserve type from section as fallback
+            published: isPublished
+          });
+        }
+      });
+    });
+    return resources;
   };
 
   const allResources = getResources(publishedConfig, true);
