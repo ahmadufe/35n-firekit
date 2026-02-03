@@ -200,12 +200,12 @@ export default function ToolCard({
          }
 
   // For pages or coming soon
-  const hasAccessCode = comingSoon && resourceId ? sessionStorage.getItem(`access_code_${resourceId}`) : null;
-  const shouldBlock = comingSoon && !hasAccessCode;
-  
-  // If unlocked, treat it like a normal card
-  const CardWrapper = (shouldBlock || (onClick && !hasAccessCode)) ? 'div' : Link;
-  const wrapperProps = (shouldBlock || (onClick && !hasAccessCode)) ? {} : { to: href };
+   const hasAccessCode = comingSoon && resourceId ? sessionStorage.getItem(`access_code_${resourceId}`) : null;
+   const shouldBlock = comingSoon && !hasAccessCode;
+
+   // If not exclusive (comingSoon=false), allow direct navigation
+   const CardWrapper = shouldBlock ? 'div' : Link;
+   const wrapperProps = shouldBlock ? {} : { to: href };
 
   const cardClickHandler = shouldBlock ? () => {
     if (onExclusiveClick) {
