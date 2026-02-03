@@ -1,9 +1,13 @@
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Lock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Lock, Bookmark, BookmarkCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { base44 } from "@/api/base44Client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export default function ToolCard({ 
   title, 
@@ -18,8 +22,67 @@ export default function ToolCard({
   topics = [],
   onClick,
   onExclusiveClick,
-  resourceId
+  resourceId,
+  showBookmark = true
 }) {
+  const queryClient = useQueryClient();
+
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: async () => {
+      try {
+        return await base44.auth.me();
+      } catch (error) {
+        return null;
+      }
+    }
+  });
+
+  const { data: bookmarks = [] } = useQuery({
+    queryKey: ['bookmarks', user?.email],
+    queryFn: () => base44.entities.Bookmark.filter({ user_email: user?.email }),
+    enabled: !!user?.email && showBookmark
+  });
+
+  const isBookmarked = bookmarks.some(b => b.resource_id === resourceId);
+
+  const bookmarkMutation = useMutation({
+    mutationFn: async () => {
+      if (isBookmarked) {
+        const bookmark = bookmarks.find(b => b.resource_id === resourceId);
+        await base44.entities.Bookmark.delete(bookmark.id);
+      } else {
+        await base44.entities.Bookmark.create({
+          user_email: user.email,
+          resource_id: resourceId,
+          resource_title: title,
+          resource_description: description,
+          resource_icon: Icon.name || 'ClipboardCheck',
+          resource_type: type,
+          resource_topics: topics,
+          resource_page: href?.includes('?') ? href.split('?')[0].replace('/app/', '') : href?.replace('/app/', ''),
+          resource_file_url: fileUrl || null,
+          resource_link: link || null,
+          resource_coming_soon: comingSoon
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['bookmarks'] });
+      toast.success(isBookmarked ? 'Bookmark removed' : 'Bookmark added');
+    }
+  });
+
+  const handleBookmarkClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user) {
+      toast.error('Please log in to bookmark resources');
+      return;
+    }
+    bookmarkMutation.mutate();
+  };
+
   const handleClick = () => {
     if (fileUrl) {
       window.open(fileUrl, '_blank');
@@ -193,9 +256,25 @@ export default function ToolCard({
           )}
 
           <div className="mt-auto">
-            <div className="flex items-center text-slate-900 font-medium text-sm group-hover:translate-x-2 transition-transform duration-300">
-              Access
-              <ArrowRight className="ml-2 h-4 w-4" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center text-slate-900 font-medium text-sm group-hover:translate-x-2 transition-transform duration-300">
+                Access
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </div>
+              {showBookmark && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleBookmarkClick}
+                  className="h-8 w-8 hover:bg-slate-200 z-10"
+                >
+                  {isBookmarked ? (
+                    <BookmarkCheck className="h-4 w-4 text-slate-900 fill-slate-900" />
+                  ) : (
+                    <Bookmark className="h-4 w-4 text-slate-500" />
+                  )}
+                </Button>
+              )}
             </div>
           </div>
         </CardContent>

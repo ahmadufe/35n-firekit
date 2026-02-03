@@ -52,6 +52,7 @@ import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import Scorecard from './pages/Scorecard';
 import UserSettings from './pages/UserSettings';
+import Bookmarks from './pages/Bookmarks';
 
 
 export const PAGES = {
@@ -60,6 +61,7 @@ export const PAGES = {
     "Home": Home,
     "Scorecard": Scorecard,
     "UserSettings": UserSettings,
+    "Bookmarks": Bookmarks,
 }
 
 export const pagesConfig = {

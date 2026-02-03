@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
-import { ClipboardCheck, BookOpen, Wrench, User, LogOut, Settings, ChevronDown, Shield, Search, X } from "lucide-react";
+import { ClipboardCheck, BookOpen, Wrench, User, LogOut, Settings, ChevronDown, Shield, Search, X, Bookmark } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import UserSetupModal from "@/components/UserSetupModal";
@@ -435,6 +435,12 @@ export default function Dashboard() {
                     <p className="text-xs text-slate-500">{user?.email}</p>
                   </div>
                   <DropdownMenuSeparator />
+                  <Link to={createPageUrl('Bookmarks')}>
+                    <DropdownMenuItem className="cursor-pointer">
+                      <Bookmark className="mr-2 h-4 w-4" />
+                      Bookmarks
+                    </DropdownMenuItem>
+                  </Link>
                   <Link to={createPageUrl('UserSettings')}>
                     <DropdownMenuItem className="cursor-pointer">
                       <Settings className="mr-2 h-4 w-4" />
