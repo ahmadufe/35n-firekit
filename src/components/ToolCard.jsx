@@ -21,13 +21,6 @@ export default function ToolCard({
   resourceId
 }) {
   const handleClick = () => {
-    if (comingSoon) {
-      if (onExclusiveClick) {
-        onExclusiveClick();
-      }
-      return;
-    }
-    
     if (fileUrl) {
       window.open(fileUrl, '_blank');
     } else if (link) {
