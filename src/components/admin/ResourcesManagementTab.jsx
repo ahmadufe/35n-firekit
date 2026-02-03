@@ -50,7 +50,7 @@ export default function ResourcesManagementTab() {
     }
   });
 
-  const AVAILABLE_TYPES = filterConfig?.filters?.type || ['Tools', 'Guides & Insights', 'Playbooks', 'Deep Dive'];
+  const AVAILABLE_TYPES = filterConfig?.filters?.type || ['Tools', 'Guides & Insights', 'Playbooks', 'Deep dive series'];
   const AVAILABLE_TOPICS = filterConfig?.filters?.topic || [
     'Fintech',
     'Trade & Logistics',
