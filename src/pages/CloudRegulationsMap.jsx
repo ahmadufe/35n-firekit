@@ -31,15 +31,11 @@ const styles = `
 .filter-btn { padding: 8px 14px; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; transition: all 0.2s; background: white; color: #0f172a; }
 .filter-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
 .filter-btn.active { background: #0f172a; color: white; border-color: #0f172a; }
-.map-container { height: 700px; margin: 0 24px 24px; border-radius: 8px; overflow: hidden; position: relative; background: #e0f2fe; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
-.map-image { width: 100%; height: 100%; object-fit: cover; object-position: center; }
-.map-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-.country-marker { position: absolute; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: white; transition: all 0.3s; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-.country-marker:hover { transform: scale(1.3); z-index: 10; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
-.country-marker.status-amber { background: #fbbf24; }
-.country-marker.status-red { background: #ef4444; }
-.country-marker.status-grey { background: #9ca3af; }
-.country-marker.status-green { background: #10b981; }
+.map-container { height: 700px; margin: 0 24px 24px; border-radius: 8px; overflow: hidden; position: relative; background: white; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
+.map-image { width: 100%; height: 100%; object-fit: contain; object-position: center; }
+.map-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.country-overlay { position: absolute; cursor: pointer; pointer-events: auto; transition: all 0.2s; }
+.country-overlay:hover { filter: brightness(1.2); z-index: 10; }
 .map-tooltip { position: absolute; background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); pointer-events: none; z-index: 1000; max-width: 350px; font-size: 12px; }
 .map-tooltip h4 { font-size: 14px; font-weight: 600; color: #0f172a; margin-bottom: 6px; }
 .map-tooltip .status-badge { display: inline-block; padding: 2px 8px; border-radius: 8px; font-size: 10px; font-weight: 600; margin-bottom: 8px; }
@@ -91,7 +87,7 @@ const styles = `
   .legend-grid { grid-template-columns: 1fr; }
   .filter-buttons { flex-direction: column; }
   .filter-btn { width: 100%; }
-  .map-container { height: 380px; margin: 0 16px 24px; }
+  .map-container { height: 450px; margin: 0 16px 24px; }
   .regulations-legend { margin: 0 16px 20px; padding: 16px; }
   .regulations-stats { margin: 20px 16px 16px; padding: 16px; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -217,27 +213,57 @@ export default function CloudRegulationsMap() {
     setTooltipPosition(null);
   };
 
-  // Country positions as percentages of map dimensions
-  const countryPositions = {
-    'Morocco': { left: '32%', top: '16%' },
-    'Egypt': { left: '58%', top: '20%' },
-    'Lebanon': { left: '63%', top: '17%' },
-    'Jordan': { left: '64%', top: '21%' },
-    'Iraq': { left: '68%', top: '18%' },
-    'Kuwait': { left: '70%', top: '23%' },
-    'Saudi Arabia': { left: '70%', top: '29%' },
-    'Bahrain': { left: '71%', top: '26%' },
-    'Qatar': { left: '72%', top: '28%' },
-    'UAE': { left: '73%', top: '30%' },
-    'Oman': { left: '74%', top: '34%' },
-    'Yemen': { left: '70%', top: '36%' },
-    'Senegal': { left: '31%', top: '40%' },
-    'Ghana': { left: '37%', top: '46%' },
-    'Nigeria': { left: '42%', top: '45%' },
-    'Ethiopia': { left: '63%', top: '46%' },
-    'Kenya': { left: '63%', top: '53%' },
-    'South Africa': { left: '50%', top: '77%' },
-    'Mauritius': { left: '67%', top: '78%' }
+  // Country clickable areas as percentages (x, y, width, height)
+  const countryAreas = {
+    'Turkey': { left: '68%', top: '3%', width: '12%', height: '8%' },
+    'Morocco': { left: '15%', top: '12%', width: '7%', height: '8%' },
+    'Tunisia': { left: '22%', top: '12%', width: '4%', height: '5%' },
+    'Algeria': { left: '17%', top: '17%', width: '12%', height: '12%' },
+    'Libya': { left: '29%', top: '19%', width: '12%', height: '10%' },
+    'Egypt': { left: '41%', top: '19%', width: '8%', height: '12%' },
+    'Syria': { left: '53%', top: '10%', width: '4%', height: '4%' },
+    'Lebanon': { left: '52%', top: '13%', width: '2%', height: '2%' },
+    'Israel': { left: '51%', top: '14%', width: '2%', height: '3%' },
+    'Palestine': { left: '51%', top: '15%', width: '2%', height: '2%' },
+    'Jordan': { left: '52%', top: '15%', width: '3%', height: '4%' },
+    'Iraq': { left: '56%', top: '11%', width: '6%', height: '9%' },
+    'Kuwait': { left: '58%', top: '18%', width: '2%', height: '2%' },
+    'Saudi Arabia': { left: '54%', top: '20%', width: '12%', height: '14%' },
+    'Bahrain': { left: '60%', top: '21%', width: '1.5%', height: '1.5%' },
+    'Qatar': { left: '61%', top: '21%', width: '1.5%', height: '2%' },
+    'UAE': { left: '64%', top: '21%', width: '3%', height: '3%' },
+    'Oman': { left: '65%', top: '23%', width: '5%', height: '7%' },
+    'Yemen': { left: '58%', top: '30%', width: '6%', height: '7%' },
+    'Iran': { left: '64%', top: '8%', width: '12%', height: '10%' },
+    'Sudan': { left: '43%', top: '31%', width: '10%', height: '12%' },
+    'South Sudan': { left: '44%', top: '43%', width: '6%', height: '5%' },
+    'Senegal': { left: '10%', top: '36%', width: '4%', height: '4%' },
+    'Ghana': { left: '18%', top: '44%', width: '3%', height: '3%' },
+    'Nigeria': { left: '22%', top: '43%', width: '6%', height: '6%' },
+    'Ethiopia': { left: '53%', top: '42%', width: '8%', height: '8%' },
+    'Kenya': { left: '52%', top: '51%', width: '6%', height: '7%' },
+    'Rwanda': { left: '47%', top: '54%', width: '2%', height: '2%' },
+    'Uganda': { left: '48%', top: '50%', width: '4%', height: '4%' },
+    'Tanzania': { left: '49%', top: '56%', width: '7%', height: '8%' },
+    'Somalia': { left: '59%', top: '48%', width: '6%', height: '10%' },
+    'Djibouti': { left: '57%', top: '39%', width: '2%', height: '2%' },
+    'Eritrea': { left: '53%', top: '38%', width: '4%', height: '4%' },
+    'South Africa': { left: '35%', top: '78%', width: '10%', height: '10%' },
+    'Mauritius': { left: '64%', top: '78%', width: '2%', height: '2%' },
+    'Madagascar': { left: '58%', top: '75%', width: '5%', height: '8%' },
+    'Mozambique': { left: '49%', top: '72%', width: '6%', height: '10%' },
+    'Zimbabwe': { left: '45%', top: '75%', width: '4%', height: '4%' },
+    'Zambia': { left: '42%', top: '69%', width: '5%', height: '6%' },
+    'Angola': { left: '31%', top: '68%', width: '8%', height: '10%' },
+    'Namibia': { left: '31%', top: '76%', width: '6%', height: '8%' },
+    'Botswana': { left: '38%', top: '76%', width: '5%', height: '4%' },
+    'Côte d\'Ivoire': { left: '17%', top: '45%', width: '3%', height: '4%' },
+    'Malawi': { left: '49%', top: '68%', width: '3%', height: '5%' },
+    'Burundi': { left: '47%', top: '55%', width: '2%', height: '2%' },
+    'Lesotho': { left: '41%', top: '82%', width: '2%', height: '2%' },
+    'Eswatini': { left: '44%', top: '79%', width: '2%', height: '2%' },
+    'Seychelles': { left: '66%', top: '56%', width: '1.5%', height: '1.5%' },
+    'Comoros': { left: '57%', top: '66%', width: '1.5%', height: '1.5%' }
   };
 
   const getStatusCounts = () => {
@@ -355,8 +381,49 @@ export default function CloudRegulationsMap() {
         </div>
       </div>
 
-      {/* Map - Removed as requested */}
-      <div className="map-container" style={{ display: 'none' }}>
+      {/* Interactive Map */}
+      <div className="map-container">
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695a4c3829d04b83a5c959f0/576cfd63b_MEAmap.png" 
+          alt="MEA Map" 
+          className="map-image"
+        />
+        <div className="map-overlay">
+          {countryData
+            .filter(country => currentFilter === 'all' || currentFilter === country.status)
+            .map((country) => {
+              const area = countryAreas[country.name];
+              if (!area) return null;
+              
+              return (
+                <div
+                  key={country.name}
+                  className="country-overlay"
+                  style={{
+                    left: area.left,
+                    top: area.top,
+                    width: area.width,
+                    height: area.height,
+                    background: `${colors[country.status]}40`,
+                    border: `2px solid ${colors[country.status]}`,
+                    borderRadius: '4px'
+                  }}
+                  onMouseEnter={(e) => handleCountryHover(country, e)}
+                  onMouseLeave={handleCountryLeave}
+                  onMouseMove={(e) => {
+                    if (hoveredCountry?.name === country.name) {
+                      const container = e.currentTarget.closest('.map-container');
+                      const rect = container.getBoundingClientRect();
+                      setTooltipPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+                    }
+                  }}
+                />
+              );
+            })}
+          {hoveredCountry && tooltipPosition && (
+            <MapTooltip country={hoveredCountry} position={tooltipPosition} />
+          )}
+        </div>
       </div>
 
       {/* Restriction Flags */}
