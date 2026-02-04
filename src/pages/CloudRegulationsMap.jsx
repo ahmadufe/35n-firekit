@@ -189,25 +189,25 @@ export default function CloudRegulationsMap() {
 
   // Country positions as percentages of map dimensions
   const countryPositions = {
-    'Morocco': { left: '15%', top: '22%' },
-    'Egypt': { left: '48%', top: '25%' },
-    'Lebanon': { left: '57%', top: '24%' },
-    'Jordan': { left: '58%', top: '28%' },
-    'Iraq': { left: '63%', top: '26%' },
-    'Kuwait': { left: '65%', top: '31%' },
-    'Saudi Arabia': { left: '65%', top: '38%' },
-    'Bahrain': { left: '67%', top: '35%' },
-    'Qatar': { left: '69%', top: '37%' },
-    'UAE': { left: '72%', top: '39%' },
-    'Oman': { left: '73%', top: '44%' },
-    'Yemen': { left: '66%', top: '47%' },
-    'Senegal': { left: '17%', top: '47%' },
-    'Ghana': { left: '27%', top: '52%' },
-    'Nigeria': { left: '33%', top: '51%' },
-    'Ethiopia': { left: '60%', top: '52%' },
-    'Kenya': { left: '60%', top: '58%' },
-    'South Africa': { left: '50%', top: '82%' },
-    'Mauritius': { left: '70%', top: '84%' }
+    'Morocco': { left: '25%', top: '18%' },
+    'Egypt': { left: '56%', top: '22%' },
+    'Lebanon': { left: '61%', top: '20%' },
+    'Jordan': { left: '62%', top: '24%' },
+    'Iraq': { left: '66%', top: '21%' },
+    'Kuwait': { left: '68%', top: '26%' },
+    'Saudi Arabia': { left: '68%', top: '32%' },
+    'Bahrain': { left: '69%', top: '29%' },
+    'Qatar': { left: '71%', top: '31%' },
+    'UAE': { left: '73%', top: '33%' },
+    'Oman': { left: '74%', top: '37%' },
+    'Yemen': { left: '68%', top: '39%' },
+    'Senegal': { left: '22%', top: '42%' },
+    'Ghana': { left: '32%', top: '48%' },
+    'Nigeria': { left: '38%', top: '47%' },
+    'Ethiopia': { left: '62%', top: '48%' },
+    'Kenya': { left: '62%', top: '55%' },
+    'South Africa': { left: '48%', top: '78%' },
+    'Mauritius': { left: '68%', top: '79%' }
   };
 
   const getStatusCounts = () => {
@@ -328,9 +328,10 @@ export default function CloudRegulationsMap() {
       {/* Map */}
       <div className="map-container">
         <img 
-          src="https://upload.wikimedia.org/wikipedia/commons/8/86/Africa_%28orthographic_projection%29.svg" 
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Africa_on_the_globe_%28red%29.svg/1200px-Africa_on_the_globe_%28red%29.svg.png" 
           alt="Africa and Middle East Map" 
           className="map-image"
+          style={{ objectPosition: 'center' }}
         />
         <div className="map-overlay">
           {countryData.map((country) => {
