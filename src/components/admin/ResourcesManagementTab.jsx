@@ -29,7 +29,8 @@ export default function ResourcesManagementTab() {
     file_url: '',
     coming_soon: false,
     published_date: '',
-    featured: false
+    featured: false,
+    asset_type: ''
   });
   const [filterView, setFilterView] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -120,7 +121,8 @@ export default function ResourcesManagementTab() {
         file_url: resource.file_url || '',
         coming_soon: resource.coming_soon || false,
         published_date: resource.published_date || '',
-        featured: resource.featured || false
+        featured: resource.featured || false,
+        asset_type: resource.asset_type || ''
       });
     } else {
       setEditingResource(null);
@@ -134,7 +136,8 @@ export default function ResourcesManagementTab() {
         file_url: '',
         coming_soon: false,
         published_date: '',
-        featured: false
+        featured: false,
+        asset_type: ''
       });
     }
     setShowDialog(true);
@@ -160,7 +163,8 @@ export default function ResourcesManagementTab() {
       file_url: formData.file_url || null,
       coming_soon: formData.coming_soon,
       published_date: formData.published_date || new Date().toISOString(),
-      featured: formData.featured
+      featured: formData.featured,
+      asset_type: formData.asset_type || null
     };
 
     let updatedResources;
@@ -438,9 +442,14 @@ export default function ResourcesManagementTab() {
                                 </Badge>
                               )}
                               {resource.featured && (
-                                <Badge className="bg-purple-100 text-purple-700 border-purple-200 text-xs">
-                                  Featured
-                                </Badge>
+                               <Badge className="bg-purple-100 text-purple-700 border-purple-200 text-xs">
+                                 Featured
+                               </Badge>
+                              )}
+                              {resource.asset_type && (
+                               <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-xs">
+                                 {resource.asset_type}
+                               </Badge>
                               )}
                               {resource.published ? (
                                 <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 text-xs">
@@ -550,18 +559,35 @@ export default function ResourcesManagementTab() {
               />
             </div>
 
-            <div>
-              <Label>Icon</Label>
-              <Select value={formData.icon} onValueChange={(value) => setFormData({ ...formData, icon: value })}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {ICON_OPTIONS.map(icon => (
-                    <SelectItem key={icon} value={icon}>{icon}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Icon</Label>
+                <Select value={formData.icon} onValueChange={(value) => setFormData({ ...formData, icon: value })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ICON_OPTIONS.map(icon => (
+                      <SelectItem key={icon} value={icon}>{icon}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label>Asset Type</Label>
+                <Select value={formData.asset_type} onValueChange={(value) => setFormData({ ...formData, asset_type: value })}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select type..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Tools">Tools</SelectItem>
+                    <SelectItem value="Insights">Insights</SelectItem>
+                    <SelectItem value="Playbooks">Playbooks</SelectItem>
+                    <SelectItem value="Deep dive series">Deep dive series</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <div>
