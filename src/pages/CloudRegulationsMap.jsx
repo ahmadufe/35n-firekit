@@ -302,26 +302,183 @@ export default function CloudRegulationsMap() {
         </MapContainer>
       </div>
 
-      {/* Stats */}
-      <div className="regulations-stats">
-        <h3>Coverage Statistics</h3>
-        <div className="stats-grid">
-          <div className="stat-box">
-            <div className="number">{countryData.length}</div>
-            <div className="label">Total Countries</div>
+      {/* Restriction Flags */}
+      <div className="restrictions-info">
+        <div className="info-title">Restriction Flags Legend</div>
+        <div className="flags-legend-container">
+          <div className="flag-item">
+            <div className="flag-acronym">A</div>
+            <div className="flag-label">Approval /<br/>Notification</div>
           </div>
-          <div className="stat-box">
-            <div className="number">{coverage}%</div>
-            <div className="label">With Regulations</div>
+          <div className="flag-item">
+            <div className="flag-acronym">R</div>
+            <div className="flag-label">Data<br/>Residency</div>
           </div>
-          <div className="stat-box">
-            <div className="number">{100 - coverage}%</div>
-            <div className="label">Information Gap</div>
+          <div className="flag-item">
+            <div className="flag-acronym">U</div>
+            <div className="flag-label">Audit /<br/>Access</div>
           </div>
-          <div className="stat-box">
-            <div className="number">{counts.amber}</div>
-            <div className="label">Tier 1 Markets</div>
+          <div className="flag-item">
+            <div className="flag-acronym">S</div>
+            <div className="flag-label">Subcontracting<br/>Controls</div>
           </div>
+          <div className="flag-item">
+            <div className="flag-acronym">E</div>
+            <div className="flag-label">Exit Plan /<br/>BCP</div>
+          </div>
+          <div className="flag-item">
+            <div className="flag-acronym">C</div>
+            <div className="flag-label">Security /<br/>Risk Controls</div>
+          </div>
+        </div>
+        <div className="indicators">
+          <span><span className="indicator-dot" style={{background:'#22c55e'}}></span> Confirmed in regulation</span>
+          <span><span className="indicator-dot" style={{background:'#f59e0b'}}></span> Partial / indirect coverage</span>
+        </div>
+      </div>
+
+      {/* Verified Countries Table */}
+      <div className="verified-table">
+        <h3>Verified Countries – A/R/U/S/E/C Flags</h3>
+        <div className="table-wrapper">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Region</th>
+                <th>Country</th>
+                <th className="table-status">Status</th>
+                <th className="table-flag">A</th>
+                <th className="table-flag">R</th>
+                <th className="table-flag">U</th>
+                <th className="table-flag">S</th>
+                <th className="table-flag">E</th>
+                <th className="table-flag">C</th>
+                <th>Key Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ME</td>
+                <td className="table-country">UAE</td>
+                <td className="table-status">🟠</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-notes"><strong>CBUAE Rulebook</strong> has dedicated Cloud Computing + Outsourcing sections. Material outsourcing requires prior approval. Data offshoring requires CB consultation. Exit planning mandatory. Auditability requirement.</td>
+              </tr>
+              <tr>
+                <td>ME</td>
+                <td className="table-country">Saudi Arabia</td>
+                <td className="table-status">🟠</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-notes"><strong>SAMA Cyber Security Framework</strong>. SAMA approval required prior to signing cloud contract. Data residency mandated for sensitive financial data. Comprehensive due diligence + risk assessment.</td>
+              </tr>
+              <tr>
+                <td>ME</td>
+                <td className="table-country">Qatar</td>
+                <td className="table-status">🟠</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-notes"><strong>QCB Cloud Regulation</strong> (eff. Apr 2024). QCB approval required before any cloud arrangement. PII & financial data must be processed within Qatar only. Termination & data-return provisions.</td>
+              </tr>
+              <tr>
+                <td>ME</td>
+                <td className="table-country">Bahrain</td>
+                <td className="table-status">🟠</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-notes"><strong>CBB Cloud Outsourcing Guidelines</strong>. Data location/transfer controls, governance framework, due diligence, subcontracting & exit provisions. Cloud-first policy.</td>
+              </tr>
+              <tr>
+                <td>Africa</td>
+                <td className="table-country">Morocco</td>
+                <td className="table-status">🟠</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-notes"><strong>Bank Al-Maghrib Directive 4/W/2022</strong>: prior agreement required for outsourcing significant functions to cloud. Covers data handling, governance, audit access, subcontracting & exit.</td>
+              </tr>
+              <tr>
+                <td>Africa</td>
+                <td className="table-country">Mauritius</td>
+                <td className="table-status">🟠</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-notes"><strong>BoM Guideline on Cloud Services</strong> (Sep 2022). Dedicated sections: Data Location, Subcontracting, Exit Strategies, Audit, Security Management. Annual cloud-services return required.</td>
+              </tr>
+              <tr>
+                <td>Africa</td>
+                <td className="table-country">South Africa</td>
+                <td className="table-status">🟠</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-notes"><strong>Joint Communication 2 of 2025</strong> (FSCA + PA, Jul 2025): risk-based cloud & offshoring expectations. Directive 3 of 2018 binding for banks. POPIA penalties up to 10% turnover.</td>
+              </tr>
+              <tr>
+                <td>Africa</td>
+                <td className="table-country">Ghana</td>
+                <td className="table-status">🟠</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-notes"><strong>BoG Outsourcing Directive</strong> (Nov 2024, eff. Jul 2025). Written approval required. Explicitly references cloud service providers — mandates disclosure of data type & storage locations.</td>
+              </tr>
+              <tr>
+                <td>Africa</td>
+                <td className="table-country">Kenya</td>
+                <td className="table-status">🟠</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">⚪*</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-notes"><strong>CBK/PG/16 Outsourcing</strong>. Approval required. Offshore outsourcing addressed but *no explicit standalone data-residency mandate equivalent to UAE/KSA/Qatar (R = partial).</td>
+              </tr>
+              <tr>
+                <td>Africa</td>
+                <td className="table-country">Egypt</td>
+                <td className="table-status">🟠†</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-flag">✅</td>
+                <td className="table-notes"><strong>CBE regulation</strong> for payment service operators explicitly references cloud computing. Cloud First Policy (Aug 2024). †Caveat: Core cloud reference is in PSP/PSO regulation, not consolidated bank-cloud rulebook.</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
