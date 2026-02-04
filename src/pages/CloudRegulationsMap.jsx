@@ -12,25 +12,48 @@ const styles = `
 .header-content { max-width: 1400px; margin: 0 auto; }
 .regulations-header h1 { font-size: 28px; font-weight: 600; text-slate-900 margin-bottom: 4px; }
 .regulations-header p { font-size: 14px; color: #64748b; }
-.regulations-legend { background: white; padding: 28px 24px; margin: 28px 24px; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
-.regulations-legend h3 { font-size: 18px; font-weight: 600; color: #0f172a; margin-bottom: 18px; }
-.legend-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-bottom: 20px; }
-.legend-item { display: flex; align-items: center; padding: 14px; border-radius: 6px; background: #f8fafc; border: 1px solid #e2e8f0; }
-.legend-color { width: 32px; height: 32px; border-radius: 50%; margin-right: 12px; flex-shrink: 0; }
+.regulations-stats { background: white; padding: 20px; margin: 28px 24px 24px; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
+.regulations-stats h3 { font-size: 16px; font-weight: 600; color: #0f172a; margin-bottom: 16px; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+.stat-box { background: #f8fafc; border: 1px solid #e2e8f0; color: #0f172a; padding: 16px; border-radius: 6px; text-align: center; transition: all 0.3s; }
+.stat-box:hover { background: #f1f5f9; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); }
+.stat-box .number { font-size: 28px; font-weight: 700; margin-bottom: 4px; color: #0f172a; }
+.stat-box .label { font-size: 12px; color: #64748b; font-weight: 500; }
+.regulations-legend { background: white; padding: 20px; margin: 0 24px 24px; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
+.regulations-legend h3 { font-size: 16px; font-weight: 600; color: #0f172a; margin-bottom: 16px; }
+.legend-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.legend-item { display: flex; align-items: center; padding: 12px; border-radius: 6px; background: #f8fafc; border: 1px solid #e2e8f0; transition: all 0.3s; }
+.legend-item:hover { background: #f1f5f9; }
+.legend-color { width: 28px; height: 28px; border-radius: 50%; margin-right: 10px; flex-shrink: 0; }
 .legend-text { flex: 1; }
-.legend-text strong { display: block; font-size: 13px; color: #0f172a; margin-bottom: 2px; }
+.legend-text strong { display: block; font-size: 12px; color: #0f172a; margin-bottom: 2px; font-weight: 600; }
 .legend-text span { font-size: 11px; color: #64748b; }
-.legend-count { font-weight: 600; color: #1e293b; font-size: 18px; margin-left: 12px; min-width: 35px; text-align: right; }
-.restrictions-info { background: #fef9c3; border: 1px solid #fde047; border-radius: 6px; padding: 14px; margin-bottom: 18px; }
-.info-title { font-size: 12px; font-weight: 600; color: #78350f; margin-bottom: 10px; }
-.flags-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 11px; color: #555; margin-bottom: 10px; line-height: 1.5; }
-.indicators { display: flex; gap: 18px; font-size: 11px; }
-.indicator-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; vertical-align: middle; margin-right: 4px; }
-.filter-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
-.filter-btn { padding: 9px 16px; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s; background: white; color: #0f172a; }
+.legend-count { font-weight: 600; color: #1e293b; font-size: 16px; margin-left: 10px; min-width: 30px; text-align: right; }
+.filter-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+.filter-btn { padding: 8px 14px; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; transition: all 0.2s; background: white; color: #0f172a; }
 .filter-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
 .filter-btn.active { background: #0f172a; color: white; border-color: #0f172a; }
-.map-container { height: 520px; margin: 0 24px; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
+.map-container { height: 520px; margin: 0 24px 24px; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
+.restrictions-info { margin: 24px 24px; }
+.info-title { font-size: 13px; font-weight: 600; color: #0f172a; margin-bottom: 12px; }
+.flags-legend-container { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.flag-item { background: #fafaf9; padding: 10px 14px; border-radius: 8px; border: 1px solid #e7e5e4; display: flex; flex-direction: column; align-items: center; text-align: center; min-width: 80px; }
+.flag-acronym { font-size: 16px; font-weight: 700; color: #0f172a; line-height: 1.2; }
+.flag-label { font-size: 10px; color: #64748b; margin-top: 4px; line-height: 1.3; }
+.indicators { display: flex; gap: 18px; font-size: 11px; margin-top: 12px; }
+.indicator-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; vertical-align: middle; margin-right: 4px; }
+.verified-table { background: white; margin: 0 24px 24px; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
+.verified-table h3 { font-size: 16px; font-weight: 600; color: #0f172a; margin-bottom: 16px; }
+.table-wrapper { overflow-x: auto; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.data-table thead { background: #f8fafc; }
+.data-table th { padding: 10px 8px; text-align: left; font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0; }
+.data-table td { padding: 10px 8px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+.data-table tr:hover { background: #fafafa; }
+.table-country { font-weight: 600; color: #0f172a; }
+.table-status { text-align: center; }
+.table-flag { text-align: center; font-size: 14px; }
+.table-notes { font-size: 10px; color: #64748b; line-height: 1.4; }
 .popup-content { min-width: 280px; padding: 0; font-size: 13px; }
 .popup-content h4 { margin-bottom: 6px; color: #0f172a; font-size: 15px; font-weight: 600; }
 .popup-content .status-badge { display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; margin-bottom: 8px; text-transform: capitalize; }
@@ -47,13 +70,6 @@ const styles = `
 .dot-yes { background: #22c55e; }
 .dot-partial { background: #f59e0b; }
 .scope-note { font-size: 10px; color: #b45309; background: #fef9c3; border: 1px solid #fde047; border-radius: 4px; padding: 3px 5px; margin-top: 4px; }
-.regulations-stats { background: white; padding: 28px 24px; margin: 28px 24px; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
-.regulations-stats h3 { font-size: 18px; font-weight: 600; color: #0f172a; margin-bottom: 18px; }
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
-.stat-box { background: white; border: 1px solid #e2e8f0; color: #0f172a; padding: 20px; border-radius: 6px; text-align: center; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
-.stat-box:hover { box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); }
-.stat-box .number { font-size: 36px; font-weight: 700; margin-bottom: 6px; color: #0f172a; }
-.stat-box .label { font-size: 13px; color: #64748b; }
 .leaflet-popup-content-wrapper { border-radius: 6px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12); }
 .leaflet-popup-tip { background-color: white; }
 @media (max-width: 768px) {
@@ -62,10 +78,14 @@ const styles = `
   .legend-grid { grid-template-columns: 1fr; }
   .filter-buttons { flex-direction: column; }
   .filter-btn { width: 100%; }
-  .map-container { height: 380px; margin: 0 16px; }
-  .regulations-legend { margin: 20px 16px; padding: 20px 16px; }
-  .regulations-stats { margin: 20px 16px; padding: 20px 16px; }
+  .map-container { height: 380px; margin: 0 16px 24px; }
+  .regulations-legend { margin: 0 16px 20px; padding: 16px; }
+  .regulations-stats { margin: 20px 16px 16px; padding: 16px; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .restrictions-info { margin: 20px 16px; }
+  .verified-table { margin: 0 16px 20px; padding: 16px; }
+  .flags-legend-container { gap: 6px; }
+  .flag-item { min-width: 70px; padding: 8px 10px; }
 }
 `;
 
@@ -161,11 +181,34 @@ export default function CloudRegulationsMap() {
           </Link>
           <h1>MEA Cloud Regulations Map</h1>
           <p>Financial services cloud computing regulations by country</p>
-        </div>
-      </header>
+          </div>
+          </header>
 
-      {/* Legend */}
-      <div className="regulations-legend">
+          {/* Stats */}
+          <div className="regulations-stats">
+          <h3>Coverage Statistics</h3>
+          <div className="stats-grid">
+          <div className="stat-box">
+            <div className="number">{countryData.length}</div>
+            <div className="label">Total Countries</div>
+          </div>
+          <div className="stat-box">
+            <div className="number">{coverage}%</div>
+            <div className="label">With Regulations</div>
+          </div>
+          <div className="stat-box">
+            <div className="number">{100 - coverage}%</div>
+            <div className="label">Information Gap</div>
+          </div>
+          <div className="stat-box">
+            <div className="number">{counts.amber}</div>
+            <div className="label">Tier 1 Markets</div>
+          </div>
+          </div>
+          </div>
+
+          {/* Legend */}
+          <div className="regulations-legend">
         <h3>Regulation Status Legend</h3>
         <div className="legend-grid">
           <div className="legend-item">
@@ -200,25 +243,9 @@ export default function CloudRegulationsMap() {
             </div>
             <div className="legend-count">{counts.grey}</div>
           </div>
-        </div>
-
-        <div className="restrictions-info">
-          <div className="info-title">Restriction Flags (shown on verified countries)</div>
-          <div className="flags-legend">
-            <span><strong>A</strong> Approval / Notification &nbsp;</span>
-            <span><strong>R</strong> Data Residency &nbsp;</span>
-            <span><strong>U</strong> Audit / Supervisory Access &nbsp;</span>
-            <span><strong>S</strong> Subcontracting Controls &nbsp;</span>
-            <span><strong>E</strong> Exit Plan / BCP &nbsp;</span>
-            <span><strong>C</strong> Security / Risk Controls</span>
           </div>
-          <div className="indicators">
-            <span><span className="indicator-dot" style={{background:'#22c55e'}}></span> Confirmed in regulation</span>
-            <span><span className="indicator-dot" style={{background:'#f59e0b'}}></span> Partial / indirect coverage</span>
-          </div>
-        </div>
 
-        <div className="filter-buttons">
+          <div className="filter-buttons">
           <button 
             className={`filter-btn btn-all ${currentFilter === 'all' ? 'active' : ''}`}
             onClick={() => setCurrentFilter('all')}

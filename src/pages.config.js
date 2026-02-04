@@ -49,21 +49,21 @@
  */
 import AdminDashboard from './pages/AdminDashboard';
 import Bookmarks from './pages/Bookmarks';
+import CloudRegulationsMap from './pages/CloudRegulationsMap';
 import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import Scorecard from './pages/Scorecard';
 import UserSettings from './pages/UserSettings';
-import CloudRegulationsMap from './pages/CloudRegulationsMap';
 
 
 export const PAGES = {
     "AdminDashboard": AdminDashboard,
     "Bookmarks": Bookmarks,
+    "CloudRegulationsMap": CloudRegulationsMap,
     "Dashboard": Dashboard,
     "Home": Home,
     "Scorecard": Scorecard,
     "UserSettings": UserSettings,
-    "CloudRegulationsMap": CloudRegulationsMap,
 }
 
 export const pagesConfig = {
