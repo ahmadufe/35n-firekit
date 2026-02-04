@@ -302,100 +302,119 @@ export default function CloudRegulationsMap() {
 
       {/* Map */}
       <div className="map-container">
-        <svg viewBox="0 0 800 800" className="map-svg">
-          {/* UAE */}
-          <path d="M 580 380 L 595 375 L 600 385 L 590 390 Z" className={`country-path status-${countryData.find(c => c.name === 'UAE')?.status}`} 
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'UAE'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Saudi Arabia */}
-          <path d="M 540 370 L 580 360 L 595 375 L 590 390 L 570 400 L 540 395 Z" className={`country-path status-${countryData.find(c => c.name === 'Saudi Arabia')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Saudi Arabia'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Qatar */}
-          <path d="M 575 385 L 582 380 L 585 390 L 578 392 Z" className={`country-path status-${countryData.find(c => c.name === 'Qatar')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Qatar'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Kuwait */}
-          <path d="M 565 365 L 575 360 L 578 368 L 570 370 Z" className={`country-path status-${countryData.find(c => c.name === 'Kuwait')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Kuwait'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Bahrain */}
-          <path d="M 572 380 L 576 378 L 577 383 L 573 384 Z" className={`country-path status-${countryData.find(c => c.name === 'Bahrain')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Bahrain'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Oman */}
-          <path d="M 595 390 L 610 385 L 615 405 L 605 410 L 595 405 Z" className={`country-path status-${countryData.find(c => c.name === 'Oman')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Oman'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Jordan */}
-          <path d="M 525 355 L 538 350 L 542 360 L 532 365 Z" className={`country-path status-${countryData.find(c => c.name === 'Jordan')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Jordan'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Lebanon */}
-          <path d="M 520 345 L 526 342 L 528 348 L 522 350 Z" className={`country-path status-${countryData.find(c => c.name === 'Lebanon')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Lebanon'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Iraq */}
-          <path d="M 545 355 L 565 345 L 575 360 L 565 365 L 550 365 Z" className={`country-path status-${countryData.find(c => c.name === 'Iraq')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Iraq'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Yemen */}
-          <path d="M 560 410 L 585 405 L 595 425 L 575 430 Z" className={`country-path status-${countryData.find(c => c.name === 'Yemen')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Yemen'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Egypt */}
-          <path d="M 480 350 L 520 345 L 525 365 L 510 380 L 475 375 Z" className={`country-path status-${countryData.find(c => c.name === 'Egypt')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Egypt'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
+        <svg viewBox="0 0 1000 900" className="map-svg" preserveAspectRatio="xMidYMid meet">
           {/* Morocco */}
-          <path d="M 340 320 L 380 315 L 390 340 L 365 350 L 340 345 Z" className={`country-path status-${countryData.find(c => c.name === 'Morocco')?.status}`}
+          <path d="M 150 180 L 200 175 L 220 200 L 210 240 L 180 250 L 150 230 Z" 
+                className={`country-path status-${countryData.find(c => c.name === 'Morocco')?.status}`}
                 onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Morocco'), e)}
                 onMouseLeave={handleCountryLeave} />
           
-          {/* Nigeria */}
-          <path d="M 380 450 L 420 445 L 425 470 L 395 475 Z" className={`country-path status-${countryData.find(c => c.name === 'Nigeria')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Nigeria'), e)}
+          {/* Egypt */}
+          <path d="M 480 200 L 550 190 L 565 230 L 555 280 L 520 290 L 475 270 Z" 
+                className={`country-path status-${countryData.find(c => c.name === 'Egypt')?.status}`}
+                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Egypt'), e)}
                 onMouseLeave={handleCountryLeave} />
           
-          {/* Ghana */}
-          <path d="M 350 460 L 375 455 L 380 470 L 360 475 Z" className={`country-path status-${countryData.find(c => c.name === 'Ghana')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Ghana'), e)}
+          {/* Lebanon */}
+          <path d="M 565 210 L 575 208 L 578 220 L 568 222 Z" 
+                className={`country-path status-${countryData.find(c => c.name === 'Lebanon')?.status}`}
+                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Lebanon'), e)}
+                onMouseLeave={handleCountryLeave} />
+          
+          {/* Jordan */}
+          <path d="M 560 225 L 580 220 L 590 245 L 575 255 Z" 
+                className={`country-path status-${countryData.find(c => c.name === 'Jordan')?.status}`}
+                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Jordan'), e)}
+                onMouseLeave={handleCountryLeave} />
+          
+          {/* Iraq */}
+          <path d="M 590 210 L 640 200 L 660 240 L 650 270 L 610 275 Z" 
+                className={`country-path status-${countryData.find(c => c.name === 'Iraq')?.status}`}
+                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Iraq'), e)}
+                onMouseLeave={handleCountryLeave} />
+          
+          {/* Kuwait */}
+          <path d="M 640 265 L 655 260 L 660 275 L 648 280 Z" 
+                className={`country-path status-${countryData.find(c => c.name === 'Kuwait')?.status}`}
+                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Kuwait'), e)}
+                onMouseLeave={handleCountryLeave} />
+          
+          {/* Saudi Arabia */}
+          <path d="M 590 275 L 660 270 L 720 300 L 720 370 L 680 390 L 620 370 L 590 320 Z" 
+                className={`country-path status-${countryData.find(c => c.name === 'Saudi Arabia')?.status}`}
+                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Saudi Arabia'), e)}
+                onMouseLeave={handleCountryLeave} />
+          
+          {/* Bahrain */}
+          <path d="M 665 310 L 672 308 L 674 318 L 667 320 Z" 
+                className={`country-path status-${countryData.find(c => c.name === 'Bahrain')?.status}`}
+                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Bahrain'), e)}
+                onMouseLeave={handleCountryLeave} />
+          
+          {/* Qatar */}
+          <path d="M 680 330 L 695 325 L 700 345 L 685 350 Z" 
+                className={`country-path status-${countryData.find(c => c.name === 'Qatar')?.status}`}
+                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Qatar'), e)}
+                onMouseLeave={handleCountryLeave} />
+          
+          {/* UAE */}
+          <path d="M 710 340 L 740 335 L 755 360 L 745 380 L 720 375 Z" 
+                className={`country-path status-${countryData.find(c => c.name === 'UAE')?.status}`}
+                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'UAE'), e)}
+                onMouseLeave={handleCountryLeave} />
+          
+          {/* Oman */}
+          <path d="M 720 380 L 760 375 L 780 410 L 770 450 L 740 455 L 720 420 Z" 
+                className={`country-path status-${countryData.find(c => c.name === 'Oman')?.status}`}
+                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Oman'), e)}
+                onMouseLeave={handleCountryLeave} />
+          
+          {/* Yemen */}
+          <path d="M 650 390 L 710 395 L 720 440 L 690 455 L 640 445 Z" 
+                className={`country-path status-${countryData.find(c => c.name === 'Yemen')?.status}`}
+                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Yemen'), e)}
                 onMouseLeave={handleCountryLeave} />
           
           {/* Senegal */}
-          <path d="M 310 435 L 335 430 L 340 445 L 320 450 Z" className={`country-path status-${countryData.find(c => c.name === 'Senegal')?.status}`}
+          <path d="M 150 360 L 190 355 L 200 375 L 180 390 L 155 385 Z" 
+                className={`country-path status-${countryData.find(c => c.name === 'Senegal')?.status}`}
                 onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Senegal'), e)}
                 onMouseLeave={handleCountryLeave} />
           
-          {/* Kenya */}
-          <path d="M 520 480 L 555 475 L 560 500 L 535 510 L 520 505 Z" className={`country-path status-${countryData.find(c => c.name === 'Kenya')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Kenya'), e)}
+          {/* Ghana */}
+          <path d="M 240 420 L 270 415 L 280 445 L 265 455 L 245 450 Z" 
+                className={`country-path status-${countryData.find(c => c.name === 'Ghana')?.status}`}
+                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Ghana'), e)}
+                onMouseLeave={handleCountryLeave} />
+          
+          {/* Nigeria */}
+          <path d="M 290 410 L 360 405 L 380 445 L 360 470 L 310 465 Z" 
+                className={`country-path status-${countryData.find(c => c.name === 'Nigeria')?.status}`}
+                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Nigeria'), e)}
                 onMouseLeave={handleCountryLeave} />
           
           {/* Ethiopia */}
-          <path d="M 530 455 L 565 450 L 570 475 L 545 480 Z" className={`country-path status-${countryData.find(c => c.name === 'Ethiopia')?.status}`}
+          <path d="M 580 420 L 640 410 L 660 450 L 650 490 L 600 495 L 580 460 Z" 
+                className={`country-path status-${countryData.find(c => c.name === 'Ethiopia')?.status}`}
                 onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Ethiopia'), e)}
                 onMouseLeave={handleCountryLeave} />
           
-          {/* Mauritius */}
-          <path d="M 600 580 L 610 578 L 612 588 L 602 590 Z" className={`country-path status-${countryData.find(c => c.name === 'Mauritius')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Mauritius'), e)}
+          {/* Kenya */}
+          <path d="M 580 500 L 640 495 L 655 540 L 640 580 L 590 585 L 575 545 Z" 
+                className={`country-path status-${countryData.find(c => c.name === 'Kenya')?.status}`}
+                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Kenya'), e)}
                 onMouseLeave={handleCountryLeave} />
           
           {/* South Africa */}
-          <path d="M 470 620 L 530 615 L 540 650 L 500 660 L 465 655 Z" className={`country-path status-${countryData.find(c => c.name === 'South Africa')?.status}`}
+          <path d="M 470 700 L 560 695 L 580 750 L 560 780 L 500 785 L 465 760 Z" 
+                className={`country-path status-${countryData.find(c => c.name === 'South Africa')?.status}`}
                 onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'South Africa'), e)}
+                onMouseLeave={handleCountryLeave} />
+          
+          {/* Mauritius */}
+          <path d="M 700 750 L 715 748 L 718 765 L 703 767 Z" 
+                className={`country-path status-${countryData.find(c => c.name === 'Mauritius')?.status}`}
+                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Mauritius'), e)}
                 onMouseLeave={handleCountryLeave} />
         </svg>
         
