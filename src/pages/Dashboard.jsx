@@ -642,7 +642,7 @@ export default function Dashboard() {
                   fileUrl={tool.file_url}
                   link={tool.link}
                   actionText={getActionText(tool.sectionId)}
-                  type={tool.sectionTitle}
+                  type={tool.asset_type || tool.sectionTitle}
                   topics={tool.topics || []}
                   resourceId={tool.id}
                 />
