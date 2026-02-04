@@ -35,6 +35,7 @@ export default function Dashboard() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTopics, setSelectedTopics] = useState([]);
+  const [selectedTypes, setSelectedTypes] = useState([]);
 
   const [showNewOnly, setShowNewOnly] = useState(false);
   const [showFeaturedOnly, setShowFeaturedOnly] = useState(false);
@@ -263,6 +264,9 @@ export default function Dashboard() {
     'Emerging markets startups & tech'
   ];
 
+  // Get unique asset types from all tools
+  const availableTypes = [...new Set(allTools.map(tool => tool.asset_type).filter(Boolean))];
+
   // Filter tools based on search and filters
   const filteredTools = allTools.filter(tool => {
     // Search filter
@@ -273,6 +277,10 @@ export default function Dashboard() {
     // Topic filter
     const matchesTopic = selectedTopics.length === 0 || 
       (tool.topics && tool.topics.some(topic => selectedTopics.includes(topic)));
+
+    // Type filter
+    const matchesType = selectedTypes.length === 0 || 
+      (tool.asset_type && selectedTypes.includes(tool.asset_type));
 
     // New resources filter
     const matchesNew = !showNewOnly || (() => {
@@ -292,7 +300,7 @@ export default function Dashboard() {
     // Exclusive filter
     const matchesExclusive = !showExclusiveOnly || tool.coming_soon;
 
-    return matchesSearch && matchesTopic && matchesNew && matchesFeatured && matchesExclusive;
+    return matchesSearch && matchesTopic && matchesType && matchesNew && matchesFeatured && matchesExclusive;
   });
 
   const toggleTopic = (topic) => {
@@ -301,12 +309,19 @@ export default function Dashboard() {
     );
   };
 
+  const toggleType = (type) => {
+    setSelectedTypes(prev => 
+      prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
+    );
+  };
 
 
-  const hasActiveFilters = selectedTopics.length > 0 || showNewOnly || showFeaturedOnly || showExclusiveOnly;
+
+  const hasActiveFilters = selectedTopics.length > 0 || selectedTypes.length > 0 || showNewOnly || showFeaturedOnly || showExclusiveOnly;
 
   const clearAllFilters = () => {
     setSelectedTopics([]);
+    setSelectedTypes([]);
     setShowNewOnly(false);
     setShowFeaturedOnly(false);
     setShowExclusiveOnly(false);
@@ -542,6 +557,14 @@ export default function Dashboard() {
               >
                 Topic {selectedTopics.length > 0 && `(${selectedTopics.length})`}
               </Button>
+              <Button
+                variant={openFilter === 'type' || selectedTypes.length > 0 ? "default" : "outline"}
+                size="sm"
+                onClick={() => toggleFilterSection('type')}
+                className={`${openFilter === 'type' || selectedTypes.length > 0 ? 'bg-slate-900 text-white' : 'bg-white text-slate-700 border-slate-300'}`}
+              >
+                Type {selectedTypes.length > 0 && `(${selectedTypes.length})`}
+              </Button>
 
               </div>
               {hasActiveFilters && (
@@ -596,6 +619,35 @@ export default function Dashboard() {
                     onClick={() => toggleTopic(topic)}
                   >
                     {topic}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {openFilter === 'type' && (
+            <div className="mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200 relative">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setOpenFilter(null)}
+                className="absolute top-2 right-2 h-6 w-6 text-slate-500 hover:text-slate-900"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+              <div className="flex flex-wrap gap-2">
+                {availableTypes.map(type => (
+                  <Badge
+                    key={type}
+                    variant={selectedTypes.includes(type) ? "default" : "outline"}
+                    className={`cursor-pointer px-3 py-1.5 text-xs transition-all ${
+                      selectedTypes.includes(type)
+                        ? 'bg-slate-900 text-white hover:bg-slate-800'
+                        : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-300'
+                    }`}
+                    onClick={() => toggleType(type)}
+                  >
+                    {type}
                   </Badge>
                 ))}
               </div>
