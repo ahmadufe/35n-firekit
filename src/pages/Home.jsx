@@ -48,8 +48,7 @@ export default function Home() {
             <a href="https://www.35nventures.com" target="_blank" rel="noopener noreferrer">
               <Button
                 size="lg"
-                variant="outline"
-                className="border-2 border-white text-white hover:bg-white/10 text-2xl px-10 py-4 h-auto font-semibold rounded-full">
+                className="bg-white text-black hover:bg-slate-200 text-2xl px-10 py-4 h-auto font-semibold rounded-full">
 
                 Learn about 35N
               </Button>
