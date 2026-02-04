@@ -67,6 +67,13 @@ export default function ResourcesManagementTab() {
     'Emerging markets startups & tech'
   ];
 
+  const AVAILABLE_TYPES = filterConfig?.filters?.type || [
+    'Tools',
+    'Insights',
+    'Playbooks',
+    'Deep dive series'
+  ];
+
   const publishedConfig = configs.find(c => c.config_name === 'published');
   const draftConfig = configs.find(c => c.config_name === 'draft');
 
@@ -581,10 +588,9 @@ export default function ResourcesManagementTab() {
                     <SelectValue placeholder="Select type..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Tools">Tools</SelectItem>
-                    <SelectItem value="Insights">Insights</SelectItem>
-                    <SelectItem value="Playbooks">Playbooks</SelectItem>
-                    <SelectItem value="Deep dive series">Deep dive series</SelectItem>
+                    {AVAILABLE_TYPES.map(type => (
+                      <SelectItem key={type} value={type}>{type}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
