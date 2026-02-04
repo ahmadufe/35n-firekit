@@ -23,8 +23,7 @@ const DEFAULT_FILTERS = {
     'Africa startups & tech',
     'Middle East startups & tech',
     'Emerging markets startups & tech'
-  ],
-  access: ['Free', 'Exclusive']
+  ]
 };
 
 export default function FilterAttributesTab() {
@@ -100,7 +99,7 @@ export default function FilterAttributesTab() {
   };
 
   const handleDeleteFilter = (filterKey) => {
-    if (['topic', 'access'].includes(filterKey)) {
+    if (['topic'].includes(filterKey)) {
       toast.error('Cannot delete default filters');
       return;
     }
@@ -209,7 +208,7 @@ export default function FilterAttributesTab() {
             <CardHeader className="border-b border-slate-100">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg">{formatFilterName(filterKey)}</CardTitle>
-                {!['topic', 'access'].includes(filterKey) && (
+                {!['topic'].includes(filterKey) && (
                   <Button
                     variant="ghost"
                     size="sm"
