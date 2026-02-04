@@ -381,50 +381,7 @@ export default function CloudRegulationsMap() {
         </div>
       </div>
 
-      {/* Interactive Map */}
-      <div className="map-container">
-        <img 
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695a4c3829d04b83a5c959f0/576cfd63b_MEAmap.png" 
-          alt="MEA Map" 
-          className="map-image"
-        />
-        <div className="map-overlay">
-          {countryData
-            .filter(country => currentFilter === 'all' || currentFilter === country.status)
-            .map((country) => {
-              const area = countryAreas[country.name];
-              if (!area) return null;
-              
-              return (
-                <div
-                  key={country.name}
-                  className="country-overlay"
-                  style={{
-                    left: area.left,
-                    top: area.top,
-                    width: area.width,
-                    height: area.height,
-                    background: `${colors[country.status]}40`,
-                    border: `2px solid ${colors[country.status]}`,
-                    borderRadius: '4px'
-                  }}
-                  onMouseEnter={(e) => handleCountryHover(country, e)}
-                  onMouseLeave={handleCountryLeave}
-                  onMouseMove={(e) => {
-                    if (hoveredCountry?.name === country.name) {
-                      const container = e.currentTarget.closest('.map-container');
-                      const rect = container.getBoundingClientRect();
-                      setTooltipPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-                    }
-                  }}
-                />
-              );
-            })}
-          {hoveredCountry && tooltipPosition && (
-            <MapTooltip country={hoveredCountry} position={tooltipPosition} />
-          )}
-        </div>
-      </div>
+
 
       {/* Restriction Flags */}
       <div className="restrictions-info">
