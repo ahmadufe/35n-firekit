@@ -51,7 +51,7 @@ export default function Home() {
                 variant="outline"
                 className="border-2 border-white text-white hover:bg-white/10 text-2xl px-10 py-4 h-auto font-semibold rounded-full">
 
-                Learn about us
+                Learn about 35N
               </Button>
             </a>
           </div>
