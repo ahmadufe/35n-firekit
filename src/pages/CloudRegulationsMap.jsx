@@ -31,14 +31,15 @@ const styles = `
 .filter-btn { padding: 8px 14px; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; transition: all 0.2s; background: white; color: #0f172a; }
 .filter-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
 .filter-btn.active { background: #0f172a; color: white; border-color: #0f172a; }
-.map-container { height: 600px; margin: 0 24px 24px; border-radius: 8px; overflow: visible; position: relative; background: white; padding: 20px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
-.map-svg { width: 100%; height: 100%; }
-.country-path { cursor: pointer; transition: all 0.2s; stroke: #94a3b8; stroke-width: 1; }
-.country-path:hover { stroke: #0f172a; stroke-width: 2; opacity: 0.9; }
-.country-path.status-amber { fill: #fde047; }
-.country-path.status-red { fill: #fca5a5; }
-.country-path.status-grey { fill: #e5e7eb; }
-.country-path.status-green { fill: #86efac; }
+.map-container { height: 600px; margin: 0 24px 24px; border-radius: 8px; overflow: hidden; position: relative; background: #f0f4f8; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
+.map-image { width: 100%; height: 100%; object-fit: contain; }
+.map-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.country-marker { position: absolute; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: white; transition: all 0.3s; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+.country-marker:hover { transform: scale(1.3); z-index: 10; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+.country-marker.status-amber { background: #fbbf24; }
+.country-marker.status-red { background: #ef4444; }
+.country-marker.status-grey { background: #9ca3af; }
+.country-marker.status-green { background: #10b981; }
 .map-tooltip { position: absolute; background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); pointer-events: none; z-index: 1000; max-width: 350px; font-size: 12px; }
 .map-tooltip h4 { font-size: 14px; font-weight: 600; color: #0f172a; margin-bottom: 6px; }
 .map-tooltip .status-badge { display: inline-block; padding: 2px 8px; border-radius: 8px; font-size: 10px; font-weight: 600; margin-bottom: 8px; }
@@ -175,7 +176,8 @@ export default function CloudRegulationsMap() {
   }, []);
 
   const handleCountryHover = (country, event) => {
-    const rect = event.currentTarget.getBoundingClientRect();
+    const container = event.currentTarget.closest('.map-container');
+    const rect = container.getBoundingClientRect();
     setHoveredCountry(country);
     setTooltipPosition({ x: event.clientX - rect.left, y: event.clientY - rect.top });
   };
@@ -183,6 +185,29 @@ export default function CloudRegulationsMap() {
   const handleCountryLeave = () => {
     setHoveredCountry(null);
     setTooltipPosition(null);
+  };
+
+  // Country positions as percentages of map dimensions
+  const countryPositions = {
+    'Morocco': { left: '15%', top: '22%' },
+    'Egypt': { left: '48%', top: '25%' },
+    'Lebanon': { left: '57%', top: '24%' },
+    'Jordan': { left: '58%', top: '28%' },
+    'Iraq': { left: '63%', top: '26%' },
+    'Kuwait': { left: '65%', top: '31%' },
+    'Saudi Arabia': { left: '65%', top: '38%' },
+    'Bahrain': { left: '67%', top: '35%' },
+    'Qatar': { left: '69%', top: '37%' },
+    'UAE': { left: '72%', top: '39%' },
+    'Oman': { left: '73%', top: '44%' },
+    'Yemen': { left: '66%', top: '47%' },
+    'Senegal': { left: '17%', top: '47%' },
+    'Ghana': { left: '27%', top: '52%' },
+    'Nigeria': { left: '33%', top: '51%' },
+    'Ethiopia': { left: '60%', top: '52%' },
+    'Kenya': { left: '60%', top: '58%' },
+    'South Africa': { left: '50%', top: '82%' },
+    'Mauritius': { left: '70%', top: '84%' }
   };
 
   const getStatusCounts = () => {
@@ -302,121 +327,37 @@ export default function CloudRegulationsMap() {
 
       {/* Map */}
       <div className="map-container">
-        <svg viewBox="0 0 1000 900" className="map-svg" preserveAspectRatio="xMidYMid meet">
-          {/* Morocco */}
-          <path d="M 150 180 L 200 175 L 220 200 L 210 240 L 180 250 L 150 230 Z" 
-                className={`country-path status-${countryData.find(c => c.name === 'Morocco')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Morocco'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Egypt */}
-          <path d="M 480 200 L 550 190 L 565 230 L 555 280 L 520 290 L 475 270 Z" 
-                className={`country-path status-${countryData.find(c => c.name === 'Egypt')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Egypt'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Lebanon */}
-          <path d="M 565 210 L 575 208 L 578 220 L 568 222 Z" 
-                className={`country-path status-${countryData.find(c => c.name === 'Lebanon')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Lebanon'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Jordan */}
-          <path d="M 560 225 L 580 220 L 590 245 L 575 255 Z" 
-                className={`country-path status-${countryData.find(c => c.name === 'Jordan')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Jordan'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Iraq */}
-          <path d="M 590 210 L 640 200 L 660 240 L 650 270 L 610 275 Z" 
-                className={`country-path status-${countryData.find(c => c.name === 'Iraq')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Iraq'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Kuwait */}
-          <path d="M 640 265 L 655 260 L 660 275 L 648 280 Z" 
-                className={`country-path status-${countryData.find(c => c.name === 'Kuwait')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Kuwait'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Saudi Arabia */}
-          <path d="M 590 275 L 660 270 L 720 300 L 720 370 L 680 390 L 620 370 L 590 320 Z" 
-                className={`country-path status-${countryData.find(c => c.name === 'Saudi Arabia')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Saudi Arabia'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Bahrain */}
-          <path d="M 665 310 L 672 308 L 674 318 L 667 320 Z" 
-                className={`country-path status-${countryData.find(c => c.name === 'Bahrain')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Bahrain'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Qatar */}
-          <path d="M 680 330 L 695 325 L 700 345 L 685 350 Z" 
-                className={`country-path status-${countryData.find(c => c.name === 'Qatar')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Qatar'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* UAE */}
-          <path d="M 710 340 L 740 335 L 755 360 L 745 380 L 720 375 Z" 
-                className={`country-path status-${countryData.find(c => c.name === 'UAE')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'UAE'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Oman */}
-          <path d="M 720 380 L 760 375 L 780 410 L 770 450 L 740 455 L 720 420 Z" 
-                className={`country-path status-${countryData.find(c => c.name === 'Oman')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Oman'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Yemen */}
-          <path d="M 650 390 L 710 395 L 720 440 L 690 455 L 640 445 Z" 
-                className={`country-path status-${countryData.find(c => c.name === 'Yemen')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Yemen'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Senegal */}
-          <path d="M 150 360 L 190 355 L 200 375 L 180 390 L 155 385 Z" 
-                className={`country-path status-${countryData.find(c => c.name === 'Senegal')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Senegal'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Ghana */}
-          <path d="M 240 420 L 270 415 L 280 445 L 265 455 L 245 450 Z" 
-                className={`country-path status-${countryData.find(c => c.name === 'Ghana')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Ghana'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Nigeria */}
-          <path d="M 290 410 L 360 405 L 380 445 L 360 470 L 310 465 Z" 
-                className={`country-path status-${countryData.find(c => c.name === 'Nigeria')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Nigeria'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Ethiopia */}
-          <path d="M 580 420 L 640 410 L 660 450 L 650 490 L 600 495 L 580 460 Z" 
-                className={`country-path status-${countryData.find(c => c.name === 'Ethiopia')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Ethiopia'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Kenya */}
-          <path d="M 580 500 L 640 495 L 655 540 L 640 580 L 590 585 L 575 545 Z" 
-                className={`country-path status-${countryData.find(c => c.name === 'Kenya')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Kenya'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* South Africa */}
-          <path d="M 470 700 L 560 695 L 580 750 L 560 780 L 500 785 L 465 760 Z" 
-                className={`country-path status-${countryData.find(c => c.name === 'South Africa')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'South Africa'), e)}
-                onMouseLeave={handleCountryLeave} />
-          
-          {/* Mauritius */}
-          <path d="M 700 750 L 715 748 L 718 765 L 703 767 Z" 
-                className={`country-path status-${countryData.find(c => c.name === 'Mauritius')?.status}`}
-                onMouseEnter={(e) => handleCountryHover(countryData.find(c => c.name === 'Mauritius'), e)}
-                onMouseLeave={handleCountryLeave} />
-        </svg>
+        <img 
+          src="https://upload.wikimedia.org/wikipedia/commons/8/86/Africa_%28orthographic_projection%29.svg" 
+          alt="Africa and Middle East Map" 
+          className="map-image"
+        />
+        <div className="map-overlay">
+          {countryData.map((country) => {
+            const position = countryPositions[country.name];
+            if (!position) return null;
+            
+            const shouldShow = currentFilter === 'all' || currentFilter === country.status;
+            if (!shouldShow) return null;
+            
+            return (
+              <div
+                key={country.name}
+                className={`country-marker status-${country.status}`}
+                style={{ 
+                  left: position.left, 
+                  top: position.top,
+                  transform: 'translate(-50%, -50%)'
+                }}
+                onMouseEnter={(e) => handleCountryHover(country, e)}
+                onMouseLeave={handleCountryLeave}
+                title={country.name}
+              >
+                {country.name.substring(0, 2).toUpperCase()}
+              </div>
+            );
+          })}
+        </div>
         
         <MapTooltip country={hoveredCountry} position={tooltipPosition} />
       </div>
