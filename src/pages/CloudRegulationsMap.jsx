@@ -328,10 +328,9 @@ export default function CloudRegulationsMap() {
       {/* Map */}
       <div className="map-container">
         <img 
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Africa_on_the_globe_%28red%29.svg/1200px-Africa_on_the_globe_%28red%29.svg.png" 
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Africa_%28orthographic_projection%29.svg/800px-Africa_%28orthographic_projection%29.svg.png" 
           alt="Africa and Middle East Map" 
           className="map-image"
-          style={{ objectPosition: 'center' }}
         />
         <div className="map-overlay">
           {countryData.map((country) => {
