@@ -262,7 +262,7 @@ export default function CloudRegulationsMap() {
             </Button>
           </Link>
           <h1>Cloud Regulations Matrix for Financial Services in MEA</h1>
-          <p className="text-sm text-slate-600 mt-2 max-w-4xl">All information here are based on our best effort to collect information publicly available sources. Mistakes could occur. While we aim to refresh this on quarterly basis, information could change after our search has been completed.</p>
+          <p className="text-sm text-slate-600 mt-2 max-w-4xl">All information here are based on our best effort to collect information from publicly available sources. Mistakes could occur. While we aim to refresh this on quarterly basis, information could change after our search has been completed.</p>
           </div>
           </header>
 
