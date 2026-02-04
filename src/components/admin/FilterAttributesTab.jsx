@@ -55,7 +55,10 @@ export default function FilterAttributesTab() {
     }
   });
 
-  const filters = filterConfig?.filters || DEFAULT_FILTERS;
+  // Merge existing filters with defaults to ensure new fields appear
+  const filters = filterConfig?.filters 
+    ? { ...DEFAULT_FILTERS, ...filterConfig.filters }
+    : DEFAULT_FILTERS;
 
   const saveFiltersMutation = useMutation({
     mutationFn: async (newFilters) => {
