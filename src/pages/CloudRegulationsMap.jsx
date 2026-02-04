@@ -31,8 +31,8 @@ const styles = `
 .filter-btn { padding: 8px 14px; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; transition: all 0.2s; background: white; color: #0f172a; }
 .filter-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
 .filter-btn.active { background: #0f172a; color: white; border-color: #0f172a; }
-.map-container { height: 600px; margin: 0 24px 24px; border-radius: 8px; overflow: hidden; position: relative; background: #f0f4f8; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
-.map-image { width: 100%; height: 100%; object-fit: contain; }
+.map-container { height: 700px; margin: 0 24px 24px; border-radius: 8px; overflow: hidden; position: relative; background: #e0f2fe; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
+.map-image { width: 100%; height: 100%; object-fit: cover; object-position: center; }
 .map-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 .country-marker { position: absolute; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: white; transition: all 0.3s; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 .country-marker:hover { transform: scale(1.3); z-index: 10; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
@@ -189,25 +189,25 @@ export default function CloudRegulationsMap() {
 
   // Country positions as percentages of map dimensions
   const countryPositions = {
-    'Morocco': { left: '25%', top: '18%' },
-    'Egypt': { left: '56%', top: '22%' },
-    'Lebanon': { left: '61%', top: '20%' },
-    'Jordan': { left: '62%', top: '24%' },
-    'Iraq': { left: '66%', top: '21%' },
-    'Kuwait': { left: '68%', top: '26%' },
-    'Saudi Arabia': { left: '68%', top: '32%' },
-    'Bahrain': { left: '69%', top: '29%' },
-    'Qatar': { left: '71%', top: '31%' },
-    'UAE': { left: '73%', top: '33%' },
-    'Oman': { left: '74%', top: '37%' },
-    'Yemen': { left: '68%', top: '39%' },
-    'Senegal': { left: '22%', top: '42%' },
-    'Ghana': { left: '32%', top: '48%' },
-    'Nigeria': { left: '38%', top: '47%' },
-    'Ethiopia': { left: '62%', top: '48%' },
-    'Kenya': { left: '62%', top: '55%' },
-    'South Africa': { left: '48%', top: '78%' },
-    'Mauritius': { left: '68%', top: '79%' }
+    'Morocco': { left: '32%', top: '16%' },
+    'Egypt': { left: '58%', top: '20%' },
+    'Lebanon': { left: '63%', top: '17%' },
+    'Jordan': { left: '64%', top: '21%' },
+    'Iraq': { left: '68%', top: '18%' },
+    'Kuwait': { left: '70%', top: '23%' },
+    'Saudi Arabia': { left: '70%', top: '29%' },
+    'Bahrain': { left: '71%', top: '26%' },
+    'Qatar': { left: '72%', top: '28%' },
+    'UAE': { left: '73%', top: '30%' },
+    'Oman': { left: '74%', top: '34%' },
+    'Yemen': { left: '70%', top: '36%' },
+    'Senegal': { left: '31%', top: '40%' },
+    'Ghana': { left: '37%', top: '46%' },
+    'Nigeria': { left: '42%', top: '45%' },
+    'Ethiopia': { left: '63%', top: '46%' },
+    'Kenya': { left: '63%', top: '53%' },
+    'South Africa': { left: '50%', top: '77%' },
+    'Mauritius': { left: '67%', top: '78%' }
   };
 
   const getStatusCounts = () => {
@@ -327,11 +327,15 @@ export default function CloudRegulationsMap() {
 
       {/* Map */}
       <div className="map-container">
-        <img 
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Africa_%28orthographic_projection%29.svg/800px-Africa_%28orthographic_projection%29.svg.png" 
-          alt="Africa and Middle East Map" 
-          className="map-image"
-        />
+        <svg viewBox="0 0 1000 900" className="map-image" style={{ background: '#e0f2fe' }}>
+          {/* Africa continent outline */}
+          <path d="M450,100 L470,95 L490,100 L510,95 L530,100 L550,110 L560,130 L570,150 L575,170 L580,190 L585,210 L590,230 L595,250 L600,270 L605,290 L608,310 L610,330 L612,350 L610,370 L608,390 L605,410 L600,430 L595,450 L590,470 L585,490 L580,510 L575,530 L570,550 L565,570 L560,590 L555,610 L550,630 L540,650 L530,670 L520,685 L510,695 L500,700 L490,705 L480,710 L470,712 L460,710 L450,708 L440,705 L430,700 L420,695 L410,688 L400,680 L390,670 L380,655 L370,640 L360,620 L350,600 L345,580 L340,560 L335,540 L330,520 L325,500 L320,480 L318,460 L315,440 L313,420 L310,400 L308,380 L305,360 L302,340 L300,320 L298,300 L295,280 L293,260 L290,240 L288,220 L285,200 L283,180 L285,160 L290,140 L300,125 L315,115 L330,108 L350,105 L370,103 L390,102 L410,101 L430,100 Z" 
+                fill="#d4e5d5" stroke="#94a3b8" strokeWidth="1.5"/>
+          
+          {/* Middle East extension */}
+          <path d="M600,100 L620,95 L640,92 L660,95 L675,100 L685,110 L690,125 L693,140 L695,155 L697,170 L698,185 L697,200 L695,215 L690,230 L685,245 L680,260 L675,275 L670,290 L660,305 L650,315 L640,322 L630,325 L620,327 L610,328 L600,327 L590,325 L585,315 L582,305 L580,290 L580,270 L585,250 L590,230 L595,210 L600,190 L605,170 L608,150 L610,130 L608,115 Z" 
+                fill="#d4e5d5" stroke="#94a3b8" strokeWidth="1.5"/>
+        </svg>
         <div className="map-overlay">
           {countryData.map((country) => {
             const position = countryPositions[country.name];
