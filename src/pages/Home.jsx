@@ -32,18 +32,29 @@ export default function Home() {
             by 35N
           </h1>
           
-          <p className="text-xl sm:text-2xl text-white/90 mb-12 font-light text-left">Practical insights, tools & frameworks for leaders, founders & innovators building great things
+          <p className="text-xl sm:text-2xl text-white/90 mb-12 font-light text-left">Practical toolkit for leaders, founders, and innovators building great digital products & fintechs
 
           </p>
           
-          <Link to={createPageUrl('Dashboard')}>
-            <Button
-              size="lg"
-              className="bg-white text-black hover:bg-slate-200 text-2xl px-10 py-4 h-auto font-semibold rounded-full">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Link to={createPageUrl('Dashboard')}>
+              <Button
+                size="lg"
+                className="bg-white text-black hover:bg-slate-200 text-2xl px-10 py-4 h-auto font-semibold rounded-full">
 
-              Explore
-            </Button>
-          </Link>
+                Explore
+              </Button>
+            </Link>
+            <a href="https://www.35nventures.com" target="_blank" rel="noopener noreferrer">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-2 border-white text-white hover:bg-white/10 text-2xl px-10 py-4 h-auto font-semibold rounded-full">
+
+                Learn about us
+              </Button>
+            </a>
+          </div>
         </div>
       </div>
     </div>);
