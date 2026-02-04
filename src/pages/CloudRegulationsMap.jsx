@@ -13,10 +13,10 @@ const styles = `
 .regulations-stats { background: white; padding: 20px; margin: 28px 24px 24px; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
 .regulations-stats h3 { font-size: 16px; font-weight: 600; color: #0f172a; margin-bottom: 16px; }
 .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
-.stat-box { background: #f8fafc; border: 1px solid #e2e8f0; color: #0f172a; padding: 16px; border-radius: 6px; text-align: center; transition: all 0.3s; }
+.stat-box { background: #f8fafc; border: 1px solid #e2e8f0; color: #0f172a; padding: 10px 14px; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; transition: all 0.3s; }
 .stat-box:hover { background: #f1f5f9; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); }
-.stat-box .number { font-size: 28px; font-weight: 700; margin-bottom: 4px; color: #0f172a; }
-.stat-box .label { font-size: 12px; color: #64748b; font-weight: 500; }
+.stat-box .number { font-size: 24px; font-weight: 700; color: #0f172a; }
+.stat-box .label { font-size: 13px; color: #64748b; font-weight: 500; }
 .regulations-legend { background: white; padding: 20px; margin: 0 24px 24px; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
 .regulations-legend h3 { font-size: 16px; font-weight: 600; color: #0f172a; margin-bottom: 16px; }
 .legend-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
