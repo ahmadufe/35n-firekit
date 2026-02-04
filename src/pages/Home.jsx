@@ -34,7 +34,7 @@ export default function Home() {
 
           </p>
           
-          <div className="flex gap-6">
+          <div className="flex gap-10">
             <Link to={createPageUrl('Dashboard')}>
               <Button
                 size="lg"
