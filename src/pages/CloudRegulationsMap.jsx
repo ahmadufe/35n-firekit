@@ -103,25 +103,55 @@ const styles = `
 `;
 
 const countryData = [
-  {name: "UAE", lat: 24.4539, lng: 54.3773, status: "amber", region: "Middle East", flags: {A:1, R:1, U:1, S:1, E:1, C:1}, details: "CBUAE Rulebook: dedicated Cloud Computing + Outsourcing sections. Prior approval required for material outsourcing. Data offshoring requires CB consultation. Exit planning mandatory (§2.19). Auditability requirement (§2.13)."},
-  {name: "Saudi Arabia", lat: 23.8859, lng: 45.0792, status: "amber", region: "Middle East", flags: {A:1, R:1, U:1, S:1, E:1, C:1}, details: "SAMA approval required prior to signing cloud contract (hybrid/public). Data residency mandated for sensitive financial data. Cyber Security Framework governs third-party & cloud controls. Market: $14.55B → $38.23B by 2033."},
-  {name: "Qatar", lat: 25.3548, lng: 51.1839, status: "amber", region: "Middle East", flags: {A:1, R:1, U:1, S:1, E:1, C:1}, details: "QCB Cloud Regulation (eff. 15 Apr 2024). §21.5: QCB approval required before any cloud arrangement. §21.4: PII & financial data must be processed within Qatar only. Termination & data-return provisions (§18.4–18.7). Sub-contractor controls in scope."},
-  {name: "Kuwait", lat: 29.3117, lng: 47.4818, status: "amber", region: "Middle East", details: "4-level data classification. Levels 3-4 require localization in Kuwait. CITRA licensing."},
-  {name: "Bahrain", lat: 26.0667, lng: 50.5577, status: "amber", region: "Middle East", flags: {A:1, R:1, U:1, S:1, E:1, C:1}, details: "CBB Cloud Outsourcing Control Guidelines (Appendix OM-2). Data location/transfer controls, governance framework, due diligence, subcontracting & exit provisions. Cloud-first policy. Data Embassy law."},
+  {name: "UAE", lat: 24.4539, lng: 54.3773, status: "amber", region: "Middle East", flags: {A:1, R:1, U:1, S:1, E:1, C:1}, details: "CBUAE Rulebook Cloud Computing + Outsourcing sections. Material outsourcing requires prior approval. Data offshoring requires CB consultation (§3.26). Auditability (§2.13). Exit planning (§2.19). Subcontracting governance (§2.14). Risk assessment + security (§3.41–53)."},
+  {name: "Saudi Arabia", lat: 23.8859, lng: 45.0792, status: "amber", region: "Middle East", flags: {A:1, R:1, U:1, S:1, E:1, C:1}, details: "SAMA Cyber Security Framework + Outsourcing Rules. SAMA approval required prior to signing cloud contract for hybrid/public. Data residency for sensitive financial data. Regulator access. Subcontractor controls. Exit provisions. Due diligence + risk assessment. Market: $14.55B → $38.23B by 2033."},
+  {name: "Qatar", lat: 25.3548, lng: 51.1839, status: "amber", region: "Middle East", flags: {A:1, R:1, U:1, S:1, E:1, C:1}, details: "QCB Cloud Regulation (eff. 15 Apr 2024). §21.5: QCB approval required. §21.4: PII & financial data processed within Qatar only. Audit rights (§22). Subcontractor controls. Exit + data return (§18.4–7). Security assessments."},
+  {name: "Kuwait", lat: 29.3117, lng: 47.4818, status: "amber", region: "Middle East", flags: {A:0, R:0, U:0, S:0, E:0, C:0}, flagNote: "INFERRED", details: "4-level data classification. Levels 3-4 require localization in Kuwait. CITRA licensing for cloud providers handling sensitive data. Flags inferred from classification framework, not verified from primary rulebook."},
+  {name: "Bahrain", lat: 26.0667, lng: 50.5577, status: "amber", region: "Middle East", flags: {A:1, R:1, U:1, S:1, E:1, C:1}, details: "CBB Cloud Outsourcing Control Guidelines (Appendix OM-2). Data location/transfer controls. Governance. Due diligence. Subcontracting. Exit strategy. Security controls. Cloud-first policy + Data Embassy law."},
   {name: "Oman", lat: 21.4735, lng: 55.9754, status: "grey", region: "Middle East", details: "E-Transactions Law has privacy provisions. Cloud framework unclear."},
-  {name: "Jordan", lat: 30.5852, lng: 36.2384, status: "grey", region: "Middle East", details: "No specific cloud regulations identified. Needs local language search."},
+  {name: "Jordan", lat: 30.5852, lng: 36.2384, status: "grey", region: "Middle East", details: "No specific cloud regulations identified."},
   {name: "Lebanon", lat: 33.8547, lng: 35.8623, status: "grey", region: "Middle East", details: "Economic crisis. Framework likely outdated."},
   {name: "Iraq", lat: 33.2232, lng: 43.6793, status: "grey", region: "Middle East", details: "Reforms underway but cloud regulations not identified."},
   {name: "Yemen", lat: 15.5527, lng: 48.5164, status: "grey", region: "Middle East", details: "No data available due to conflict."},
-  {name: "Egypt", lat: 26.8206, lng: 30.8025, status: "amber", region: "North Africa", flags: {A:1, R:1, U:1, S:1, E:1, C:1}, scopeNote: "†CBE cloud reference is within PSP/PSO regulation, not a consolidated bank-cloud rulebook. Banks may have additional requirements.", details: "Cloud First Policy Aug 2024. CBE regulation for payment operators explicitly references cloud computing. Personal Data Protection Law 2020. Tier-3 license for government cloud."},
-  {name: "Morocco", lat: 31.7917, lng: -7.0926, status: "amber", region: "North Africa", flags: {A:1, R:1, U:1, S:1, E:1, C:1}, details: "Bank Al-Maghrib Directive 4/W/2022: prior agreement required for outsourcing significant functions to cloud. Minimum rules cover data handling, governance, audit access, subcontracting & exit. Decree 2-24-921 (Nov 2024) for critical entities."},
-  {name: "Nigeria", lat: 9.0820, lng: 8.6753, status: "amber", region: "West Africa", details: "STRICT: Mandatory data localization. NDPR/NDPA. $358K Fidelity fine 2024. Hybrid cloud required."},
-  {name: "Ghana", lat: 7.9465, lng: -1.0232, status: "amber", region: "West Africa", flags: {A:1, R:1, U:1, S:1, E:1, C:1}, details: "BoG Outsourcing Directive (Nov 2024, eff. Jul 2025). Written CB approval required. Explicitly references cloud service providers — mandates disclosure of data type & storage locations. Materiality framework + full outsourcing lifecycle controls."},
-  {name: "Senegal", lat: 14.4974, lng: -14.4524, status: "amber", region: "West Africa", details: "BCEAO regional framework. Huawei datacenter. Data sovereignty push."},
-  {name: "Kenya", lat: -0.0236, lng: 37.9062, status: "amber", region: "East Africa", flags: {A:1, R:0.5, U:1, S:1, E:1, C:1}, scopeNote: "*R: CBK/PG/16 Part IV covers offshore outsourcing controls but no explicit standalone data-residency mandate equivalent to UAE/KSA/Qatar.", details: "CBK/PG/16 Outsourcing Guideline: approval required for material activities. Offshore outsourcing addressed in Part IV. Cybersecurity Guidance Note 2017. Subcontractor clause (§4.5.6.6(g)). Cloud Policy 2025. Record fines 2024."},
+  {name: "Syria", lat: 34.8021, lng: 38.9968, status: "grey", region: "Middle East", details: "No data available."},
+  {name: "Israel", lat: 31.0461, lng: 34.8516, status: "grey", region: "Middle East", details: "Advanced tech sector but specific regulations not captured in English sources."},
+  {name: "Palestine", lat: 31.9522, lng: 35.2332, status: "grey", region: "Middle East", details: "No information found."},
+  {name: "Iran", lat: 32.4279, lng: 53.6880, status: "grey", region: "Middle East", details: "Under sanctions. Cloud likely restricted."},
+  {name: "Turkey", lat: 38.9637, lng: 35.2433, status: "grey", region: "Middle East", details: "Large fintech market. Turkish language research needed."},
+  {name: "Egypt", lat: 26.8206, lng: 30.8025, status: "amber", region: "North Africa", flags: {A:1, R:1, U:1, S:1, E:1, C:1}, scopeNote: "†Scope caveat: Cloud reference in PSP/PSO regulation, not consolidated bank-cloud rulebook. Banks may have additional requirements.", details: "CBE regulation for payment operators explicitly references cloud computing. Cloud First Policy (Aug 2024). PDPL 2020. Tier-3 license for government cloud."},
+  {name: "Morocco", lat: 31.7917, lng: -7.0926, status: "amber", region: "North Africa", flags: {A:1, R:1, U:1, S:1, E:1, C:1}, details: "Bank Al-Maghrib Directive 4/W/2022: prior agreement required for outsourcing significant functions to cloud. Minimum rules: data handling + location, governance, regulator/audit access, subcontracting, exit, risk + security. Decree 2-24-921 (Nov 2024) for critical entities."},
+  {name: "Libya", lat: 26.3351, lng: 17.2283, status: "grey", region: "North Africa", details: "Political instability. No framework."},
+  {name: "Tunisia", lat: 33.8869, lng: 9.5375, status: "grey", region: "North Africa", details: "South-MED reforms underway. French/Arabic research needed."},
+  {name: "Algeria", lat: 28.0339, lng: 1.6596, status: "grey", region: "North Africa", details: "FATF grey list. AML regulations but no cloud framework identified."},
+  {name: "Sudan", lat: 12.8628, lng: 30.2176, status: "grey", region: "North Africa", details: "No information available."},
+  {name: "South Sudan", lat: 6.8770, lng: 31.3070, status: "grey", region: "East Africa", details: "No information available."},
+  {name: "Nigeria", lat: 9.0820, lng: 8.6753, status: "amber", region: "West Africa", flags: {A:0, R:0, U:0, S:0, E:0, C:0}, flagNote: "INFERRED", details: "STRICT - Mandatory data localization. NDPR/NDPA. NITDA framework (Feb 2025) requires local hosting for financial/healthcare data. $358K Fidelity Bank fine 2024. Hybrid cloud required. Flags inferred from NDPA + NITDA requirements, not verified from primary CBN cloud rulebook."},
+  {name: "Ghana", lat: 7.9465, lng: -1.0232, status: "amber", region: "West Africa", flags: {A:1, R:1, U:1, S:1, E:1, C:1}, details: "BoG Outsourcing Directive (Nov 2024, eff. Jul 2025). Written BoG approval required. Explicitly references cloud service providers — requires detail on data type + storage locations. Materiality framework. Due diligence. Subcontracting. Exit. Full lifecycle controls."},
+  {name: "Senegal", lat: 14.4974, lng: -14.4524, status: "amber", region: "West Africa", flags: {A:0, R:0, U:0, S:0, E:0, C:0}, flagNote: "INFERRED", details: "BCEAO regional payment services framework (applies to 8 UEMOA countries). Huawei datacenter for government. Data sovereignty push. Flags inferred from BCEAO framework, not verified from Senegal-specific CB cloud directive."},
+  {name: "Côte d'Ivoire", lat: 7.5400, lng: -5.5471, status: "amber", region: "West Africa", flags: {A:0, R:0, U:0, S:0, E:0, C:0}, flagNote: "INFERRED", details: "BCEAO framework applies. IBM Cloud for Financial Services present. UEMOA regional strategy. Flags inferred from BCEAO framework, not verified from local CB cloud directive."},
+  {name: "Kenya", lat: -0.0236, lng: 37.9062, status: "amber", region: "East Africa", flags: {A:1, R:0.5, U:1, S:1, E:1, C:1}, scopeNote: "*R: CBK/PG/16 Part IV covers offshore outsourcing controls but no explicit standalone data-residency mandate equivalent to UAE/KSA/Qatar.", details: "CBK/PG/16 Outsourcing Guideline + Cybersecurity Guidance Note 2017. Approval required for material outsourcing. Part IV addresses offshore but no explicit data-residency mandate equivalent to Qatar/UAE/KSA (R = partial). Audit rights. Subcontractor clause (§4.5.6.6(g)). Exit. Due diligence + security. Cloud Policy 2025. Record fines 2024."},
   {name: "Ethiopia", lat: 9.1450, lng: 40.4897, status: "red", region: "East Africa", details: "PROHIBITED: Crypto banned. No mobile money. Cloud for financial services likely not allowed."},
+  {name: "Rwanda", lat: -1.9403, lng: 29.8739, status: "amber", region: "East Africa", flags: {A:0, R:0, U:0, S:0, E:0, C:0}, flagNote: "INFERRED", details: "BNR Cybersecurity Directive 2023. Approval required for outsourcing to third parties. Data localization push. Kigali Internet City + African Data Centre. Flags inferred from Cybersecurity Directive + outsourcing requirements, not verified from dedicated cloud rulebook."},
+  {name: "Uganda", lat: 1.3733, lng: 32.2903, status: "grey", region: "East Africa", details: "Data Protection Act 2019. No specific cloud framework identified."},
+  {name: "Tanzania", lat: -6.3690, lng: 34.8888, status: "amber", region: "East Africa", flags: {A:0, R:0, U:0, S:0, E:0, C:0}, flagNote: "INFERRED", details: "BoT Outsourcing Guidelines (Dec 2023) Section 4.3 covers cloud arrangements. Requires approval, documentation, SLAs, audit + exit. Data storage location must be disclosed. Flags inferred from outsourcing guidelines, not verified from dedicated cloud rulebook."},
+  {name: "Burundi", lat: -3.3731, lng: 29.9189, status: "grey", region: "East Africa", details: "No information found."},
+  {name: "Somalia", lat: 5.1521, lng: 46.1996, status: "grey", region: "East Africa", details: "Conflict-affected. No framework."},
+  {name: "Djibouti", lat: 11.8251, lng: 42.5903, status: "grey", region: "East Africa", details: "Large datacenters (Africa Data Centres). No regulatory framework identified."},
+  {name: "Eritrea", lat: 15.1794, lng: 39.7823, status: "grey", region: "East Africa", details: "No information available."},
+  {name: "Seychelles", lat: -4.6796, lng: 55.4920, status: "grey", region: "East Africa", details: "Offshore finance hub. No cloud regulations identified."},
+  {name: "Comoros", lat: -11.6455, lng: 43.3333, status: "grey", region: "East Africa", details: "No information found."},
   {name: "Mauritius", lat: -20.3484, lng: 57.5522, status: "amber", region: "East Africa", flags: {A:1, R:1, U:1, S:1, E:1, C:1}, details: "BoM Guideline on Use of Cloud Services (eff. 7 Sep 2022). Dedicated sections: Data Location, Subcontracting, Exit Strategies, Audit/Testing, Security Management, Regulatory Notification. Risk-based approach. Annual cloud-services return required."},
   {name: "South Africa", lat: -30.5595, lng: 22.9375, status: "amber", region: "Southern Africa", flags: {A:1, R:1, U:1, S:1, E:1, C:1}, details: "POPIA 2021. Joint Communication 2 of 2025 (FSCA + PA, 25 Jul 2025): risk-based cloud & offshoring expectations, governance, due diligence. Directive 3 of 2018 binding for banks. Joint Standard in development. Penalties up to 10% turnover."},
+  {name: "Botswana", lat: -22.3285, lng: 24.6849, status: "grey", region: "Southern Africa", details: "Data protection framework. No cloud regulations identified."},
+  {name: "Namibia", lat: -22.9576, lng: 18.4904, status: "grey", region: "Southern Africa", details: "Data protection discussions ongoing. No cloud framework."},
+  {name: "Lesotho", lat: -29.6100, lng: 28.2336, status: "grey", region: "Southern Africa", details: "No information found."},
+  {name: "Eswatini", lat: -26.5225, lng: 31.4659, status: "grey", region: "Southern Africa", details: "No information found."},
+  {name: "Zimbabwe", lat: -19.0154, lng: 29.1549, status: "grey", region: "Southern Africa", details: "Data Protection Act 2021. No cloud-specific framework."},
+  {name: "Zambia", lat: -13.1339, lng: 27.8493, status: "grey", region: "Southern Africa", details: "Data protection law. No cloud regulations identified."},
+  {name: "Malawi", lat: -13.2543, lng: 34.3015, status: "grey", region: "Southern Africa", details: "Data protection discussions. No cloud framework."},
+  {name: "Mozambique", lat: -18.6657, lng: 35.5296, status: "grey", region: "Southern Africa", details: "Data protection law. No cloud regulations identified."},
+  {name: "Angola", lat: -11.2027, lng: 17.8739, status: "grey", region: "Southern Africa", details: "Oil-dependent economy. No cloud framework identified."},
+  {name: "Madagascar", lat: -18.7669, lng: 46.8691, status: "grey", region: "East Africa", details: "No information found."}
 ];
 
 const colors = {
@@ -325,45 +355,8 @@ export default function CloudRegulationsMap() {
         </div>
       </div>
 
-      {/* Map */}
-      <div className="map-container">
-        <svg viewBox="0 0 1000 900" className="map-image" style={{ background: '#e0f2fe' }}>
-          {/* Africa continent outline */}
-          <path d="M450,100 L470,95 L490,100 L510,95 L530,100 L550,110 L560,130 L570,150 L575,170 L580,190 L585,210 L590,230 L595,250 L600,270 L605,290 L608,310 L610,330 L612,350 L610,370 L608,390 L605,410 L600,430 L595,450 L590,470 L585,490 L580,510 L575,530 L570,550 L565,570 L560,590 L555,610 L550,630 L540,650 L530,670 L520,685 L510,695 L500,700 L490,705 L480,710 L470,712 L460,710 L450,708 L440,705 L430,700 L420,695 L410,688 L400,680 L390,670 L380,655 L370,640 L360,620 L350,600 L345,580 L340,560 L335,540 L330,520 L325,500 L320,480 L318,460 L315,440 L313,420 L310,400 L308,380 L305,360 L302,340 L300,320 L298,300 L295,280 L293,260 L290,240 L288,220 L285,200 L283,180 L285,160 L290,140 L300,125 L315,115 L330,108 L350,105 L370,103 L390,102 L410,101 L430,100 Z" 
-                fill="#d4e5d5" stroke="#94a3b8" strokeWidth="1.5"/>
-          
-          {/* Middle East extension */}
-          <path d="M600,100 L620,95 L640,92 L660,95 L675,100 L685,110 L690,125 L693,140 L695,155 L697,170 L698,185 L697,200 L695,215 L690,230 L685,245 L680,260 L675,275 L670,290 L660,305 L650,315 L640,322 L630,325 L620,327 L610,328 L600,327 L590,325 L585,315 L582,305 L580,290 L580,270 L585,250 L590,230 L595,210 L600,190 L605,170 L608,150 L610,130 L608,115 Z" 
-                fill="#d4e5d5" stroke="#94a3b8" strokeWidth="1.5"/>
-        </svg>
-        <div className="map-overlay">
-          {countryData.map((country) => {
-            const position = countryPositions[country.name];
-            if (!position) return null;
-            
-            const shouldShow = currentFilter === 'all' || currentFilter === country.status;
-            if (!shouldShow) return null;
-            
-            return (
-              <div
-                key={country.name}
-                className={`country-marker status-${country.status}`}
-                style={{ 
-                  left: position.left, 
-                  top: position.top,
-                  transform: 'translate(-50%, -50%)'
-                }}
-                onMouseEnter={(e) => handleCountryHover(country, e)}
-                onMouseLeave={handleCountryLeave}
-                title={country.name}
-              >
-                {country.name.substring(0, 2).toUpperCase()}
-              </div>
-            );
-          })}
-        </div>
-        
-        <MapTooltip country={hoveredCountry} position={tooltipPosition} />
+      {/* Map - Removed as requested */}
+      <div className="map-container" style={{ display: 'none' }}>
       </div>
 
       {/* Restriction Flags */}
@@ -401,9 +394,9 @@ export default function CloudRegulationsMap() {
         </div>
       </div>
 
-      {/* Verified Countries Table */}
+      {/* All Countries Table */}
       <div className="verified-table">
-        <h3>Verified Countries – A/R/U/S/E/C Flags</h3>
+        <h3>Complete MEA Cloud Regulations Analysis</h3>
         <div className="table-wrapper">
           <table className="data-table">
             <thead>
@@ -417,130 +410,42 @@ export default function CloudRegulationsMap() {
                 <th className="table-flag">S</th>
                 <th className="table-flag">E</th>
                 <th className="table-flag">C</th>
-                <th>Key Notes</th>
+                <th>Key Regulations & Notes</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>ME</td>
-                <td className="table-country">UAE</td>
-                <td className="table-status">🟠</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-notes"><strong>CBUAE Rulebook</strong> has dedicated Cloud Computing + Outsourcing sections. Material outsourcing requires prior approval. Data offshoring requires CB consultation. Exit planning mandatory. Auditability requirement.</td>
-              </tr>
-              <tr>
-                <td>ME</td>
-                <td className="table-country">Saudi Arabia</td>
-                <td className="table-status">🟠</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-notes"><strong>SAMA Cyber Security Framework</strong>. SAMA approval required prior to signing cloud contract. Data residency mandated for sensitive financial data. Comprehensive due diligence + risk assessment.</td>
-              </tr>
-              <tr>
-                <td>ME</td>
-                <td className="table-country">Qatar</td>
-                <td className="table-status">🟠</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-notes"><strong>QCB Cloud Regulation</strong> (eff. Apr 2024). QCB approval required before any cloud arrangement. PII & financial data must be processed within Qatar only. Termination & data-return provisions.</td>
-              </tr>
-              <tr>
-                <td>ME</td>
-                <td className="table-country">Bahrain</td>
-                <td className="table-status">🟠</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-notes"><strong>CBB Cloud Outsourcing Guidelines</strong>. Data location/transfer controls, governance framework, due diligence, subcontracting & exit provisions. Cloud-first policy.</td>
-              </tr>
-              <tr>
-                <td>Africa</td>
-                <td className="table-country">Morocco</td>
-                <td className="table-status">🟠</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-notes"><strong>Bank Al-Maghrib Directive 4/W/2022</strong>: prior agreement required for outsourcing significant functions to cloud. Covers data handling, governance, audit access, subcontracting & exit.</td>
-              </tr>
-              <tr>
-                <td>Africa</td>
-                <td className="table-country">Mauritius</td>
-                <td className="table-status">🟠</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-notes"><strong>BoM Guideline on Cloud Services</strong> (Sep 2022). Dedicated sections: Data Location, Subcontracting, Exit Strategies, Audit, Security Management. Annual cloud-services return required.</td>
-              </tr>
-              <tr>
-                <td>Africa</td>
-                <td className="table-country">South Africa</td>
-                <td className="table-status">🟠</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-notes"><strong>Joint Communication 2 of 2025</strong> (FSCA + PA, Jul 2025): risk-based cloud & offshoring expectations. Directive 3 of 2018 binding for banks. POPIA penalties up to 10% turnover.</td>
-              </tr>
-              <tr>
-                <td>Africa</td>
-                <td className="table-country">Ghana</td>
-                <td className="table-status">🟠</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-notes"><strong>BoG Outsourcing Directive</strong> (Nov 2024, eff. Jul 2025). Written approval required. Explicitly references cloud service providers — mandates disclosure of data type & storage locations.</td>
-              </tr>
-              <tr>
-                <td>Africa</td>
-                <td className="table-country">Kenya</td>
-                <td className="table-status">🟠</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">⚪*</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-notes"><strong>CBK/PG/16 Outsourcing</strong>. Approval required. Offshore outsourcing addressed but *no explicit standalone data-residency mandate equivalent to UAE/KSA/Qatar (R = partial).</td>
-              </tr>
-              <tr>
-                <td>Africa</td>
-                <td className="table-country">Egypt</td>
-                <td className="table-status">🟠†</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-flag">✅</td>
-                <td className="table-notes"><strong>CBE regulation</strong> for payment service operators explicitly references cloud computing. Cloud First Policy (Aug 2024). †Caveat: Core cloud reference is in PSP/PSO regulation, not consolidated bank-cloud rulebook.</td>
-              </tr>
+              {countryData
+                .filter(country => currentFilter === 'all' || currentFilter === country.status)
+                .map((country, idx) => {
+                  const getFlag = (val) => {
+                    if (val === 1) return '✅';
+                    if (val === 0.5) return '⚪*';
+                    if (val === 0 && country.flagNote === 'INFERRED') return '🔹';
+                    return '—';
+                  };
+                  
+                  return (
+                    <tr key={idx}>
+                      <td>{country.region}</td>
+                      <td className="table-country">{country.name}</td>
+                      <td className="table-status">
+                        {country.status === 'amber' ? '🟠' : country.status === 'red' ? '🔴' : '⚪'}
+                        {country.scopeNote && '†'}
+                      </td>
+                      <td className="table-flag">{country.flags ? getFlag(country.flags.A) : '—'}</td>
+                      <td className="table-flag">{country.flags ? getFlag(country.flags.R) : '—'}</td>
+                      <td className="table-flag">{country.flags ? getFlag(country.flags.U) : '—'}</td>
+                      <td className="table-flag">{country.flags ? getFlag(country.flags.S) : '—'}</td>
+                      <td className="table-flag">{country.flags ? getFlag(country.flags.E) : '—'}</td>
+                      <td className="table-flag">{country.flags ? getFlag(country.flags.C) : '—'}</td>
+                      <td className="table-notes">
+                        {country.flagNote && <span style={{color: '#0ea5e9', fontWeight: 600}}>{country.flagNote}: </span>}
+                        {country.details}
+                        {country.scopeNote && <div style={{marginTop: '4px', fontSize: '9px', color: '#b45309'}}>{country.scopeNote}</div>}
+                      </td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
         </div>
