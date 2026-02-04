@@ -261,8 +261,8 @@ export default function CloudRegulationsMap() {
               Back to Dashboard
             </Button>
           </Link>
-          <h1>MEA Cloud Regulations Map</h1>
-          <p>Financial services cloud computing regulations by country</p>
+          <h1>Cloud Regulations Matrix for Financial Services in MEA</h1>
+          <p className="text-sm text-slate-600 mt-2 max-w-4xl">All information here are based on our best effort to collect information publicly available sources. Mistakes could occur. While we aim to refresh this on quarterly basis, information could change after our search has been completed.</p>
           </div>
           </header>
 
