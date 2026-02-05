@@ -165,41 +165,50 @@ export default function AICodingToolsComparison() {
         <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-50 border-b border-slate-200 sticky top-0">
+              <thead className="bg-slate-50 border-b-2 border-slate-300 sticky top-0">
                 <tr>
-                  {columns.map((column) => (
-                    <th 
-                      key={column} 
-                      className={`text-left p-3 ${column === '#' ? 'w-16 min-w-[60px]' : 'min-w-[200px]'} resize-x overflow-auto`}
-                      style={{ position: 'relative' }}
-                    >
-                      <div className="space-y-2">
-                        <div className="font-semibold text-sm text-slate-900">
-                          {column}
+                  {columns.map((column) => {
+                    const defaultWidth = column === '#' ? 60 : 200;
+                    const width = columnWidths[column] || defaultWidth;
+                    return (
+                      <th 
+                        key={column} 
+                        className="text-left p-3 relative"
+                        style={{ width: `${width}px`, minWidth: `${width}px`, maxWidth: `${width}px` }}
+                      >
+                        <div className="space-y-2">
+                          <div className="font-semibold text-sm text-slate-900">
+                            {column}
+                          </div>
+                          <div className="relative">
+                            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-slate-400" />
+                            <Input
+                              type="text"
+                              placeholder={`Filter ${column}...`}
+                              value={columnFilters[column] || ''}
+                              onChange={(e) => handleFilterChange(column, e.target.value)}
+                              className="h-8 pl-7 pr-7 text-xs border-slate-200"
+                            />
+                            {columnFilters[column] && (
+                              <button
+                                onClick={() => clearFilter(column)}
+                                className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            )}
+                          </div>
                         </div>
-                        <div className="relative">
-                          <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-slate-400" />
-                          <Input
-                            type="text"
-                            placeholder={`Filter ${column}...`}
-                            value={columnFilters[column] || ''}
-                            onChange={(e) => handleFilterChange(column, e.target.value)}
-                            className="h-8 pl-7 pr-7 text-xs border-slate-200"
-                          />
-                          {columnFilters[column] && (
-                            <button
-                              onClick={() => clearFilter(column)}
-                              className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                            >
-                              <X className="h-3 w-3" />
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    </th>
-                  ))}
+                        <div
+                          className="absolute top-0 right-0 h-full w-2 cursor-col-resize hover:bg-slate-400 hover:opacity-50"
+                          onMouseDown={(e) => handleMouseDown(e, column)}
+                        />
+                      </th>
+                    );
+                  })}
                 </tr>
               </thead>
+              <div className="h-2 bg-slate-100 border-y border-slate-200" />
               <tbody className="divide-y divide-slate-100">
                 {filteredData.map((row, rowIndex) => (
                   <tr key={rowIndex} className="hover:bg-slate-50 transition-colors">
