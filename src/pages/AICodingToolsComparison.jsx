@@ -139,7 +139,11 @@ export default function AICodingToolsComparison() {
               <thead className="bg-slate-50 border-b border-slate-200 sticky top-0">
                 <tr>
                   {columns.map((column) => (
-                    <th key={column} className="text-left p-3 min-w-[200px] max-w-[300px]">
+                    <th 
+                      key={column} 
+                      className={`text-left p-3 ${column === '#' ? 'w-16 min-w-[60px]' : 'min-w-[200px]'} resize-x overflow-auto`}
+                      style={{ position: 'relative' }}
+                    >
                       <div className="space-y-2">
                         <div className="font-semibold text-sm text-slate-900">
                           {column}
