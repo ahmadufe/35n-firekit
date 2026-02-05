@@ -54,6 +54,7 @@ import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import Scorecard from './pages/Scorecard';
 import UserSettings from './pages/UserSettings';
+import AICodingToolsComparison from './pages/AICodingToolsComparison';
 
 
 export const PAGES = {
@@ -64,6 +65,7 @@ export const PAGES = {
     "Home": Home,
     "Scorecard": Scorecard,
     "UserSettings": UserSettings,
+    "AICodingToolsComparison": AICodingToolsComparison,
 }
 
 export const pagesConfig = {
