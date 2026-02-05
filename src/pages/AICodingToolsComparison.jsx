@@ -88,7 +88,7 @@ export default function AICodingToolsComparison() {
             </Button>
           </Link>
           <h1 className="text-4xl font-bold text-slate-900 mb-2">
-            AI Coding Tools Comparison (18 tools)
+            AI Coding Tools Comparison
           </h1>
           <p className="text-slate-600">
             Comprehensive comparison of AI-powered development tools and platforms
