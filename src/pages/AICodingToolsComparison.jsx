@@ -79,7 +79,7 @@ export default function AICodingToolsComparison() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <div className="max-w-[1600px] mx-auto px-6 py-12">
+      <div className="max-w-[1600px] mx-auto px-6 py-12 pt-24">
         {/* Header */}
         <div className="mb-8">
           <Link to={createPageUrl('Dashboard')}>
