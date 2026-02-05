@@ -47,6 +47,7 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import AICodingToolsComparison from './pages/AICodingToolsComparison';
 import AdminDashboard from './pages/AdminDashboard';
 import Bookmarks from './pages/Bookmarks';
 import CloudRegulationsMap from './pages/CloudRegulationsMap';
@@ -54,11 +55,11 @@ import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import Scorecard from './pages/Scorecard';
 import UserSettings from './pages/UserSettings';
-import AICodingToolsComparison from './pages/AICodingToolsComparison';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AICodingToolsComparison": AICodingToolsComparison,
     "AdminDashboard": AdminDashboard,
     "Bookmarks": Bookmarks,
     "CloudRegulationsMap": CloudRegulationsMap,
@@ -66,7 +67,6 @@ export const PAGES = {
     "Home": Home,
     "Scorecard": Scorecard,
     "UserSettings": UserSettings,
-    "AICodingToolsComparison": AICodingToolsComparison,
 }
 
 export const pagesConfig = {

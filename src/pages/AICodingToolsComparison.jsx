@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, X } from "lucide-react";
@@ -7,6 +7,8 @@ import { createPageUrl } from "@/utils";
 
 export default function AICodingToolsComparison() {
   const [columnFilters, setColumnFilters] = useState({});
+  const [columnWidths, setColumnWidths] = useState({});
+  const [resizing, setResizing] = useState(null);
 
   const comparisonData = [
     {'#': 1, 'Tool': 'Lovable', 'Best for': 'Fastest MVP creation; beautiful UI with Supabase backend; GitHub export', 'Target user': 'Non-technical founders, agencies, developers wanting rapid prototyping', 'Paradigm': 'AI code-generation platform (full export, owns code)', 'Stack transparency': 'Very High (code visible + GitHub export)', 'Typical stack / languages': 'React, Vite, TypeScript, Tailwind CSS; Supabase (PostgreSQL)', 'Code export': 'Yes', 'GitHub sync': 'Yes', 'Self-hosting possible': 'Yes', 'Visual editor': 'Limited (select tool)', 'Code editor': 'Yes', 'Prompt + manual editing': 'Yes', 'System-level instructions': 'Yes (project instructions, style prefs)', 'Figma / design import': 'Can reference images', 'Styling control level': 'High', 'Built-in database': 'No', 'External DB support': 'Yes (Supabase native)', 'Auth built-in': 'Via Supabase', 'RBAC': 'Via Supabase', 'Workflows / background jobs': 'Via Supabase/external', 'Webhooks': 'Via external', 'Payments': 'Via Stripe/external', 'Email / SMS': 'Via external', 'Integrations (highlights)': 'Supabase, GitHub, any API', 'Hosting included': 'Yes (Lovable Cloud)', 'Custom domain': 'Yes', 'Pricing model': 'Credit-based messages', 'Free tier': 'Yes (5/day, 25/month)', 'Paid tiers from (USD/mo)': '$21 (Pro)', 'Included credits (examples)': 'Pro: 100/month; rollover', 'Overage / payg': 'Upgrade tier', 'Ease of use': 'Very High', 'Lock-in risk': 'Low-Medium', 'Reviews—highlights': '£13.50M ARR in 3 months; beautiful UI; GPT Engineer creators; fastest growth', 'Reviews—pain points': 'Credit burn on iterations; breaks when complex; frontend-focused', 'Official pricing': 'https://lovable.dev/pricing', 'Official docs/features': 'https://docs.lovable.dev/', 'Last checked': '2026-01-19', 'Key sources': 'Official docs, Reddit, G2, Product Hunt', 'Prototype fit': 'Very High', 'MVP fit': 'Very High', 'SaaS fit': 'High'},
