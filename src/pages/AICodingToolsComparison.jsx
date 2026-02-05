@@ -175,8 +175,8 @@ export default function AICodingToolsComparison() {
                 {filteredData.map((row, rowIndex) => (
                   <tr key={rowIndex} className="hover:bg-slate-50 transition-colors">
                     {columns.map((column) => (
-                      <td key={column} className="p-3 text-sm text-slate-700 min-w-[200px] max-w-[300px]">
-                        <div className="line-clamp-3">
+                      <td key={column} className={`p-3 text-sm text-slate-700 ${column === '#' ? 'w-16' : 'min-w-[200px]'}`}>
+                        <div className={column === '#' ? '' : 'line-clamp-3'}>
                           {row[column] || '-'}
                         </div>
                       </td>
