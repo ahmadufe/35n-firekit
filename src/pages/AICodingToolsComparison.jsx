@@ -80,6 +80,33 @@ export default function AICodingToolsComparison() {
 
   const activeFiltersCount = Object.values(columnFilters).filter(v => v).length;
 
+  const handleMouseDown = (e, column) => {
+    e.preventDefault();
+    setResizing({ column, startX: e.clientX, startWidth: columnWidths[column] || (column === '#' ? 60 : 200) });
+  };
+
+  const handleMouseMove = (e) => {
+    if (!resizing) return;
+    const diff = e.clientX - resizing.startX;
+    const newWidth = Math.max(60, resizing.startWidth + diff);
+    setColumnWidths(prev => ({ ...prev, [resizing.column]: newWidth }));
+  };
+
+  const handleMouseUp = () => {
+    setResizing(null);
+  };
+
+  React.useEffect(() => {
+    if (resizing) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
+    }
+  }, [resizing]);
+
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="max-w-[1600px] mx-auto px-6 py-12 pt-24">
