@@ -212,13 +212,21 @@ export default function AICodingToolsComparison() {
               <tbody className="divide-y divide-slate-100">
                 {filteredData.map((row, rowIndex) => (
                   <tr key={rowIndex} className="hover:bg-slate-50 transition-colors">
-                    {columns.map((column) => (
-                      <td key={column} className={`p-3 text-sm text-slate-700 ${column === '#' ? 'w-16' : 'min-w-[200px]'}`}>
-                        <div className={column === '#' ? '' : 'line-clamp-3'}>
-                          {row[column] || '-'}
-                        </div>
-                      </td>
-                    ))}
+                    {columns.map((column) => {
+                      const defaultWidth = column === '#' ? 60 : 200;
+                      const width = columnWidths[column] || defaultWidth;
+                      return (
+                        <td 
+                          key={column} 
+                          className="p-3 text-sm text-slate-700"
+                          style={{ width: `${width}px`, minWidth: `${width}px`, maxWidth: `${width}px` }}
+                        >
+                          <div className={column === '#' ? '' : 'line-clamp-3'}>
+                            {row[column] || '-'}
+                          </div>
+                        </td>
+                      );
+                    })}
                   </tr>
                 ))}
               </tbody>
