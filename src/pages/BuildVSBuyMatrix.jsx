@@ -65,11 +65,11 @@ export default function BuildVSBuyMatrix() {
               <ul className="space-y-2 text-slate-700">
                 <li className="flex items-start gap-2">
                   <span className="text-slate-400 mt-1">•</span>
-                  <span>Score based on YOUR organization's reality, not ideals</span>
+                  <span>Score based on your organization's REALITY, not ideals</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-slate-400 mt-1">•</span>
-                  <span>Be honest about capability gaps - overconfidence kills projects</span>
+                  <span>Be honest about capability gaps</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-slate-400 mt-1">•</span>
