@@ -55,6 +55,7 @@ import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import Scorecard from './pages/Scorecard';
 import UserSettings from './pages/UserSettings';
+import BuildVSBuyMatrix from './pages/BuildVSBuyMatrix';
 import __Layout from './Layout.jsx';
 
 
@@ -67,6 +68,7 @@ export const PAGES = {
     "Home": Home,
     "Scorecard": Scorecard,
     "UserSettings": UserSettings,
+    "BuildVSBuyMatrix": BuildVSBuyMatrix,
 }
 
 export const pagesConfig = {
