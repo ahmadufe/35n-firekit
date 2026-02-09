@@ -60,30 +60,24 @@ export default function AccessCodeDialog({ open, onOpenChange, resource }) {
       setIsValid(true);
       setError('');
       
-      // Only store in session for authenticated users
-      if (user) {
-        sessionStorage.setItem(`access_code_${resourceId}`, code.trim());
-      }
+      // Store access code in session for the resource
+      sessionStorage.setItem(`access_code_${resourceId}`, 'true');
       
-      // Close dialog and redirect to resource
+      toast.success('Access granted! Redirecting...');
+      
+      // Close dialog and redirect to resource immediately
       setTimeout(() => {
         onOpenChange(false);
-        toast.success('Access granted!');
-        
-        // Store access code in session for the resource
-        sessionStorage.setItem(`access_code_${resourceId}`, 'true');
         
         // Redirect based on resource type
-        if (resource.id === 'cloud-regulations-map') {
-          navigate(createPageUrl('CloudRegulationsMap'));
+        if (resource.page) {
+          navigate(createPageUrl(resource.page));
         } else if (resource.file_url) {
           window.open(resource.file_url, '_blank');
         } else if (resource.link) {
           window.open(resource.link, '_blank');
-        } else if (resource.page) {
-          navigate(createPageUrl(resource.page));
         }
-      }, 1000);
+      }, 500);
     } catch (err) {
       setError('Something went wrong. Please try again.');
     } finally {
