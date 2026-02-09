@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
+import { ChevronDown, ChevronUp, Save } from "lucide-react";
+import { toast } from "sonner";
 
 const questions = [
   {
@@ -50,6 +52,9 @@ export default function ExecutiveDecisionTool() {
   const [weights, setWeights] = useState(
     questions.reduce((acc, q) => ({ ...acc, [q.id]: q.defaultWeight }), {})
   );
+  const [assessmentName, setAssessmentName] = useState('');
+  const [showHybridApproaches, setShowHybridApproaches] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -139,23 +144,77 @@ export default function ExecutiveDecisionTool() {
   };
 
   const decision = getDecision();
+  const shouldShowHybridBanner = decision.title === "Lean BUILD";
+
+  const handleSave = async () => {
+    if (!user) return;
+    
+    if (!assessmentName.trim()) {
+      toast.error('Please enter an assessment name');
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      await base44.entities.ExecutiveDecision.create({
+        user_email: user.email,
+        assessment_name: assessmentName,
+        scores,
+        weights,
+        total_score: parseFloat(totalWeightedScore),
+        decision: decision.title
+      });
+      toast.success('Assessment saved successfully');
+    } catch (error) {
+      toast.error('Failed to save assessment');
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12">
+    <div className="min-h-screen bg-slate-50 py-12 pt-24">
       <div className="max-w-6xl mx-auto px-6">
-        <Link to={createPageUrl('BuildVSBuyMatrix')}>
-          <Button variant="ghost" className="mb-6">
-            ← Back to Build vs Buy Matrix
-          </Button>
-        </Link>
+        <div className="absolute top-20 left-6">
+          <Link to={createPageUrl('BuildVSBuyMatrix')}>
+            <Button variant="ghost">
+              ← Back to Build vs Buy Matrix
+            </Button>
+          </Link>
+        </div>
 
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-900 mb-3">
-            Executive Decision Tool
-          </h1>
-          <p className="text-lg text-slate-600">
-            Answer each question below. Score 1-5 where 5 = Strongly BUILD, 1 = Strongly BUY, 3 = Neutral
-          </p>
+          <div className="flex items-start justify-between mb-6">
+            <div className="flex-1">
+              <h1 className="text-4xl font-bold text-slate-900 mb-3">
+                Executive Decision Tool
+              </h1>
+              <p className="text-lg text-slate-600">
+                Answer each question below. Score 1-5 where 5 = Strongly BUILD, 1 = Strongly BUY, 3 = Neutral
+              </p>
+            </div>
+            <Button
+              onClick={handleSave}
+              disabled={!user || isSaving}
+              className={`flex items-center gap-2 ${!user ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+              <Save className="h-4 w-4" />
+              {isSaving ? 'Saving...' : 'Save Assessment'}
+            </Button>
+          </div>
+          
+          <div className="max-w-md">
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              Assessment Name
+            </label>
+            <Input
+              type="text"
+              placeholder="e.g., CRM System Evaluation"
+              value={assessmentName}
+              onChange={(e) => setAssessmentName(e.target.value)}
+              className="w-full"
+            />
+          </div>
         </div>
 
         {/* Decision Box */}
@@ -173,6 +232,100 @@ export default function ExecutiveDecisionTool() {
             </div>
           </div>
         </div>
+
+        {/* Hybrid Approaches Banner */}
+        {shouldShowHybridBanner && (
+          <div className="mb-8">
+            <button
+              onClick={() => setShowHybridApproaches(!showHybridApproaches)}
+              className="w-full bg-blue-50 border-2 border-blue-200 rounded-lg p-4 flex items-center justify-between hover:bg-blue-100 transition-colors"
+            >
+              <span className="text-blue-900 font-semibold">Explore hybrid approaches</span>
+              {showHybridApproaches ? (
+                <ChevronUp className="h-5 w-5 text-blue-600" />
+              ) : (
+                <ChevronDown className="h-5 w-5 text-blue-600" />
+              )}
+            </button>
+            
+            {showHybridApproaches && (
+              <div className="mt-4 bg-white border border-blue-200 rounded-lg p-6">
+                <p className="text-slate-700 mb-4 font-medium">
+                  Sometimes the answer is neither pure build nor pure buy:
+                </p>
+                
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-slate-50">
+                        <th className="border border-slate-200 p-3 text-left font-semibold text-slate-900">Scenario</th>
+                        <th className="border border-slate-200 p-3 text-left font-semibold text-slate-900">Approach</th>
+                        <th className="border border-slate-200 p-3 text-left font-semibold text-slate-900">When to Use</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="border border-slate-200 p-3 font-medium text-slate-900">Buy then Build</td>
+                        <td className="border border-slate-200 p-3 text-slate-700">Start with vendor, migrate later</td>
+                        <td className="border border-slate-200 p-3 text-slate-700">
+                          <ul className="list-disc list-inside space-y-1">
+                            <li>Need fast launch</li>
+                            <li>Building capability over time</li>
+                            <li>Validating market first</li>
+                          </ul>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="border border-slate-200 p-3 font-medium text-slate-900">Build on Top</td>
+                        <td className="border border-slate-200 p-3 text-slate-700">Use vendor infrastructure, build custom layer</td>
+                        <td className="border border-slate-200 p-3 text-slate-700">
+                          <ul className="list-disc list-inside space-y-1">
+                            <li>Need customization</li>
+                            <li>Vendor has strong foundation</li>
+                            <li>Integration is clean</li>
+                          </ul>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="border border-slate-200 p-3 font-medium text-slate-900">Open Source + Build</td>
+                        <td className="border border-slate-200 p-3 text-slate-700">Fork/extend OSS with internal dev</td>
+                        <td className="border border-slate-200 p-3 text-slate-700">
+                          <ul className="list-disc list-inside space-y-1">
+                            <li>Community momentum</li>
+                            <li>Customization needed</li>
+                            <li>Technical team exists</li>
+                          </ul>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="border border-slate-200 p-3 font-medium text-slate-900">Co-development</td>
+                        <td className="border border-slate-200 p-3 text-slate-700">Partner with vendor for custom features</td>
+                        <td className="border border-slate-200 p-3 text-slate-700">
+                          <ul className="list-disc list-inside space-y-1">
+                            <li>Specific needs</li>
+                            <li>Vendor is flexible</li>
+                            <li>Shared strategic value</li>
+                            <li>Clear boundaries</li>
+                          </ul>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="border border-slate-200 p-3 font-medium text-slate-900">Modular Approach</td>
+                        <td className="border border-slate-200 p-3 text-slate-700">Build core, buy peripherals</td>
+                        <td className="border border-slate-200 p-3 text-slate-700">
+                          <ul className="list-disc list-inside space-y-1">
+                            <li>Some pieces are commodity</li>
+                            <li>Want control of key components</li>
+                          </ul>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Questions Table */}
         <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
