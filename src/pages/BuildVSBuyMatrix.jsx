@@ -34,14 +34,16 @@ export default function BuildVSBuyMatrix() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="max-w-5xl mx-auto px-6 py-12 pt-24">
+    <div className="min-h-screen bg-slate-50 pt-28">
+      <div className="max-w-5xl mx-auto px-6 py-12">
         {/* Back Button */}
-        <Link to={createPageUrl('Dashboard')}>
-          <Button variant="ghost" className="mb-6">
-            ← Back to Dashboard
-          </Button>
-        </Link>
+        <div className="mb-8">
+          <Link to={createPageUrl('Dashboard')}>
+            <Button variant="ghost">
+              ← Back to Dashboard
+            </Button>
+          </Link>
+        </div>
 
         {/* Header */}
         <div className="mb-12">

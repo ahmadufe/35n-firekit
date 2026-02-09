@@ -53,10 +53,10 @@ import Bookmarks from './pages/Bookmarks';
 import BuildVSBuyMatrix from './pages/BuildVSBuyMatrix';
 import CloudRegulationsMap from './pages/CloudRegulationsMap';
 import Dashboard from './pages/Dashboard';
+import ExecutiveDecisionTool from './pages/ExecutiveDecisionTool';
 import Home from './pages/Home';
 import Scorecard from './pages/Scorecard';
 import UserSettings from './pages/UserSettings';
-import ExecutiveDecisionTool from './pages/ExecutiveDecisionTool';
 import __Layout from './Layout.jsx';
 
 
@@ -67,10 +67,10 @@ export const PAGES = {
     "BuildVSBuyMatrix": BuildVSBuyMatrix,
     "CloudRegulationsMap": CloudRegulationsMap,
     "Dashboard": Dashboard,
+    "ExecutiveDecisionTool": ExecutiveDecisionTool,
     "Home": Home,
     "Scorecard": Scorecard,
     "UserSettings": UserSettings,
-    "ExecutiveDecisionTool": ExecutiveDecisionTool,
 }
 
 export const pagesConfig = {
