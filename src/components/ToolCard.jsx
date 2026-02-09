@@ -207,18 +207,17 @@ export default function ToolCard({
    const CardWrapper = shouldBlock ? 'div' : Link;
    const wrapperProps = shouldBlock ? {} : { to: href };
 
-  const cardClickHandler = shouldBlock ? () => {
+  const cardClickHandler = shouldBlock ? (e) => {
+    e.preventDefault();
     if (onExclusiveClick) {
       onExclusiveClick();
     }
-  } : (onClick && !hasAccessCode) ? (e) => {
-    e.preventDefault();
-    onClick();
-  } : () => {
-    if (hasAccessCode) {
-      sessionStorage.setItem(`access_code_${resourceId}`, 'true');
+  } : onClick ? (e) => {
+    if (!hasAccessCode) {
+      e.preventDefault();
+      onClick();
     }
-  };
+  } : undefined;
 
   return (
     <CardWrapper {...wrapperProps} onClick={cardClickHandler} className="h-full">
