@@ -81,36 +81,40 @@ export default function BuildVSBuyMatrix() {
         </div>
 
         {/* Tool Options */}
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-12">
           {/* Executive Decision Tool */}
-          <Card className="p-8 hover:shadow-lg transition-all duration-300 cursor-pointer group">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-20 h-20 bg-slate-100 rounded-lg flex items-center justify-center mb-6 group-hover:bg-slate-200 transition-colors">
-                <FolderOpen className="w-10 h-10 text-slate-600" />
+          <div className="cursor-pointer group">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0">
+                <FolderOpen className="w-12 h-12 text-slate-400 group-hover:text-slate-600 transition-colors" />
               </div>
-              <h3 className="text-xl font-semibold text-slate-900 mb-3">
-                Executive decision tool
-              </h3>
-              <p className="text-sm text-slate-600">
-                A rapid & high-level diagnostic made for leadership teams
-              </p>
+              <div className="flex-1">
+                <h3 className="text-2xl font-semibold text-slate-900 mb-2 group-hover:text-slate-700 transition-colors">
+                  Executive decision tool
+                </h3>
+                <p className="text-slate-600 leading-relaxed">
+                  A rapid & high-level diagnostic made for leadership teams
+                </p>
+              </div>
             </div>
-          </Card>
+          </div>
 
           {/* Detailed Assessment Tool */}
-          <Card className="p-8 hover:shadow-lg transition-all duration-300 cursor-pointer group">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-20 h-20 bg-slate-100 rounded-lg flex items-center justify-center mb-6 group-hover:bg-slate-200 transition-colors">
-                <FolderOpen className="w-10 h-10 text-slate-600" />
+          <div className="cursor-pointer group">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0">
+                <FolderOpen className="w-12 h-12 text-slate-400 group-hover:text-slate-600 transition-colors" />
               </div>
-              <h3 className="text-xl font-semibold text-slate-900 mb-3">
-                Detailed assessment tool
-              </h3>
-              <p className="text-sm text-slate-600">
-                A comprehensive scoring framework covering a wide range of factors
-              </p>
+              <div className="flex-1">
+                <h3 className="text-2xl font-semibold text-slate-900 mb-2 group-hover:text-slate-700 transition-colors">
+                  Detailed assessment tool
+                </h3>
+                <p className="text-slate-600 leading-relaxed">
+                  A comprehensive scoring framework covering a wide range of factors
+                </p>
+              </div>
             </div>
-          </Card>
+          </div>
         </div>
       </div>
     </div>

@@ -50,12 +50,12 @@
 import AICodingToolsComparison from './pages/AICodingToolsComparison';
 import AdminDashboard from './pages/AdminDashboard';
 import Bookmarks from './pages/Bookmarks';
+import BuildVSBuyMatrix from './pages/BuildVSBuyMatrix';
 import CloudRegulationsMap from './pages/CloudRegulationsMap';
 import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import Scorecard from './pages/Scorecard';
 import UserSettings from './pages/UserSettings';
-import BuildVSBuyMatrix from './pages/BuildVSBuyMatrix';
 import __Layout from './Layout.jsx';
 
 
@@ -63,12 +63,12 @@ export const PAGES = {
     "AICodingToolsComparison": AICodingToolsComparison,
     "AdminDashboard": AdminDashboard,
     "Bookmarks": Bookmarks,
+    "BuildVSBuyMatrix": BuildVSBuyMatrix,
     "CloudRegulationsMap": CloudRegulationsMap,
     "Dashboard": Dashboard,
     "Home": Home,
     "Scorecard": Scorecard,
     "UserSettings": UserSettings,
-    "BuildVSBuyMatrix": BuildVSBuyMatrix,
 }
 
 export const pagesConfig = {
