@@ -144,7 +144,8 @@ export default function ExecutiveDecisionTool() {
   };
 
   const decision = getDecision();
-  const shouldShowHybridBanner = decision.title === "Lean BUILD";
+  const score = parseFloat(totalWeightedScore);
+  const shouldShowHybridBanner = score >= 2.7 && score <= 3.9;
 
   const handleSave = async () => {
     if (!user) return;
@@ -173,11 +174,11 @@ export default function ExecutiveDecisionTool() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12 pt-24">
+    <div className="min-h-screen bg-slate-50 py-8">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="absolute top-20 left-6">
+        <div className="mb-8">
           <Link to={createPageUrl('BuildVSBuyMatrix')}>
-            <Button variant="ghost">
+            <Button variant="ghost" className="mb-6">
               ← Back to Build vs Buy Matrix
             </Button>
           </Link>
