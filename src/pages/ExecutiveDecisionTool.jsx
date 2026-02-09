@@ -1,0 +1,267 @@
+import React, { useState, useEffect } from 'react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
+
+const questions = [
+  {
+    id: 1,
+    question: "Will this capability materially differentiate us in the market? (Is this our competitive edge?)",
+    defaultWeight: 25,
+    scoringLogic: "5=Core differentiator | 1=Commodity function"
+  },
+  {
+    id: 2,
+    question: "Can we afford to wait 12+ months to get this capability live? (Time flexibility)",
+    defaultWeight: 20,
+    scoringLogic: "5=Can wait, iterate slowly | 1=Need within 3-6 months"
+  },
+  {
+    id: 3,
+    question: "Are our requirements highly unique vs. standard industry practice?",
+    defaultWeight: 20,
+    scoringLogic: "5=Completely custom | 1=80%+ standard fit"
+  },
+  {
+    id: 4,
+    question: "Do we have the team/capability to build AND operate this long-term?",
+    defaultWeight: 15,
+    scoringLogic: "5=Strong capability | 1=Large capability gap"
+  },
+  {
+    id: 5,
+    question: "Is 3-year TCO lower if we build (considering all costs)?",
+    defaultWeight: 12,
+    scoringLogic: "5=Much cheaper to build | 1=Vendor clearly cheaper"
+  },
+  {
+    id: 6,
+    question: "Is the vendor market immature or unproven for this specific problem?",
+    defaultWeight: 8,
+    scoringLogic: "5=No good vendors exist | 1=Many proven vendors"
+  }
+];
+
+export default function ExecutiveDecisionTool() {
+  const [scores, setScores] = useState({});
+  const [weights, setWeights] = useState(
+    questions.reduce((acc, q) => ({ ...acc, [q.id]: q.defaultWeight }), {})
+  );
+
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: async () => {
+      try {
+        return await base44.auth.me();
+      } catch (error) {
+        return null;
+      }
+    }
+  });
+
+  useEffect(() => {
+    if (!user) {
+      base44.auth.redirectToLogin();
+    }
+  }, [user]);
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-slate-900 mb-4">Please sign in to access this tool</h2>
+          <p className="text-slate-600 mb-6">You need to be logged in to use the Executive Decision Tool</p>
+        </div>
+      </div>
+    );
+  }
+
+  const handleScoreChange = (id, value) => {
+    const numValue = parseFloat(value);
+    if (value === '' || (numValue >= 1 && numValue <= 5)) {
+      setScores({ ...scores, [id]: value === '' ? '' : numValue });
+    }
+  };
+
+  const handleWeightChange = (id, value) => {
+    const numValue = parseFloat(value);
+    if (value === '' || (numValue >= 0 && numValue <= 100)) {
+      setWeights({ ...weights, [id]: value === '' ? '' : numValue });
+    }
+  };
+
+  const calculateWeightedScore = (id) => {
+    const score = scores[id] || 0;
+    const weight = weights[id] || 0;
+    return (score * weight / 100).toFixed(2);
+  };
+
+  const totalWeight = Object.values(weights).reduce((sum, w) => sum + (parseFloat(w) || 0), 0);
+  const totalWeightedScore = questions.reduce((sum, q) => {
+    return sum + parseFloat(calculateWeightedScore(q.id));
+  }, 0).toFixed(2);
+
+  const getDecision = () => {
+    const score = parseFloat(totalWeightedScore);
+    if (score >= 4.0) {
+      return {
+        title: "Strong BUILD",
+        subtitle: "Clear strategic & economic case",
+        color: "bg-green-50 border-green-200 text-green-900"
+      };
+    } else if (score >= 3.3) {
+      return {
+        title: "Lean BUILD",
+        subtitle: "Consider hybrid or phased approach",
+        color: "bg-blue-50 border-blue-200 text-blue-900"
+      };
+    } else if (score >= 2.7) {
+      return {
+        title: "Lean BUY",
+        subtitle: "But evaluate build for key differentiators",
+        color: "bg-orange-50 border-orange-200 text-orange-900"
+      };
+    } else if (score >= 1.0) {
+      return {
+        title: "Strong BUY",
+        subtitle: "Focus resources on actual competitive advantage",
+        color: "bg-red-50 border-red-200 text-red-900"
+      };
+    }
+    return {
+      title: "Incomplete",
+      subtitle: "Please complete all scores",
+      color: "bg-slate-50 border-slate-200 text-slate-600"
+    };
+  };
+
+  const decision = getDecision();
+
+  return (
+    <div className="min-h-screen bg-slate-50 py-12">
+      <div className="max-w-6xl mx-auto px-6">
+        <Link to={createPageUrl('BuildVSBuyMatrix')}>
+          <Button variant="ghost" className="mb-6">
+            ← Back to Build vs Buy Matrix
+          </Button>
+        </Link>
+
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-slate-900 mb-3">
+            Executive Decision Tool
+          </h1>
+          <p className="text-lg text-slate-600">
+            Answer each question below. Score 1-5 where 5 = Strongly BUILD, 1 = Strongly BUY, 3 = Neutral
+          </p>
+        </div>
+
+        {/* Decision Box */}
+        <div className={`mb-8 p-6 rounded-lg border-2 ${decision.color}`}>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-sm font-medium opacity-70 mb-1">DECISION</div>
+              <div className="text-3xl font-bold">{decision.title}</div>
+              <div className="text-lg mt-1">{decision.subtitle}</div>
+            </div>
+            <div className="text-right">
+              <div className="text-sm font-medium opacity-70 mb-1">Total Score</div>
+              <div className="text-5xl font-bold">{totalWeightedScore}</div>
+              <div className="text-sm mt-1">out of 5.0</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Questions Table */}
+        <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-slate-50 border-b-2 border-slate-200">
+                <tr>
+                  <th className="text-left p-4 font-semibold text-sm text-slate-900 w-12">#</th>
+                  <th className="text-left p-4 font-semibold text-sm text-slate-900">Question</th>
+                  <th className="text-left p-4 font-semibold text-sm text-slate-900 w-32">Your Score (1-5)</th>
+                  <th className="text-left p-4 font-semibold text-sm text-slate-900 w-24">Weight (%)</th>
+                  <th className="text-left p-4 font-semibold text-sm text-slate-900 w-32">Weighted Score</th>
+                  <th className="text-left p-4 font-semibold text-sm text-slate-900 w-64">Scoring Logic</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {questions.map((q) => (
+                  <tr key={q.id} className="hover:bg-slate-50 transition-colors">
+                    <td className="p-4 text-sm font-medium text-slate-900">{q.id}</td>
+                    <td className="p-4 text-sm text-slate-700">{q.question}</td>
+                    <td className="p-4">
+                      <Input
+                        type="number"
+                        min="1"
+                        max="5"
+                        step="0.1"
+                        value={scores[q.id] || ''}
+                        onChange={(e) => handleScoreChange(q.id, e.target.value)}
+                        className="w-full bg-yellow-50 border-yellow-300 focus:border-yellow-500 focus:ring-yellow-500"
+                        placeholder="1-5"
+                      />
+                    </td>
+                    <td className="p-4">
+                      <Input
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="1"
+                        value={weights[q.id] || ''}
+                        onChange={(e) => handleWeightChange(q.id, e.target.value)}
+                        className="w-full"
+                      />
+                    </td>
+                    <td className="p-4 text-sm font-semibold text-slate-900">
+                      {calculateWeightedScore(q.id)}
+                    </td>
+                    <td className="p-4 text-xs text-slate-600 italic">
+                      {q.scoringLogic}
+                    </td>
+                  </tr>
+                ))}
+                <tr className="bg-slate-50 font-semibold">
+                  <td className="p-4 text-sm text-slate-900" colSpan="3">TOTAL</td>
+                  <td className="p-4 text-sm text-slate-900">
+                    {totalWeight.toFixed(0)}%
+                  </td>
+                  <td className="p-4 text-sm text-slate-900">
+                    {totalWeightedScore}
+                  </td>
+                  <td className="p-4"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Score Interpretation */}
+        <div className="mt-8 bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+          <h3 className="font-semibold text-slate-900 mb-4">Score Interpretation:</h3>
+          <ul className="space-y-2 text-sm text-slate-700">
+            <li className="flex items-start gap-2">
+              <span className="text-green-600 font-semibold">•</span>
+              <span><strong>4.0 - 5.0:</strong> Strong BUILD - Clear strategic & economic case</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-blue-600 font-semibold">•</span>
+              <span><strong>3.3 - 3.9:</strong> Lean BUILD - Consider hybrid or phased approach</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-orange-600 font-semibold">•</span>
+              <span><strong>2.7 - 3.2:</strong> Lean BUY - But evaluate build for key differentiators</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-red-600 font-semibold">•</span>
+              <span><strong>1.0 - 2.6:</strong> Strong BUY - Focus resources on actual competitive advantage</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+}

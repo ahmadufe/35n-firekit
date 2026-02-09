@@ -83,21 +83,23 @@ export default function BuildVSBuyMatrix() {
         {/* Tool Options */}
         <div className="grid md:grid-cols-2 gap-12">
           {/* Executive Decision Tool */}
-          <div className="cursor-pointer group">
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0">
-                <FolderOpen className="w-12 h-12 text-slate-400 group-hover:text-slate-600 transition-colors" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-2xl font-semibold text-slate-900 mb-2 group-hover:text-slate-700 transition-colors">
-                  Executive decision tool
-                </h3>
-                <p className="text-slate-600 leading-relaxed">
-                  A rapid & high-level diagnostic made for leadership teams
-                </p>
+          <Link to={createPageUrl('ExecutiveDecisionTool')}>
+            <div className="cursor-pointer group">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <FolderOpen className="w-12 h-12 text-slate-400 group-hover:text-slate-600 transition-colors" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-semibold text-slate-900 mb-2 group-hover:text-slate-700 transition-colors">
+                    Executive decision tool
+                  </h3>
+                  <p className="text-slate-600 leading-relaxed">
+                    A rapid & high-level diagnostic made for leadership teams
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          </Link>
 
           {/* Detailed Assessment Tool */}
           <div className="cursor-pointer group">
