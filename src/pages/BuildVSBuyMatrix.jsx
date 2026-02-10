@@ -142,10 +142,14 @@ export default function BuildVSBuyMatrix() {
         </div>
 
         {/* Previous Assessments Table */}
-        {allAssessments.length > 0 && (
-          <div className="mt-16">
-            <h2 className="text-2xl font-bold text-slate-900 mb-6">Previous Assessments</h2>
-            <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold text-slate-900 mb-6">Previous Assessments</h2>
+          <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+            {allAssessments.length === 0 ? (
+              <div className="p-12 text-center">
+                <p className="text-slate-500 text-lg">You haven't saved any previous assessments</p>
+              </div>
+            ) : (
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-slate-50 border-b border-slate-200">
@@ -191,9 +195,9 @@ export default function BuildVSBuyMatrix() {
                   </tbody>
                 </table>
               </div>
-            </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
