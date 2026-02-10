@@ -50,8 +50,10 @@ export default function AccessCodeDialog({ open, onOpenChange, resource }) {
       const accessCode = accessCodes[0];
 
       // Check if resource is in the allowed resources for this code
-      if (!accessCode.resources.includes(resourceId)) {
-        setError('This code does not grant access to this resource.');
+      console.log('Checking access - Code resources:', accessCode.resources, 'Looking for:', resourceId);
+      
+      if (!accessCode.resources || !accessCode.resources.includes(resourceId)) {
+        setError(`This code does not grant access to this resource. Code grants access to: ${accessCode.resources ? accessCode.resources.join(', ') : 'no resources'}`);
         setIsValid(false);
         return;
       }
