@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { FolderOpen } from "lucide-react";
+import { FolderOpen, Eye, Pencil } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
 
 export default function BuildVSBuyMatrix() {
   const { data: user } = useQuery({
@@ -17,6 +18,18 @@ export default function BuildVSBuyMatrix() {
         return null;
       }
     }
+  });
+
+  const { data: executiveDecisions = [] } = useQuery({
+    queryKey: ['executiveDecisions', user?.email],
+    queryFn: () => base44.entities.ExecutiveDecision.filter({ user_email: user.email }, '-created_date'),
+    enabled: !!user
+  });
+
+  const { data: detailedAssessments = [] } = useQuery({
+    queryKey: ['detailedAssessments', user?.email],
+    queryFn: () => base44.entities.DetailedAssessment.filter({ user_email: user.email }, '-created_date'),
+    enabled: !!user
   });
 
   if (!user) {
@@ -32,6 +45,11 @@ export default function BuildVSBuyMatrix() {
       </div>
     );
   }
+
+  const allAssessments = [
+    ...executiveDecisions.map(a => ({ ...a, type: 'Executive Decision' })),
+    ...detailedAssessments.map(a => ({ ...a, type: 'Detailed Assessment' }))
+  ].sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
 
   return (
     <div className="min-h-screen bg-slate-50 pt-28">
@@ -122,6 +140,60 @@ export default function BuildVSBuyMatrix() {
             </div>
           </Link>
         </div>
+
+        {/* Previous Assessments Table */}
+        {allAssessments.length > 0 && (
+          <div className="mt-16">
+            <h2 className="text-2xl font-bold text-slate-900 mb-6">Previous Assessments</h2>
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-slate-50 border-b border-slate-200">
+                    <tr>
+                      <th className="text-left p-4 font-semibold text-sm text-slate-900">Assessment Name</th>
+                      <th className="text-left p-4 font-semibold text-sm text-slate-900">Type</th>
+                      <th className="text-left p-4 font-semibold text-sm text-slate-900">Decision</th>
+                      <th className="text-left p-4 font-semibold text-sm text-slate-900">Score</th>
+                      <th className="text-left p-4 font-semibold text-sm text-slate-900">Date</th>
+                      <th className="text-left p-4 font-semibold text-sm text-slate-900">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {allAssessments.map((assessment) => (
+                      <tr key={assessment.id} className="hover:bg-slate-50 transition-colors">
+                        <td className="p-4 text-sm text-slate-900 font-medium">
+                          {assessment.assessment_name}
+                        </td>
+                        <td className="p-4 text-sm text-slate-600">
+                          {assessment.type}
+                        </td>
+                        <td className="p-4 text-sm text-slate-900">
+                          {assessment.decision}
+                        </td>
+                        <td className="p-4 text-sm text-slate-900 font-semibold">
+                          {assessment.total_score.toFixed(2)}
+                        </td>
+                        <td className="p-4 text-sm text-slate-600">
+                          {format(new Date(assessment.created_date), 'MMM d, yyyy')}
+                        </td>
+                        <td className="p-4">
+                          <div className="flex gap-2">
+                            <Link to={`${createPageUrl(assessment.type === 'Executive Decision' ? 'ExecutiveDecisionTool' : 'DetailedAssessmentTool')}?id=${assessment.id}`}>
+                              <Button variant="ghost" size="sm">
+                                <Eye className="h-4 w-4 mr-1" />
+                                View
+                              </Button>
+                            </Link>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

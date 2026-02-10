@@ -411,14 +411,13 @@ export default function DetailedAssessmentTool() {
 
     setIsSaving(true);
     try {
-      await base44.entities.Assessment.create({
+      await base44.entities.DetailedAssessment.create({
         user_email: user.email,
-        product_name: assessmentName,
+        assessment_name: assessmentName,
         scores,
+        weights,
         total_score: parseFloat(totalWeightedScore),
-        passed: parseFloat(totalWeightedScore) >= 3.3,
-        critical_failures: [],
-        status: decision.title.includes('BUILD') ? 'pass' : decision.title.includes('BUY') ? 'fail' : 'conditional'
+        decision: decision.title
       });
       toast.success('Assessment saved successfully');
     } catch (error) {
