@@ -299,6 +299,9 @@ sections.forEach(section => {
 });
 
 export default function DetailedAssessmentTool() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const assessmentId = urlParams.get('id');
+  
   const [scores, setScores] = useState({});
   const [weights, setWeights] = useState(defaultWeights);
   const [assessmentName, setAssessmentName] = useState('');
@@ -316,11 +319,29 @@ export default function DetailedAssessmentTool() {
     }
   });
 
+  const { data: savedAssessment } = useQuery({
+    queryKey: ['detailedAssessment', assessmentId],
+    queryFn: async () => {
+      if (!assessmentId) return null;
+      const assessments = await base44.entities.DetailedAssessment.filter({ id: assessmentId });
+      return assessments[0] || null;
+    },
+    enabled: !!assessmentId
+  });
+
   useEffect(() => {
     if (!user) {
       base44.auth.redirectToLogin();
     }
   }, [user]);
+
+  useEffect(() => {
+    if (savedAssessment) {
+      setScores(savedAssessment.scores || {});
+      setWeights(savedAssessment.weights || defaultWeights);
+      setAssessmentName(savedAssessment.assessment_name || '');
+    }
+  }, [savedAssessment]);
 
   if (!user) {
     return null;

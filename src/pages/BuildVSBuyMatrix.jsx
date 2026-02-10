@@ -141,9 +141,9 @@ export default function BuildVSBuyMatrix() {
           </Link>
         </div>
 
-        {/* Previous Assessments Table */}
+        {/* Saved Assessments Table */}
         <div className="mt-16">
-          <h2 className="text-2xl font-bold text-slate-900 mb-6">Previous Assessments</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-6">Saved Assessments</h2>
           <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
             {allAssessments.length === 0 ? (
               <div className="p-12 text-center">

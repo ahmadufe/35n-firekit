@@ -48,6 +48,9 @@ const questions = [
 ];
 
 export default function ExecutiveDecisionTool() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const assessmentId = urlParams.get('id');
+  
   const [scores, setScores] = useState({});
   const [weights, setWeights] = useState(
     questions.reduce((acc, q) => ({ ...acc, [q.id]: q.defaultWeight }), {})
@@ -67,11 +70,29 @@ export default function ExecutiveDecisionTool() {
     }
   });
 
+  const { data: savedAssessment } = useQuery({
+    queryKey: ['executiveAssessment', assessmentId],
+    queryFn: async () => {
+      if (!assessmentId) return null;
+      const assessments = await base44.entities.ExecutiveDecision.filter({ id: assessmentId });
+      return assessments[0] || null;
+    },
+    enabled: !!assessmentId
+  });
+
   useEffect(() => {
     if (!user) {
       base44.auth.redirectToLogin();
     }
   }, [user]);
+
+  useEffect(() => {
+    if (savedAssessment) {
+      setScores(savedAssessment.scores || {});
+      setWeights(savedAssessment.weights || weights);
+      setAssessmentName(savedAssessment.assessment_name || '');
+    }
+  }, [savedAssessment]);
 
   if (!user) {
     return null;
