@@ -48,25 +48,25 @@ const sections = [
       {
         id: 5,
         question: "Can we afford to wait 12+ months to get this capability live?",
-        weight: 2.25,
+        weight: 2.5,
         scoringLogic: "5=Can wait/iterate | 1=Need fast delivery"
       },
       {
         id: 6,
         question: "Is perfect fit more important than speed to market?",
-        weight: 2.25,
+        weight: 2.5,
         scoringLogic: "5=Can wait/iterate | 1=Need fast delivery"
       },
       {
         id: 7,
         question: "Can we tolerate iterative delivery with learning cycles and potential delays?",
-        weight: 2.25,
+        weight: 2.5,
         scoringLogic: "5=Can wait/iterate | 1=Need fast delivery"
       },
       {
         id: 8,
         question: "Do we have time to build without losing market opportunity?",
-        weight: 2.25,
+        weight: 2.5,
         scoringLogic: "5=Can wait/iterate | 1=Need fast delivery"
       }
     ]
@@ -135,25 +135,25 @@ const sections = [
       {
         id: 16,
         question: "Are there regulatory/data residency/security requirements that vendors struggle to meet?",
-        weight: 2.2,
+        weight: 2.25,
         scoringLogic: "5=High compliance/control needs | 1=Standard OK"
       },
       {
         id: 17,
         question: "Would we need audit-level transparency/control that vendors won't provide?",
-        weight: 2.2,
+        weight: 2.25,
         scoringLogic: "5=High compliance/control needs | 1=Standard OK"
       },
       {
         id: 18,
         question: "Is vendor lock-in a major strategic risk here?",
-        weight: 2.2,
+        weight: 2.25,
         scoringLogic: "5=High compliance/control needs | 1=Standard OK"
       },
       {
         id: 19,
         question: "Is the financial/operational cost of choosing wrong extremely high?",
-        weight: 2.2,
+        weight: 2.25,
         scoringLogic: "5=High compliance/control needs | 1=Standard OK"
       }
     ]
