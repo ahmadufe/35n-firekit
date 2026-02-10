@@ -72,8 +72,8 @@ export default function BuildVSBuyMatrix() {
 
   useEffect(() => {
     // Check if user has access via login or access code
-    const accessCode = sessionStorage.getItem('accessCode');
-    if (user || accessCode) {
+    const hasAccessCode = sessionStorage.getItem('access_code_build-vs-buy-matrix');
+    if (user || hasAccessCode) {
       setHasAccess(true);
     } else {
       setShowAccessDialog(true);
@@ -85,10 +85,21 @@ export default function BuildVSBuyMatrix() {
       <>
         <AccessCodeDialog
           open={showAccessDialog}
-          onOpenChange={setShowAccessDialog}
-          resourceId="build-vs-buy-matrix"
-          resourceTitle="Build VS Buy Matrix"
-          onAccessGranted={() => setHasAccess(true)}
+          onOpenChange={(open) => {
+            setShowAccessDialog(open);
+            if (!open) {
+              // Check again if access was granted
+              const hasAccessCode = sessionStorage.getItem('access_code_build-vs-buy-matrix');
+              if (hasAccessCode) {
+                setHasAccess(true);
+              }
+            }
+          }}
+          resource={{
+            id: "build-vs-buy-matrix",
+            title: "Build VS Buy Matrix",
+            page: "BuildVSBuyMatrix"
+          }}
         />
         <div className="min-h-screen bg-slate-50 flex items-center justify-center px-6">
           <div className="max-w-md text-center">
