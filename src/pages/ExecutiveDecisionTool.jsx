@@ -85,7 +85,7 @@ export default function ExecutiveDecisionTool() {
 
   useEffect(() => {
     // Check if user has access via login or access code
-    const hasAccessCode = sessionStorage.getItem('access_code_build-vs-buy-matrix');
+    const hasAccessCode = sessionStorage.getItem('access_code_tool_1770624688365');
     if (user || hasAccessCode) {
       setHasAccess(true);
     } else {
@@ -110,15 +110,15 @@ export default function ExecutiveDecisionTool() {
             setShowAccessDialog(open);
             if (!open) {
               // Check again if access was granted
-              const hasAccessCode = sessionStorage.getItem('access_code_build-vs-buy-matrix');
+              const hasAccessCode = sessionStorage.getItem('access_code_tool_1770624688365');
               if (hasAccessCode) {
                 setHasAccess(true);
               }
             }
           }}
           resource={{
-            id: "build-vs-buy-matrix",
-            title: "Build VS Buy Matrix",
+            id: "tool_1770624688365",
+            title: "Build VS Buy Decision Matrix",
             page: "ExecutiveDecisionTool"
           }}
         />
