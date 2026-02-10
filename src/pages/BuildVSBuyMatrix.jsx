@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { FolderOpen, Eye, Pencil, Trash2 } from "lucide-react";
+import { FolderOpen, Eye, Pencil, Trash2, Lock } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { toast } from "sonner";
+import AccessCodeDialog from "@/components/AccessCodeDialog";
 
 export default function BuildVSBuyMatrix() {
   const queryClient = useQueryClient();
+  const [showAccessDialog, setShowAccessDialog] = useState(false);
+  const [hasAccess, setHasAccess] = useState(false);
   
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -67,17 +70,42 @@ export default function BuildVSBuyMatrix() {
     }
   };
 
-  if (!user) {
+  useEffect(() => {
+    // Check if user has access via login or access code
+    const accessCode = sessionStorage.getItem('accessCode');
+    if (user || accessCode) {
+      setHasAccess(true);
+    } else {
+      setShowAccessDialog(true);
+    }
+  }, [user]);
+
+  if (!hasAccess) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center px-6">
-        <div className="max-w-md text-center">
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">Sign in Required</h2>
-          <p className="text-slate-600 mb-6">Please sign in to access the Build VS Buy Matrix tool.</p>
-          <Button onClick={() => base44.auth.redirectToLogin()}>
-            Sign in
-          </Button>
+      <>
+        <AccessCodeDialog
+          open={showAccessDialog}
+          onOpenChange={setShowAccessDialog}
+          resourceId="build-vs-buy-matrix"
+          resourceTitle="Build VS Buy Matrix"
+          onAccessGranted={() => setHasAccess(true)}
+        />
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center px-6">
+          <div className="max-w-md text-center">
+            <Lock className="h-16 w-16 text-slate-400 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-slate-900 mb-4">Access Required</h2>
+            <p className="text-slate-600 mb-6">Please sign in or enter an access code to use the Build VS Buy Matrix tool.</p>
+            <div className="flex gap-3 justify-center">
+              <Button onClick={() => base44.auth.redirectToLogin()}>
+                Sign in
+              </Button>
+              <Button variant="outline" onClick={() => setShowAccessDialog(true)}>
+                Enter Access Code
+              </Button>
+            </div>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
@@ -176,9 +204,10 @@ export default function BuildVSBuyMatrix() {
           </Link>
         </div>
 
-        {/* Saved Assessments Table */}
-        <div className="mt-16">
-          <h2 className="text-2xl font-bold text-slate-900 mb-6">Saved Assessments</h2>
+        {/* Saved Assessments Table - Only show for logged in users */}
+        {user && (
+          <div className="mt-16">
+            <h2 className="text-2xl font-bold text-slate-900 mb-6">Saved Assessments</h2>
           <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
             {allAssessments.length === 0 ? (
               <div className="p-12 text-center">
@@ -241,7 +270,8 @@ export default function BuildVSBuyMatrix() {
               </div>
             )}
           </div>
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

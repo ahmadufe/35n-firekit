@@ -5,8 +5,9 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { Save, ChevronDown, ChevronUp } from "lucide-react";
+import { Save, ChevronDown, ChevronUp, Lock } from "lucide-react";
 import { toast } from "sonner";
+import AccessCodeDialog from "@/components/AccessCodeDialog";
 
 const sections = [
   {
@@ -307,6 +308,8 @@ export default function DetailedAssessmentTool() {
   const [assessmentName, setAssessmentName] = useState('');
   const [showHybridApproaches, setShowHybridApproaches] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [showAccessDialog, setShowAccessDialog] = useState(false);
+  const [hasAccess, setHasAccess] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -330,8 +333,12 @@ export default function DetailedAssessmentTool() {
   });
 
   useEffect(() => {
-    if (!user) {
-      base44.auth.redirectToLogin();
+    // Check if user has access via login or access code
+    const accessCode = sessionStorage.getItem('accessCode');
+    if (user || accessCode) {
+      setHasAccess(true);
+    } else {
+      setShowAccessDialog(true);
     }
   }, [user]);
 
@@ -343,8 +350,33 @@ export default function DetailedAssessmentTool() {
     }
   }, [savedAssessment]);
 
-  if (!user) {
-    return null;
+  if (!hasAccess) {
+    return (
+      <>
+        <AccessCodeDialog
+          open={showAccessDialog}
+          onOpenChange={setShowAccessDialog}
+          resourceId="build-vs-buy-matrix"
+          resourceTitle="Build VS Buy Matrix"
+          onAccessGranted={() => setHasAccess(true)}
+        />
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center px-6">
+          <div className="max-w-md text-center">
+            <Lock className="h-16 w-16 text-slate-400 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-slate-900 mb-4">Access Required</h2>
+            <p className="text-slate-600 mb-6">Please sign in or enter an access code to use this tool.</p>
+            <div className="flex gap-3 justify-center">
+              <Button onClick={() => base44.auth.redirectToLogin()}>
+                Sign in
+              </Button>
+              <Button variant="outline" onClick={() => setShowAccessDialog(true)}>
+                Enter Access Code
+              </Button>
+            </div>
+          </div>
+        </div>
+      </>
+    );
   }
 
   const handleScoreChange = (id, value) => {
@@ -484,28 +516,39 @@ export default function DetailedAssessmentTool() {
                 Answer each question. Score 1-5 where 5 = Strongly BUILD, 1 = Strongly BUY, 3 = Neutral
               </p>
             </div>
-            <Button
-              onClick={handleSave}
-              disabled={!user || isSaving}
-              className={`flex items-center gap-2 ${!user ? 'opacity-50 cursor-not-allowed' : ''}`}
-            >
-              <Save className="h-4 w-4" />
-              {isSaving ? 'Saving...' : 'Save Assessment'}
-            </Button>
+            {user ? (
+              <Button
+                onClick={handleSave}
+                disabled={isSaving}
+                className="flex items-center gap-2"
+              >
+                <Save className="h-4 w-4" />
+                {isSaving ? 'Saving...' : 'Save Assessment'}
+              </Button>
+            ) : (
+              <div className="text-right">
+                <div className="text-sm text-slate-500 mb-1">Sign in to save assessments</div>
+                <Button variant="outline" onClick={() => base44.auth.redirectToLogin()}>
+                  Sign in
+                </Button>
+              </div>
+            )}
           </div>
           
-          <div className="max-w-md">
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              Assessment Name
-            </label>
-            <Input
-              type="text"
-              placeholder="e.g., CRM System Evaluation"
-              value={assessmentName}
-              onChange={(e) => setAssessmentName(e.target.value)}
-              className="w-full"
-            />
-          </div>
+          {user && (
+            <div className="max-w-md">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Assessment Name
+              </label>
+              <Input
+                type="text"
+                placeholder="e.g., CRM System Evaluation"
+                value={assessmentName}
+                onChange={(e) => setAssessmentName(e.target.value)}
+                className="w-full"
+              />
+            </div>
+          )}
         </div>
 
         {/* Weight Warning */}
