@@ -27,9 +27,7 @@ export default function Home() {
       <div className="min-h-screen flex items-center px-6 sm:px-12 lg:px-20 py-20">
         <div className="relative z-10 max-w-3xl w-full">
           <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-white tracking-tight mb-8 sm:mb-12 lg:mb-16 text-left">
-Welcome to FireKit
-
-
+            Welcome to <span className="text-orange-500">Fire</span>Kit
           </h1>
           
           <p className="text-base sm:text-xl lg:text-2xl text-white/90 mb-8 sm:mb-12 font-light text-left">Practical insights, tools & frameworks for leaders, founders & innovators building great things
