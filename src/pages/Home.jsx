@@ -24,33 +24,26 @@ export default function Home() {
 
       </div>
       
-      <div className="min-h-screen flex items-center px-6 sm:px-12 lg:px-20">
-        <div className="relative z-10 max-w-3xl">
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white tracking-tight mb-16 text-left mt-8">
-            Welcome to <span className="text-orange-500">Fire</span>Kit
+      <div className="min-h-screen flex items-center px-6 sm:px-12 lg:px-20 py-20">
+        <div className="relative z-10 max-w-3xl w-full">
+          <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-white tracking-tight mb-8 sm:mb-12 lg:mb-16 text-left">
+Welcome to FireKit
+
+
           </h1>
           
-          <p className="text-xl sm:text-2xl text-white/90 mb-12 font-light text-left">Practical insights, tools & frameworks for leaders, founders & innovators building great things
+          <p className="text-base sm:text-xl lg:text-2xl text-white/90 mb-8 sm:mb-12 font-light text-left">Practical insights, tools & frameworks for leaders, founders & innovators building great things
 
           </p>
           
-          <div className="flex gap-10">
-            <Link to={createPageUrl('Dashboard')}>
-              <Button
-                size="lg"
-                className="bg-white text-black hover:bg-slate-200 text-2xl px-10 py-4 h-auto font-semibold rounded-full">
-                Explore
-              </Button>
-            </Link>
-            
-            <a href="https://www.35nventures.com" target="_blank" rel="noopener noreferrer">
-              <Button
-                size="lg"
-                className="bg-white text-black hover:bg-slate-200 text-2xl px-10 py-4 h-auto font-semibold rounded-full">
-                Learn about 35N
-              </Button>
-            </a>
-          </div>
+          <Link to={createPageUrl('Dashboard')}>
+            <Button
+              size="lg"
+              className="bg-white text-black hover:bg-slate-200 text-lg sm:text-xl lg:text-2xl px-8 sm:px-10 py-3 sm:py-4 h-auto font-semibold rounded-full">
+
+              Explore
+            </Button>
+          </Link>
         </div>
       </div>
     </div>);

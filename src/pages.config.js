@@ -48,6 +48,7 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import AICodingToolsComparison from './pages/AICodingToolsComparison';
+import AICodingcomplite from './pages/AICodingcomplite';
 import AdminDashboard from './pages/AdminDashboard';
 import Bookmarks from './pages/Bookmarks';
 import BuildVSBuyMatrix from './pages/BuildVSBuyMatrix';
@@ -59,12 +60,12 @@ import ExecutiveDecisionTool from './pages/ExecutiveDecisionTool';
 import Home from './pages/Home';
 import Scorecard from './pages/Scorecard';
 import UserSettings from './pages/UserSettings';
-import AICodingcomplite from './pages/AICodingcomplite';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "AICodingToolsComparison": AICodingToolsComparison,
+    "AICodingcomplite": AICodingcomplite,
     "AdminDashboard": AdminDashboard,
     "Bookmarks": Bookmarks,
     "BuildVSBuyMatrix": BuildVSBuyMatrix,
@@ -76,7 +77,6 @@ export const PAGES = {
     "Home": Home,
     "Scorecard": Scorecard,
     "UserSettings": UserSettings,
-    "AICodingcomplite": AICodingcomplite,
 }
 
 export const pagesConfig = {
