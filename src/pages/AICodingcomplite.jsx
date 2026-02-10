@@ -228,8 +228,8 @@ export default function AICodingcomplite() {
 
         {/* Note about full version */}
         <div className="mt-6 text-center">
-          <p className="text-slate-600">
-            A comprehensive comparison across 18 tools is available. You can access it from the main dashboard.
+          <p className="text-slate-600 font-bold">
+            P.S. A comprehensive comparison across 18 tools is available. You can access it from the main dashboard.
           </p>
         </div>
 
