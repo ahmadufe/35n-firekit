@@ -519,10 +519,10 @@ export default function Dashboard() {
           </div>
 
           {/* Filter Controls */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-medium text-slate-700">Filter by:</span>
-              <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 flex-wrap">
+              <span className="text-sm font-medium text-slate-700 whitespace-nowrap">Filter by:</span>
+              <div className="flex items-center gap-2 flex-wrap">
               {newToolsCount > 0 && (
                 <Button
                   variant={showNewOnly ? "default" : "outline"}
@@ -579,16 +579,16 @@ export default function Dashboard() {
               )}
             </div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <button
                 onClick={handleSuggestResource}
-                className="text-sm font-medium text-slate-900 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-lg transition-colors"
+                className="text-sm font-medium text-slate-900 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
               >
                 Suggest a resource
               </button>
               <button
                 onClick={() => setShowFeedbackDialog(true)}
-                className="text-sm font-medium text-slate-900 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-lg transition-colors"
+                className="text-sm font-medium text-slate-900 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
               >
                 Give feedback
               </button>
