@@ -112,6 +112,10 @@ export default function ExecutiveDecisionTool() {
     }
   };
 
+  const resetWeights = () => {
+    setWeights(questions.reduce((acc, q) => ({ ...acc, [q.id]: q.defaultWeight }), {}));
+  };
+
   const calculateWeightedScore = (id) => {
     const score = scores[id] || 0;
     const weight = weights[id] || 0;
@@ -341,6 +345,13 @@ export default function ExecutiveDecisionTool() {
             )}
           </div>
         )}
+
+        {/* Reset Weights Button */}
+        <div className="mb-4 flex justify-end">
+          <Button onClick={resetWeights} variant="outline">
+            Reset Weights
+          </Button>
+        </div>
 
         {/* Questions Table */}
         <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
