@@ -267,23 +267,19 @@ export default function ExecutiveDecisionTool() {
                 Answer each question below. Score 1-5 where 5 = Strongly BUILD, 1 = Strongly BUY, 3 = Neutral
               </p>
             </div>
-            {user ? (
+            <div className="text-right">
               <Button
                 onClick={handleSave}
-                disabled={isSaving}
+                disabled={isSaving || !user}
                 className="flex items-center gap-2"
               >
                 <Save className="h-4 w-4" />
                 {isSaving ? 'Saving...' : 'Save Assessment'}
               </Button>
-            ) : (
-              <div className="text-right">
-                <div className="text-sm text-slate-500 mb-1">Sign in to save assessments</div>
-                <Button variant="outline" onClick={() => base44.auth.redirectToLogin()}>
-                  Sign in
-                </Button>
-              </div>
-            )}
+              {!user && (
+                <div className="text-sm text-slate-500 mt-1">Sign in to save assessment</div>
+              )}
+            </div>
           </div>
           
           {user && (
