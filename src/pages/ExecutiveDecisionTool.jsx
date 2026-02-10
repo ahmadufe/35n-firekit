@@ -183,7 +183,7 @@ export default function ExecutiveDecisionTool() {
         total_score: parseFloat(totalWeightedScore),
         decision: decision.title
       });
-      toast.success('Assessment saved successfully');
+      toast.success('The assessment has been saved. You can access it from the saved assessment table on the tool\'s main page.');
     } catch (error) {
       toast.error('Failed to save assessment');
     } finally {
