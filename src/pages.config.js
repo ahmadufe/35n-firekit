@@ -58,6 +58,7 @@ import ExecutiveDecisionTool from './pages/ExecutiveDecisionTool';
 import Home from './pages/Home';
 import Scorecard from './pages/Scorecard';
 import UserSettings from './pages/UserSettings';
+import DigitalOnboarding from './pages/DigitalOnboarding';
 import __Layout from './Layout.jsx';
 
 
@@ -73,6 +74,7 @@ export const PAGES = {
     "Home": Home,
     "Scorecard": Scorecard,
     "UserSettings": UserSettings,
+    "DigitalOnboarding": DigitalOnboarding,
 }
 
 export const pagesConfig = {
