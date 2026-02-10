@@ -59,6 +59,7 @@ import ExecutiveDecisionTool from './pages/ExecutiveDecisionTool';
 import Home from './pages/Home';
 import Scorecard from './pages/Scorecard';
 import UserSettings from './pages/UserSettings';
+import AICodingcomplite from './pages/AICodingcomplite';
 import __Layout from './Layout.jsx';
 
 
@@ -75,6 +76,7 @@ export const PAGES = {
     "Home": Home,
     "Scorecard": Scorecard,
     "UserSettings": UserSettings,
+    "AICodingcomplite": AICodingcomplite,
 }
 
 export const pagesConfig = {
