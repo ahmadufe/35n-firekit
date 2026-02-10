@@ -304,15 +304,25 @@ export default function Dashboard() {
   });
 
   const toggleTopic = (topic) => {
+    const isAdding = !selectedTopics.includes(topic);
     setSelectedTopics(prev => 
       prev.includes(topic) ? prev.filter(t => t !== topic) : [...prev, topic]
     );
+    base44.analytics.track({
+      eventName: 'filter_topic_toggle',
+      properties: { topic, action: isAdding ? 'add' : 'remove' }
+    });
   };
 
   const toggleType = (type) => {
+    const isAdding = !selectedTypes.includes(type);
     setSelectedTypes(prev => 
       prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
     );
+    base44.analytics.track({
+      eventName: 'filter_type_toggle',
+      properties: { type, action: isAdding ? 'add' : 'remove' }
+    });
   };
 
 
@@ -325,6 +335,10 @@ export default function Dashboard() {
     setShowNewOnly(false);
     setShowFeaturedOnly(false);
     setShowExclusiveOnly(false);
+    base44.analytics.track({
+      eventName: 'filter_clear_all',
+      properties: {}
+    });
   };
 
   const toggleFilterSection = (filterName) => {
@@ -513,7 +527,15 @@ export default function Dashboard() {
               type="text"
               placeholder="Search tools, resources, and playbooks..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                if (e.target.value) {
+                  base44.analytics.track({
+                    eventName: 'search_query',
+                    properties: { query_length: e.target.value.length }
+                  });
+                }
+              }}
               className="h-14 pl-12 pr-4 text-base border-slate-200 focus:border-slate-900 focus:ring-slate-900 shadow-sm"
             />
           </div>
@@ -527,7 +549,13 @@ export default function Dashboard() {
                 <Button
                   variant={showNewOnly ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setShowNewOnly(!showNewOnly)}
+                  onClick={() => {
+                    setShowNewOnly(!showNewOnly);
+                    base44.analytics.track({
+                      eventName: 'filter_newly_added_toggle',
+                      properties: { enabled: !showNewOnly }
+                    });
+                  }}
                   className={`${showNewOnly ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-white text-green-600 border-green-300 hover:bg-green-50'}`}
                 >
                   Newly added {showNewOnly && `(${newToolsCount})`}
@@ -536,7 +564,13 @@ export default function Dashboard() {
               <Button
                 variant={showFeaturedOnly ? "default" : "outline"}
                 size="sm"
-                onClick={() => setShowFeaturedOnly(!showFeaturedOnly)}
+                onClick={() => {
+                  setShowFeaturedOnly(!showFeaturedOnly);
+                  base44.analytics.track({
+                    eventName: 'filter_featured_toggle',
+                    properties: { enabled: !showFeaturedOnly }
+                  });
+                }}
                 className={`${showFeaturedOnly ? 'bg-purple-500 hover:bg-purple-600 text-white' : 'bg-white text-purple-600 border-purple-300 hover:bg-purple-50'}`}
               >
                 Featured
@@ -544,7 +578,13 @@ export default function Dashboard() {
               <Button
                 variant={showExclusiveOnly ? "default" : "outline"}
                 size="sm"
-                onClick={() => setShowExclusiveOnly(!showExclusiveOnly)}
+                onClick={() => {
+                  setShowExclusiveOnly(!showExclusiveOnly);
+                  base44.analytics.track({
+                    eventName: 'filter_exclusive_toggle',
+                    properties: { enabled: !showExclusiveOnly }
+                  });
+                }}
                 className={`${showExclusiveOnly ? 'bg-orange-500 hover:bg-orange-600 text-white' : 'bg-white text-orange-600 border-orange-300 hover:bg-orange-50'}`}
               >
                 Exclusive
