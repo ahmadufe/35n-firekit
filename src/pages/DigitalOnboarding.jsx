@@ -9,26 +9,26 @@ export default function DigitalOnboarding() {
     {
       id: 1,
       title: "The 5 Archetypes of Digital Onboarding",
-      fileUrl: null, // Will be added when files are uploaded
-      thumbnail: null
+      fileUrl: "https://drive.google.com/file/d/1MEU8PUuL6OcTdtgZXbSo7IS82y0aTBG7/view?usp=sharing",
+      thumbnail: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695a4c3829d04b83a5c959f0/5abd5639f_The5ArchetypesofDigitalOnboarding.png"
     },
     {
       id: 2,
       title: "3 Metric Types to Assess the Benefits of Digital Onboarding",
-      fileUrl: null,
-      thumbnail: null
+      fileUrl: "https://drive.google.com/file/d/1yrpQ8zg8QDPFHND6BDTWSk48zJBGuI4o/view?usp=sharing",
+      thumbnail: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695a4c3829d04b83a5c959f0/69bff9bf3_3MetricTypestoAssesstheBenefitsofDigitalOnboarding.png"
     },
     {
       id: 3,
       title: "4 Steps to Calculate the ROI of Digital Onboarding",
-      fileUrl: null,
-      thumbnail: null
+      fileUrl: "https://drive.google.com/file/d/1fHibTiWvuswJHDLdNoZ7x8A6lHn1Et5W/view?usp=sharing",
+      thumbnail: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695a4c3829d04b83a5c959f0/f315381e2_4StepstoCalculatetheROIofDigitalOnboarding.png"
     },
     {
       id: 4,
       title: "14 Best Practices to Design & Build Stellar Digital Onboarding",
-      fileUrl: null,
-      thumbnail: null
+      fileUrl: "https://drive.google.com/file/d/1MwzYLHWAO40_AiFiZwy1dsIvsw136lqr/view?usp=sharing",
+      thumbnail: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695a4c3829d04b83a5c959f0/b5cc588d9_14BestPracticestoDesignBuildStellarDigitalOnboarding.png"
     }
   ];
 

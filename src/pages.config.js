@@ -54,11 +54,11 @@ import BuildVSBuyMatrix from './pages/BuildVSBuyMatrix';
 import CloudRegulationsMap from './pages/CloudRegulationsMap';
 import Dashboard from './pages/Dashboard';
 import DetailedAssessmentTool from './pages/DetailedAssessmentTool';
+import DigitalOnboarding from './pages/DigitalOnboarding';
 import ExecutiveDecisionTool from './pages/ExecutiveDecisionTool';
 import Home from './pages/Home';
 import Scorecard from './pages/Scorecard';
 import UserSettings from './pages/UserSettings';
-import DigitalOnboarding from './pages/DigitalOnboarding';
 import __Layout from './Layout.jsx';
 
 
@@ -70,11 +70,11 @@ export const PAGES = {
     "CloudRegulationsMap": CloudRegulationsMap,
     "Dashboard": Dashboard,
     "DetailedAssessmentTool": DetailedAssessmentTool,
+    "DigitalOnboarding": DigitalOnboarding,
     "ExecutiveDecisionTool": ExecutiveDecisionTool,
     "Home": Home,
     "Scorecard": Scorecard,
     "UserSettings": UserSettings,
-    "DigitalOnboarding": DigitalOnboarding,
 }
 
 export const pagesConfig = {
