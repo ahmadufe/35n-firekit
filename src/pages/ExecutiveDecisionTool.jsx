@@ -175,14 +175,26 @@ export default function ExecutiveDecisionTool() {
 
     setIsSaving(true);
     try {
-      await base44.entities.ExecutiveDecision.create({
-        user_email: user.email,
-        assessment_name: assessmentName,
-        scores,
-        weights,
-        total_score: parseFloat(totalWeightedScore),
-        decision: decision.title
-      });
+      if (assessmentId) {
+        // Update existing assessment
+        await base44.entities.ExecutiveDecision.update(assessmentId, {
+          assessment_name: assessmentName,
+          scores,
+          weights,
+          total_score: parseFloat(totalWeightedScore),
+          decision: decision.title
+        });
+      } else {
+        // Create new assessment
+        await base44.entities.ExecutiveDecision.create({
+          user_email: user.email,
+          assessment_name: assessmentName,
+          scores,
+          weights,
+          total_score: parseFloat(totalWeightedScore),
+          decision: decision.title
+        });
+      }
       toast.success('The assessment has been saved. You can access it from the saved assessment table on the tool\'s main page.');
     } catch (error) {
       toast.error('Failed to save assessment');
