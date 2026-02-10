@@ -151,7 +151,7 @@ export default function AICodingcomplite() {
         </div>
 
         {/* Table Container */}
-        <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden relative">
+        <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-slate-50 border-b-2 border-slate-300 sticky top-0">
@@ -202,14 +202,7 @@ export default function AICodingcomplite() {
                 {filteredData.map((row, rowIndex) => (
                   <tr 
                     key={rowIndex} 
-                    className={`transition-colors ${
-                      rowIndex < 4 
-                        ? 'hover:bg-slate-50' 
-                        : 'relative'
-                    }`}
-                    style={{
-                      opacity: rowIndex < 4 ? 1 : Math.max(0.05, 1 - (rowIndex - 3) * 0.4)
-                    }}
+                    className="hover:bg-slate-50 transition-colors"
                   >
                     {columns.map((column) => {
                       const defaultWidth = column === '#' ? 60 : 200;
@@ -231,10 +224,6 @@ export default function AICodingcomplite() {
               </tbody>
             </table>
           </div>
-          {/* Gradient overlay for rows 5+ */}
-          <div className="absolute inset-0 pointer-events-none" style={{
-            background: 'linear-gradient(to bottom, transparent 0%, transparent 28%, rgba(248, 250, 252, 0.7) 50%, rgba(248, 250, 252, 1) 100%)'
-          }} />
         </div>
 
         {/* Note about full version */}
