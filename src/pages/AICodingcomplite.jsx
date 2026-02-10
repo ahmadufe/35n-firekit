@@ -57,13 +57,14 @@ export default function AICodingcomplite() {
   };
 
   const filteredData = useMemo(() => {
-    return comparisonData.filter(row => {
+    const filtered = comparisonData.filter(row => {
       return Object.entries(columnFilters).every(([column, filterValue]) => {
         if (!filterValue) return true;
         const cellValue = String(row[column] || '').toLowerCase();
         return cellValue.includes(filterValue.toLowerCase());
       });
     });
+    return filtered.slice(0, 6);
   }, [columnFilters]);
 
   const activeFiltersCount = Object.values(columnFilters).filter(v => v).length;
@@ -106,7 +107,7 @@ export default function AICodingcomplite() {
             </Button>
           </Link>
           <h1 className="text-4xl font-bold text-slate-900 mb-2">
-            AI Coding Tools Comparison – Light version (5 tools)
+            AI Coding Tools Comparison – Light version (6 tools)
           </h1>
           <p className="text-slate-600">
             Comprehensive comparison of AI-powered development tools and platforms
@@ -202,12 +203,12 @@ export default function AICodingcomplite() {
                   <tr 
                     key={rowIndex} 
                     className={`transition-colors ${
-                      rowIndex < 5 
+                      rowIndex < 4 
                         ? 'hover:bg-slate-50' 
                         : 'relative'
                     }`}
                     style={{
-                      opacity: rowIndex < 5 ? 1 : Math.max(0.1, 1 - (rowIndex - 4) * 0.15)
+                      opacity: rowIndex < 4 ? 1 : Math.max(0.05, 1 - (rowIndex - 3) * 0.4)
                     }}
                   >
                     {columns.map((column) => {
@@ -230,10 +231,17 @@ export default function AICodingcomplite() {
               </tbody>
             </table>
           </div>
-          {/* Gradient overlay for rows 6+ */}
+          {/* Gradient overlay for rows 5+ */}
           <div className="absolute inset-0 pointer-events-none" style={{
-            background: 'linear-gradient(to bottom, transparent 0%, transparent 35%, rgba(248, 250, 252, 0.95) 100%)'
+            background: 'linear-gradient(to bottom, transparent 0%, transparent 28%, rgba(248, 250, 252, 0.7) 50%, rgba(248, 250, 252, 1) 100%)'
           }} />
+        </div>
+
+        {/* Note about full version */}
+        <div className="mt-6 text-center">
+          <p className="text-slate-600">
+            A comprehensive comparison across 18 tools is available. You can access it from the main dashboard.
+          </p>
         </div>
 
         {/* Sources Section */}
