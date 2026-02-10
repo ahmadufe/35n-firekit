@@ -52,7 +52,7 @@ export default function DigitalOnboarding() {
         </div>
 
         {/* Tiles Grid */}
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-3 gap-8 max-w-5xl">
           {tiles.map((tile) => (
             <a
               key={tile.id}
@@ -69,7 +69,7 @@ export default function DigitalOnboarding() {
               }}
             >
               {/* Thumbnail */}
-              <div className="aspect-[3/2] bg-slate-100 flex items-center justify-center overflow-hidden">
+              <div className="aspect-[4/5] bg-slate-100 flex items-center justify-center overflow-hidden">
                 {tile.thumbnail ? (
                   <img 
                     src={tile.thumbnail} 
@@ -79,13 +79,6 @@ export default function DigitalOnboarding() {
                 ) : (
                   <FileText className="h-16 w-16 text-slate-400" />
                 )}
-              </div>
-              
-              {/* Content */}
-              <div className="p-8">
-                <h3 className="text-xl font-semibold text-slate-900 leading-tight group-hover:text-slate-700 transition-colors">
-                  {tile.title}
-                </h3>
               </div>
             </a>
           ))}
