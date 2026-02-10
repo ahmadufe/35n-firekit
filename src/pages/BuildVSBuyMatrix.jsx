@@ -3,12 +3,15 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { FolderOpen, Eye, Pencil } from "lucide-react";
+import { FolderOpen, Eye, Pencil, Trash2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 export default function BuildVSBuyMatrix() {
+  const queryClient = useQueryClient();
+  
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: async () => {
@@ -31,6 +34,38 @@ export default function BuildVSBuyMatrix() {
     queryFn: () => base44.entities.DetailedAssessment.filter({ user_email: user.email }, '-created_date'),
     enabled: !!user
   });
+
+  const deleteExecutiveMutation = useMutation({
+    mutationFn: (id) => base44.entities.ExecutiveDecision.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['executiveDecisions'] });
+      toast.success('Assessment deleted successfully');
+    },
+    onError: () => {
+      toast.error('Failed to delete assessment');
+    }
+  });
+
+  const deleteDetailedMutation = useMutation({
+    mutationFn: (id) => base44.entities.DetailedAssessment.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['detailedAssessments'] });
+      toast.success('Assessment deleted successfully');
+    },
+    onError: () => {
+      toast.error('Failed to delete assessment');
+    }
+  });
+
+  const handleDelete = (assessment) => {
+    if (window.confirm(`Are you sure you want to delete "${assessment.assessment_name}"?`)) {
+      if (assessment.type === 'Executive Decision') {
+        deleteExecutiveMutation.mutate(assessment.id);
+      } else {
+        deleteDetailedMutation.mutate(assessment.id);
+      }
+    }
+  };
 
   if (!user) {
     return (
@@ -185,9 +220,18 @@ export default function BuildVSBuyMatrix() {
                             <Link to={`${createPageUrl(assessment.type === 'Executive Decision' ? 'ExecutiveDecisionTool' : 'DetailedAssessmentTool')}?id=${assessment.id}`}>
                               <Button variant="ghost" size="sm">
                                 <Eye className="h-4 w-4 mr-1" />
-                                View
+                                View & Edit
                               </Button>
                             </Link>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => handleDelete(assessment)}
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            >
+                              <Trash2 className="h-4 w-4 mr-1" />
+                              Delete
+                            </Button>
                           </div>
                         </td>
                       </tr>
