@@ -67,18 +67,14 @@ export default function ExecutiveDecisionTool() {
     }
   });
 
+  useEffect(() => {
+    if (!user) {
+      base44.auth.redirectToLogin();
+    }
+  }, [user]);
+
   if (!user) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center px-6">
-        <div className="max-w-md text-center">
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">Sign in Required</h2>
-          <p className="text-slate-600 mb-6">Please sign in to access the Executive Decision Tool.</p>
-          <Button onClick={() => base44.auth.redirectToLogin()}>
-            Sign in
-          </Button>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   const handleScoreChange = (id, value) => {
