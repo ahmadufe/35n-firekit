@@ -34,14 +34,23 @@ export default function Home() {
 
           </p>
           
-          <Link to={createPageUrl('Dashboard')}>
-            <Button
-              size="lg"
-              className="bg-white text-black hover:bg-slate-200 text-lg sm:text-xl lg:text-2xl px-8 sm:px-10 py-3 sm:py-4 h-auto font-semibold rounded-full">
-
-              Explore
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Link to={createPageUrl('Dashboard')}>
+              <Button
+                size="lg"
+                className="bg-white text-black hover:bg-slate-200 text-lg sm:text-xl lg:text-2xl px-8 sm:px-10 py-3 sm:py-4 h-auto font-semibold rounded-full w-full sm:w-auto">
+                Explore
+              </Button>
+            </Link>
+            <a href="https://www.35nventures.com" target="_blank" rel="noopener noreferrer">
+              <Button
+                size="lg"
+                variant="outline"
+                className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-black text-lg sm:text-xl lg:text-2xl px-8 sm:px-10 py-3 sm:py-4 h-auto font-semibold rounded-full w-full sm:w-auto">
+                Learn about 35N
+              </Button>
+            </a>
+          </div>
         </div>
       </div>
     </div>);
