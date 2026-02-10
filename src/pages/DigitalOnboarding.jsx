@@ -52,14 +52,14 @@ export default function DigitalOnboarding() {
         </div>
 
         {/* Tiles Grid */}
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-8">
           {tiles.map((tile) => (
             <a
               key={tile.id}
               href={tile.fileUrl || '#'}
               target="_blank"
               rel="noopener noreferrer"
-              className={`group bg-white rounded-lg border border-slate-200 overflow-hidden transition-all hover:shadow-lg ${
+              className={`group bg-white rounded-2xl border-2 border-slate-200 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 ${
                 !tile.fileUrl ? 'cursor-not-allowed opacity-60' : 'hover:border-slate-300'
               }`}
               onClick={(e) => {
@@ -69,12 +69,12 @@ export default function DigitalOnboarding() {
               }}
             >
               {/* Thumbnail */}
-              <div className="aspect-[4/3] bg-slate-100 flex items-center justify-center overflow-hidden">
+              <div className="aspect-[3/2] bg-slate-100 flex items-center justify-center overflow-hidden">
                 {tile.thumbnail ? (
                   <img 
                     src={tile.thumbnail} 
                     alt={tile.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 ) : (
                   <FileText className="h-16 w-16 text-slate-400" />
@@ -82,8 +82,8 @@ export default function DigitalOnboarding() {
               </div>
               
               {/* Content */}
-              <div className="p-6">
-                <h3 className="text-lg font-semibold text-slate-900 group-hover:text-slate-700 transition-colors">
+              <div className="p-8">
+                <h3 className="text-xl font-semibold text-slate-900 leading-tight group-hover:text-slate-700 transition-colors">
                   {tile.title}
                 </h3>
               </div>
