@@ -104,21 +104,23 @@ export default function BuildVSBuyMatrix() {
           </Link>
 
           {/* Detailed Assessment Tool */}
-          <div className="cursor-pointer group">
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0">
-                <FolderOpen className="w-12 h-12 text-slate-400 group-hover:text-slate-600 transition-colors" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-2xl font-semibold text-slate-900 mb-2 group-hover:text-slate-700 transition-colors">
-                  Detailed assessment tool
-                </h3>
-                <p className="text-slate-600 leading-relaxed">
-                  A comprehensive scoring framework covering a wide range of factors
-                </p>
+          <Link to={createPageUrl('DetailedAssessmentTool')}>
+            <div className="cursor-pointer group">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <FolderOpen className="w-12 h-12 text-slate-400 group-hover:text-slate-600 transition-colors" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-semibold text-slate-900 mb-2 group-hover:text-slate-700 transition-colors">
+                    Detailed assessment tool
+                  </h3>
+                  <p className="text-slate-600 leading-relaxed">
+                    A comprehensive scoring framework covering a wide range of factors
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          </Link>
         </div>
       </div>
     </div>
