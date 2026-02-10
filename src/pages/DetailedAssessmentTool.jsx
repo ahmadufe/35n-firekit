@@ -48,25 +48,25 @@ const sections = [
       {
         id: 5,
         question: "Can we afford to wait 12+ months to get this capability live?",
-        weight: 2.5,
+        weight: 2.25,
         scoringLogic: "5=Can wait/iterate | 1=Need fast delivery"
       },
       {
         id: 6,
         question: "Is perfect fit more important than speed to market?",
-        weight: 2.5,
+        weight: 2.25,
         scoringLogic: "5=Can wait/iterate | 1=Need fast delivery"
       },
       {
         id: 7,
         question: "Can we tolerate iterative delivery with learning cycles and potential delays?",
-        weight: 2.5,
+        weight: 2.25,
         scoringLogic: "5=Can wait/iterate | 1=Need fast delivery"
       },
       {
         id: 8,
         question: "Do we have time to build without losing market opportunity?",
-        weight: 2.5,
+        weight: 2.25,
         scoringLogic: "5=Can wait/iterate | 1=Need fast delivery"
       }
     ]
@@ -79,25 +79,25 @@ const sections = [
       {
         id: 9,
         question: "Are our workflows materially different from standard industry practice?",
-        weight: 3.2,
+        weight: 3.25,
         scoringLogic: "5=Highly unique/complex | 1=Standard workflows"
       },
       {
         id: 10,
         question: "Do we need complex approval chains/rules/orchestration unique to us?",
-        weight: 3.2,
+        weight: 3.25,
         scoringLogic: "5=Highly unique/complex | 1=Standard workflows"
       },
       {
         id: 11,
         question: "Will the process change frequently over the next 12-24 months?",
-        weight: 3.2,
+        weight: 3.25,
         scoringLogic: "5=Highly unique/complex | 1=Standard workflows"
       },
       {
         id: 12,
         question: "Are vendor standard workflows incompatible with our business needs?",
-        weight: 3.2,
+        weight: 3.25,
         scoringLogic: "5=Highly unique/complex | 1=Standard workflows"
       }
     ]
