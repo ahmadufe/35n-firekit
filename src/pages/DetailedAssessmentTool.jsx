@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { Save } from "lucide-react";
+import { Save, ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
 
 const sections = [
@@ -302,6 +302,7 @@ export default function DetailedAssessmentTool() {
   const [scores, setScores] = useState({});
   const [weights, setWeights] = useState(defaultWeights);
   const [assessmentName, setAssessmentName] = useState('');
+  const [showHybridApproaches, setShowHybridApproaches] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const { data: user } = useQuery({
@@ -400,6 +401,8 @@ export default function DetailedAssessmentTool() {
   };
 
   const decision = getDecision();
+  const score = parseFloat(totalWeightedScore);
+  const shouldShowHybridBanner = score >= 2.7 && score <= 3.9;
 
   const handleSave = async () => {
     if (!user) return;
@@ -496,6 +499,100 @@ export default function DetailedAssessmentTool() {
             </div>
           </div>
         </div>
+
+        {/* Hybrid Approaches Banner */}
+        {shouldShowHybridBanner && (
+          <div className="mb-8">
+            <button
+              onClick={() => setShowHybridApproaches(!showHybridApproaches)}
+              className="w-full bg-blue-50 border-2 border-blue-200 rounded-lg p-4 flex items-center justify-between hover:bg-blue-100 transition-colors"
+            >
+              <span className="text-blue-900 font-semibold">Explore hybrid approaches</span>
+              {showHybridApproaches ? (
+                <ChevronUp className="h-5 w-5 text-blue-600" />
+              ) : (
+                <ChevronDown className="h-5 w-5 text-blue-600" />
+              )}
+            </button>
+            
+            {showHybridApproaches && (
+              <div className="mt-4 bg-white border border-blue-200 rounded-lg p-6">
+                <p className="text-slate-700 mb-4 font-medium">
+                  Sometimes the answer is neither pure build nor pure buy:
+                </p>
+                
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-slate-50">
+                        <th className="border border-slate-200 p-3 text-left font-semibold text-slate-900">Scenario</th>
+                        <th className="border border-slate-200 p-3 text-left font-semibold text-slate-900">Approach</th>
+                        <th className="border border-slate-200 p-3 text-left font-semibold text-slate-900">When to Use</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="border border-slate-200 p-3 font-medium text-slate-900">Buy then Build</td>
+                        <td className="border border-slate-200 p-3 text-slate-700">Start with vendor, migrate later</td>
+                        <td className="border border-slate-200 p-3 text-slate-700">
+                          <ul className="list-disc list-inside space-y-1">
+                            <li>Need fast launch</li>
+                            <li>Building capability over time</li>
+                            <li>Validating market first</li>
+                          </ul>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="border border-slate-200 p-3 font-medium text-slate-900">Build on Top</td>
+                        <td className="border border-slate-200 p-3 text-slate-700">Use vendor infrastructure, build custom layer</td>
+                        <td className="border border-slate-200 p-3 text-slate-700">
+                          <ul className="list-disc list-inside space-y-1">
+                            <li>Need customization</li>
+                            <li>Vendor has strong foundation</li>
+                            <li>Integration is clean</li>
+                          </ul>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="border border-slate-200 p-3 font-medium text-slate-900">Open Source + Build</td>
+                        <td className="border border-slate-200 p-3 text-slate-700">Fork/extend OSS with internal dev</td>
+                        <td className="border border-slate-200 p-3 text-slate-700">
+                          <ul className="list-disc list-inside space-y-1">
+                            <li>Community momentum</li>
+                            <li>Customization needed</li>
+                            <li>Technical team exists</li>
+                          </ul>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="border border-slate-200 p-3 font-medium text-slate-900">Co-development</td>
+                        <td className="border border-slate-200 p-3 text-slate-700">Partner with vendor for custom features</td>
+                        <td className="border border-slate-200 p-3 text-slate-700">
+                          <ul className="list-disc list-inside space-y-1">
+                            <li>Specific needs</li>
+                            <li>Vendor is flexible</li>
+                            <li>Shared strategic value</li>
+                            <li>Clear boundaries</li>
+                          </ul>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="border border-slate-200 p-3 font-medium text-slate-900">Modular Approach</td>
+                        <td className="border border-slate-200 p-3 text-slate-700">Build core, buy peripherals</td>
+                        <td className="border border-slate-200 p-3 text-slate-700">
+                          <ul className="list-disc list-inside space-y-1">
+                            <li>Some pieces are commodity</li>
+                            <li>Want control of key components</li>
+                          </ul>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Reset Weights Button */}
         <div className="mb-4 flex justify-end">

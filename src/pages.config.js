@@ -53,11 +53,11 @@ import Bookmarks from './pages/Bookmarks';
 import BuildVSBuyMatrix from './pages/BuildVSBuyMatrix';
 import CloudRegulationsMap from './pages/CloudRegulationsMap';
 import Dashboard from './pages/Dashboard';
+import DetailedAssessmentTool from './pages/DetailedAssessmentTool';
 import ExecutiveDecisionTool from './pages/ExecutiveDecisionTool';
 import Home from './pages/Home';
 import Scorecard from './pages/Scorecard';
 import UserSettings from './pages/UserSettings';
-import DetailedAssessmentTool from './pages/DetailedAssessmentTool';
 import __Layout from './Layout.jsx';
 
 
@@ -68,11 +68,11 @@ export const PAGES = {
     "BuildVSBuyMatrix": BuildVSBuyMatrix,
     "CloudRegulationsMap": CloudRegulationsMap,
     "Dashboard": Dashboard,
+    "DetailedAssessmentTool": DetailedAssessmentTool,
     "ExecutiveDecisionTool": ExecutiveDecisionTool,
     "Home": Home,
     "Scorecard": Scorecard,
     "UserSettings": UserSettings,
-    "DetailedAssessmentTool": DetailedAssessmentTool,
 }
 
 export const pagesConfig = {
