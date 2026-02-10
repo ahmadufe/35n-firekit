@@ -64,7 +64,7 @@ export default function AICodingcomplite() {
         return cellValue.includes(filterValue.toLowerCase());
       });
     });
-    return filtered.slice(0, 6);
+    return filtered.slice(0, 5);
   }, [columnFilters]);
 
   const activeFiltersCount = Object.values(columnFilters).filter(v => v).length;
@@ -107,7 +107,7 @@ export default function AICodingcomplite() {
             </Button>
           </Link>
           <h1 className="text-4xl font-bold text-slate-900 mb-2">
-            AI Coding Tools Comparison – Light version (6 tools)
+            AI Coding Tools Comparison – Light version (5 tools)
           </h1>
           <p className="text-slate-600">
             Comprehensive comparison of AI-powered development tools and platforms
