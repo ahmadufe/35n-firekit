@@ -291,8 +291,16 @@ const sections = [
   }
 ];
 
+const defaultWeights = {};
+sections.forEach(section => {
+  section.questions.forEach(q => {
+    defaultWeights[q.id] = q.weight;
+  });
+});
+
 export default function DetailedAssessmentTool() {
   const [scores, setScores] = useState({});
+  const [weights, setWeights] = useState(defaultWeights);
   const [assessmentName, setAssessmentName] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
@@ -324,15 +332,37 @@ export default function DetailedAssessmentTool() {
     }
   };
 
-  const calculateWeightedScore = (id, weight) => {
+  const handleWeightChange = (id, value) => {
+    const numValue = parseFloat(value);
+    if (value === '' || (numValue >= 0 && numValue <= 100)) {
+      setWeights({ ...weights, [id]: value === '' ? '' : numValue });
+    }
+  };
+
+  const resetWeights = () => {
+    setWeights(defaultWeights);
+  };
+
+  const calculateWeightedScore = (id) => {
     const score = scores[id] || 0;
+    const weight = weights[id] || 0;
     return ((score * weight) / 100).toFixed(2);
+  };
+
+  const getSectionTotal = (section) => {
+    return section.questions.reduce((sum, q) => {
+      return sum + (parseFloat(weights[q.id]) || 0);
+    }, 0);
   };
 
   const allQuestions = sections.flatMap(section => section.questions);
   
+  const totalWeight = allQuestions.reduce((sum, q) => {
+    return sum + (parseFloat(weights[q.id]) || 0);
+  }, 0);
+
   const totalWeightedScore = allQuestions.reduce((sum, q) => {
-    return sum + parseFloat(calculateWeightedScore(q.id, q.weight));
+    return sum + parseFloat(calculateWeightedScore(q.id));
   }, 0).toFixed(2);
 
   const getDecision = () => {
@@ -443,6 +473,15 @@ export default function DetailedAssessmentTool() {
           </div>
         </div>
 
+        {/* Weight Warning */}
+        {Math.abs(totalWeight - 100) > 0.01 && (
+          <div className="mb-6 p-4 bg-red-50 border-2 border-red-300 rounded-lg">
+            <p className="text-red-700 font-semibold text-center">
+              Attention: Weights don't add up to 100%. Please adjust (Current total: {totalWeight.toFixed(1)}%)
+            </p>
+          </div>
+        )}
+
         {/* Decision Box */}
         <div className={`mb-8 p-6 rounded-lg border-2 ${decision.color}`}>
           <div className="flex items-center justify-between">
@@ -459,15 +498,27 @@ export default function DetailedAssessmentTool() {
           </div>
         </div>
 
+        {/* Reset Weights Button */}
+        <div className="mb-4 flex justify-end">
+          <Button onClick={resetWeights} variant="outline">
+            Reset Weights
+          </Button>
+        </div>
+
         {/* Questions Table by Section */}
         <div className="space-y-8">
-          {sections.map((section) => (
-            <div key={section.id} className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
-              <div className="bg-slate-900 text-white px-6 py-3">
-                <h2 className="text-lg font-semibold">
-                  {section.id}) {section.title}
-                </h2>
-              </div>
+          {sections.map((section) => {
+            const sectionTotal = getSectionTotal(section);
+            return (
+              <div key={section.id} className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                <div className="bg-slate-900 text-white px-6 py-3 flex items-center justify-between">
+                  <h2 className="text-lg font-semibold">
+                    {section.id}) {section.title}
+                  </h2>
+                  <div className="text-sm font-medium">
+                    Section Total: {sectionTotal.toFixed(1)}%
+                  </div>
+                </div>
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-slate-50 border-b border-slate-200">
@@ -497,9 +548,19 @@ export default function DetailedAssessmentTool() {
                             placeholder="1-5"
                           />
                         </td>
-                        <td className="p-4 text-sm text-slate-700">{q.weight}%</td>
+                        <td className="p-4">
+                          <Input
+                            type="number"
+                            min="0"
+                            max="100"
+                            step="0.1"
+                            value={weights[q.id] || ''}
+                            onChange={(e) => handleWeightChange(q.id, e.target.value)}
+                            className="w-full"
+                          />
+                        </td>
                         <td className="p-4 text-sm font-semibold text-slate-900">
-                          {calculateWeightedScore(q.id, q.weight)}
+                          {calculateWeightedScore(q.id)}
                         </td>
                         <td className="p-4 text-xs text-slate-600 italic">
                           {q.scoringLogic}
@@ -510,13 +571,17 @@ export default function DetailedAssessmentTool() {
                 </table>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Total Summary */}
         <div className="mt-8 bg-slate-900 text-white rounded-lg shadow-sm p-6">
           <div className="flex items-center justify-between">
-            <div className="text-xl font-semibold">TOTAL WEIGHTED SCORE</div>
+            <div>
+              <div className="text-xl font-semibold">TOTAL WEIGHTED SCORE</div>
+              <div className="text-sm opacity-70 mt-1">Total Weight: {totalWeight.toFixed(1)}%</div>
+            </div>
             <div className="text-3xl font-bold">{totalWeightedScore} / 5.0</div>
           </div>
         </div>
