@@ -507,6 +507,20 @@ export default function Dashboard() {
 
         {/* Search Bar and Filters */}
         <div className="mb-8 max-w-5xl mx-auto">
+          <div className="flex justify-end gap-2 mb-3">
+            <button
+              onClick={handleSuggestResource}
+              className="text-xs font-medium text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"
+            >
+              Suggest a resource
+            </button>
+            <button
+              onClick={() => setShowFeedbackDialog(true)}
+              className="text-xs font-medium text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"
+            >
+              Give feedback
+            </button>
+          </div>
           <div className="relative mb-4">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
             <Input
@@ -579,20 +593,7 @@ export default function Dashboard() {
               )}
             </div>
             
-            <div className="flex items-center gap-2 flex-wrap">
-              <button
-                onClick={handleSuggestResource}
-                className="text-sm font-medium text-slate-900 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
-              >
-                Suggest a resource
-              </button>
-              <button
-                onClick={() => setShowFeedbackDialog(true)}
-                className="text-sm font-medium text-slate-900 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
-              >
-                Give feedback
-              </button>
-            </div>
+
           </div>
 
           {/* Filter Options */}
