@@ -28,6 +28,7 @@ export default function ResourcesManagementTab() {
     link: '',
     file_url: '',
     coming_soon: false,
+    is_coming_soon: false,
     published_date: '',
     featured: false,
     asset_type: ''
@@ -127,6 +128,7 @@ export default function ResourcesManagementTab() {
         link: resource.link || '',
         file_url: resource.file_url || '',
         coming_soon: resource.coming_soon || false,
+        is_coming_soon: resource.is_coming_soon || false,
         published_date: resource.published_date || '',
         featured: resource.featured || false,
         asset_type: resource.asset_type || ''
@@ -142,6 +144,7 @@ export default function ResourcesManagementTab() {
         link: '',
         file_url: '',
         coming_soon: false,
+        is_coming_soon: false,
         published_date: '',
         featured: false,
         asset_type: ''
@@ -169,6 +172,7 @@ export default function ResourcesManagementTab() {
       link: formData.link || null,
       file_url: formData.file_url || null,
       coming_soon: formData.coming_soon,
+      is_coming_soon: formData.is_coming_soon,
       published_date: formData.published_date || new Date().toISOString(),
       featured: formData.featured,
       asset_type: formData.asset_type || null
@@ -448,6 +452,11 @@ export default function ResourcesManagementTab() {
                                   Exclusive
                                 </Badge>
                               )}
+                              {resource.is_coming_soon && (
+                                <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-xs">
+                                  Coming Soon
+                                </Badge>
+                              )}
                               {resource.featured && (
                                <Badge className="bg-purple-100 text-purple-700 border-purple-200 text-xs">
                                  Featured
@@ -695,7 +704,11 @@ export default function ResourcesManagementTab() {
                   type="checkbox"
                   id="coming-soon"
                   checked={formData.coming_soon}
-                  onChange={(e) => setFormData({ ...formData, coming_soon: e.target.checked })}
+                  onChange={(e) => setFormData({ 
+                    ...formData, 
+                    coming_soon: e.target.checked,
+                    is_coming_soon: e.target.checked ? false : formData.is_coming_soon
+                  })}
                   className="rounded"
                 />
                 <Label htmlFor="coming-soon">Mark as Exclusive</Label>
@@ -710,6 +723,21 @@ export default function ResourcesManagementTab() {
                   className="rounded"
                 />
                 <Label htmlFor="featured">Mark as Featured</Label>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="is-coming-soon"
+                  checked={formData.is_coming_soon}
+                  onChange={(e) => setFormData({ 
+                    ...formData, 
+                    is_coming_soon: e.target.checked,
+                    coming_soon: e.target.checked ? false : formData.coming_soon
+                  })}
+                  className="rounded"
+                />
+                <Label htmlFor="is-coming-soon">Mark as Coming Soon</Label>
               </div>
             </div>
           </div>
