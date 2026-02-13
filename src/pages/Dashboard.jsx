@@ -40,6 +40,7 @@ export default function Dashboard() {
   const [showNewOnly, setShowNewOnly] = useState(false);
   const [showFeaturedOnly, setShowFeaturedOnly] = useState(false);
   const [showExclusiveOnly, setShowExclusiveOnly] = useState(false);
+  const [showComingSoonOnly, setShowComingSoonOnly] = useState(false);
   const [openFilter, setOpenFilter] = useState(null);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [loginPromptType, setLoginPromptType] = useState('timed'); // 'timed' or 'resource'
@@ -300,7 +301,10 @@ export default function Dashboard() {
     // Exclusive filter
     const matchesExclusive = !showExclusiveOnly || tool.coming_soon;
 
-    return matchesSearch && matchesTopic && matchesType && matchesNew && matchesFeatured && matchesExclusive;
+    // Coming soon filter
+    const matchesComingSoon = !showComingSoonOnly || tool.is_coming_soon;
+
+    return matchesSearch && matchesTopic && matchesType && matchesNew && matchesFeatured && matchesExclusive && matchesComingSoon;
   });
 
   const toggleTopic = (topic) => {
@@ -327,7 +331,7 @@ export default function Dashboard() {
 
 
 
-  const hasActiveFilters = selectedTopics.length > 0 || selectedTypes.length > 0 || showNewOnly || showFeaturedOnly || showExclusiveOnly;
+  const hasActiveFilters = selectedTopics.length > 0 || selectedTypes.length > 0 || showNewOnly || showFeaturedOnly || showExclusiveOnly || showComingSoonOnly;
 
   const clearAllFilters = () => {
     setSelectedTopics([]);
@@ -335,6 +339,7 @@ export default function Dashboard() {
     setShowNewOnly(false);
     setShowFeaturedOnly(false);
     setShowExclusiveOnly(false);
+    setShowComingSoonOnly(false);
     base44.analytics.track({
       eventName: 'filter_clear_all',
       properties: {}
@@ -588,6 +593,20 @@ export default function Dashboard() {
                 className={`${showExclusiveOnly ? 'bg-orange-500 hover:bg-orange-600 text-white' : 'bg-white text-orange-600 border-orange-300 hover:bg-orange-50'}`}
               >
                 Exclusive
+              </Button>
+              <Button
+                variant={showComingSoonOnly ? "default" : "outline"}
+                size="sm"
+                onClick={() => {
+                  setShowComingSoonOnly(!showComingSoonOnly);
+                  base44.analytics.track({
+                    eventName: 'filter_coming_soon_toggle',
+                    properties: { enabled: !showComingSoonOnly }
+                  });
+                }}
+                className={`${showComingSoonOnly ? 'bg-blue-500 hover:bg-blue-600 text-white' : 'bg-white text-blue-600 border-blue-300 hover:bg-blue-50'}`}
+              >
+                Coming Soon
               </Button>
               <Button
                 variant={openFilter === 'topic' || selectedTopics.length > 0 ? "default" : "outline"}
