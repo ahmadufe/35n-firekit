@@ -78,7 +78,7 @@ export default function ToolCard({
     e.preventDefault();
     e.stopPropagation();
     if (!user) {
-      toast.error('Please log in to bookmark resources');
+      toast.error('Please sign in to save this resource in your bookmarks');
       return;
     }
     bookmarkMutation.mutate();
