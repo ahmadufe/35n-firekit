@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
-import { base44 } from "@/api/base44Client";
 
 Home.public = true;
 
@@ -37,20 +36,23 @@ Welcome to FireKit
 
           </p>
           
-          <Link to={createPageUrl('Dashboard')}>
-            <Button
-              size="lg"
-              onClick={() => {
-                base44.analytics.track({
-                  eventName: 'learn_about_35n_click',
-                  properties: { page: 'home' }
-                });
-              }}
-              className="bg-white text-black hover:bg-slate-200 text-2xl px-10 py-4 h-auto font-semibold rounded-full">
-
-              Explore
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Link to={createPageUrl('Dashboard')}>
+              <Button
+                size="lg"
+                className="bg-white text-black hover:bg-slate-200 text-2xl px-10 py-4 h-auto font-semibold rounded-full">
+                Explore
+              </Button>
+            </Link>
+            <a href="https://www.35nventures.com" target="_blank" rel="noopener noreferrer">
+              <Button
+                size="lg"
+                variant="outline"
+                className="bg-transparent text-white border-2 border-white hover:bg-white hover:text-black text-2xl px-10 py-4 h-auto font-semibold rounded-full">
+                About 35N
+              </Button>
+            </a>
+          </div>
         </div>
       </div>
     </div>);
