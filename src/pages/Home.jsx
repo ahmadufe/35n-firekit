@@ -36,14 +36,22 @@ Welcome to FireKit
 
           </p>
           
-          <Link to={createPageUrl('Dashboard')}>
-            <Button
-              size="lg"
-              className="bg-white text-black hover:bg-slate-200 text-2xl px-10 py-4 h-auto font-semibold rounded-full">
-
-              Explore
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 items-start">
+            <Link to={createPageUrl('Dashboard')}>
+              <Button
+                size="lg"
+                className="bg-white text-black hover:bg-slate-200 text-2xl px-10 py-4 h-auto font-semibold rounded-full">
+                Explore
+              </Button>
+            </Link>
+            <a href="https://www.35nventures.com" target="_blank" rel="noopener noreferrer">
+              <Button
+                size="lg"
+                className="bg-white text-black hover:bg-slate-200 text-2xl px-10 py-4 h-auto font-semibold rounded-full">
+                About 35N
+              </Button>
+            </a>
+          </div>
         </div>
       </div>
     </div>);
