@@ -32,27 +32,18 @@ Welcome to FireKit
 
           </h1>
           
-          <p className="text-xl sm:text-2xl text-white/90 mb-12 font-light text-left">Practical insights, tools & frameworks for leaders, founders & innovators building great things
+          <p className="text-xl sm:text-2xl text-white/90 mb-12 font-light text-left">Practical insights, tools & frameworks by 35N for leaders, founders & innovators building great companies
 
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Link to={createPageUrl('Dashboard')}>
-              <Button
-                size="lg"
-                className="bg-white text-black hover:bg-slate-200 text-2xl px-10 py-4 h-auto font-semibold rounded-full">
-                Explore
-              </Button>
-            </Link>
-            <a href="https://www.35nventures.com" target="_blank" rel="noopener noreferrer">
-              <Button
-                size="lg"
-                variant="outline"
-                className="bg-transparent text-white border-2 border-white hover:bg-white hover:text-black text-2xl px-10 py-4 h-auto font-semibold rounded-full">
-                About 35N
-              </Button>
-            </a>
-          </div>
+          <Link to={createPageUrl('Dashboard')}>
+            <Button
+              size="lg"
+              className="bg-white text-black hover:bg-slate-200 text-2xl px-10 py-4 h-auto font-semibold rounded-full">
+
+              Explore
+            </Button>
+          </Link>
         </div>
       </div>
     </div>);
