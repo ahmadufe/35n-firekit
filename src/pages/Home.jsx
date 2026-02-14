@@ -32,7 +32,7 @@ Welcome to FireKit by 35N
 
           </h1>
           
-          <p className="text-xl sm:text-2xl text-white/90 mb-12 font-light text-left">Practical insights, tools & frameworks for leaders, founders & innovators building great things
+          <p className="text-xl sm:text-2xl text-white/90 mb-12 font-light text-left">Practical insights, tools & frameworks for leaders, founders & innovators building great companies
 
           </p>
           
