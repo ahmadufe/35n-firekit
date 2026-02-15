@@ -178,6 +178,29 @@ export default function SaaSMetricsDashboard() {
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+          <div className="flex items-center justify-between mb-8">
+            <div className="text-lg font-semibold text-slate-900">Company Information</div>
+            <div className="flex gap-3">
+              <Button
+                onClick={handleSave}
+                disabled={!user || isSaving}
+                className={`${!user ? 'bg-slate-300 cursor-not-allowed' : 'bg-slate-900 hover:bg-slate-800'}`}
+              >
+                <Save className="h-4 w-4 mr-2" />
+                {isSaving ? 'Saving...' : 'Save'}
+              </Button>
+              <Button
+                onClick={handleExtract}
+                disabled={!user}
+                variant="outline"
+                className={!user ? 'border-slate-300 text-slate-400 cursor-not-allowed' : ''}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Extract to Excel
+              </Button>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -220,24 +243,30 @@ export default function SaaSMetricsDashboard() {
             </div>
           </div>
 
-          <div className="mb-6 flex gap-3">
-            <Button
-              onClick={handleSave}
-              disabled={!user || isSaving}
-              className={`${!user ? 'bg-slate-300 cursor-not-allowed' : 'bg-slate-900 hover:bg-slate-800'}`}
-            >
-              <Save className="h-4 w-4 mr-2" />
-              {isSaving ? 'Saving...' : 'Save'}
-            </Button>
-            <Button
-              onClick={handleExtract}
-              disabled={!user}
-              variant="outline"
-              className={!user ? 'border-slate-300 text-slate-400 cursor-not-allowed' : ''}
-            >
-              <Download className="h-4 w-4 mr-2" />
-              Extract to Excel
-            </Button>
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold text-slate-900 mb-4">Key Metrics Summary</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+              {[
+                { id: 5, label: "# of current customers" },
+                { id: 7, label: "Customer Retention rate" },
+                { id: 8, label: "Churn rate" },
+                { id: 11, label: "CAC" },
+                { id: 12, label: "Customer LTV" },
+                { id: 17, label: "Gross margin" },
+                { id: 18, label: "Net margin" },
+                { id: 20, label: "CAC payback time" },
+                { id: 23, label: "Monthly Recurring Revenue (MRR)" },
+                { id: 26, label: "Gross Revenue Retention (GRR)" }
+              ].map(metric => {
+                const value = metrics[metric.id]?.value;
+                return (
+                  <div key={metric.id} className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div className="text-xs font-medium text-slate-500 mb-1 line-clamp-2">{metric.label}</div>
+                    <div className="text-xl font-bold text-slate-900">{value || '-'}</div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           <div className="space-y-8">
