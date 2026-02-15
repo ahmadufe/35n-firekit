@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Save, Download } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
 import * as XLSX from 'xlsx';
@@ -48,12 +48,14 @@ const metricsData = [
 
 export default function SaaSMetricsDashboard() {
   const queryClient = useQueryClient();
+  const location = useLocation();
   const [companyName, setCompanyName] = useState('');
   const [industry, setIndustry] = useState('');
   const [country, setCountry] = useState('');
   const [metrics, setMetrics] = useState({});
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [currentEditId, setCurrentEditId] = useState(null);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -73,14 +75,27 @@ export default function SaaSMetricsDashboard() {
   });
 
   useEffect(() => {
-    if (savedData.length > 0) {
+    const viewId = location.state?.viewId;
+    const editId = location.state?.editId;
+    
+    if (viewId || editId) {
+      const targetData = savedData.find(d => d.id === (viewId || editId));
+      if (targetData) {
+        setCompanyName(targetData.company_name || '');
+        setIndustry(targetData.industry || '');
+        setCountry(targetData.country || '');
+        setMetrics(targetData.metrics_data || {});
+        setCurrentEditId(editId || null);
+      }
+    } else if (savedData.length > 0) {
       const data = savedData[0];
       setCompanyName(data.company_name || '');
       setIndustry(data.industry || '');
       setCountry(data.country || '');
       setMetrics(data.metrics_data || {});
+      setCurrentEditId(data.id);
     }
-  }, [savedData]);
+  }, [savedData, location.state]);
 
   const handleMetricChange = (metricId, field, value) => {
     if (!user) {
@@ -112,13 +127,15 @@ export default function SaaSMetricsDashboard() {
         metrics_data: metrics
       };
 
-      if (savedData.length > 0) {
-        await base44.entities.SaaSMetrics.update(savedData[0].id, dataToSave);
+      if (currentEditId) {
+        await base44.entities.SaaSMetrics.update(currentEditId, dataToSave);
       } else {
-        await base44.entities.SaaSMetrics.create(dataToSave);
+        const newRecord = await base44.entities.SaaSMetrics.create(dataToSave);
+        setCurrentEditId(newRecord.id);
       }
 
       queryClient.invalidateQueries({ queryKey: ['saasMetrics'] });
+      queryClient.invalidateQueries({ queryKey: ['allSaasMetrics'] });
       toast.success('Data saved successfully');
     } catch (error) {
       toast.error('Failed to save data');
@@ -166,7 +183,7 @@ export default function SaaSMetricsDashboard() {
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="flex items-center gap-4 mb-4">
-          <Link to={createPageUrl('Dashboard')}>
+          <Link to={createPageUrl('SaaSMetricsIntro')}>
             <Button variant="ghost" size="icon" className="hover:bg-slate-100">
               <ArrowLeft className="h-5 w-5" />
             </Button>
@@ -290,7 +307,7 @@ export default function SaaSMetricsDashboard() {
                       {categoryMetrics.map((metric, index) => (
                         <tr key={metric.id} className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
                           <td className="px-4 py-3 text-sm text-slate-600 border border-slate-200">{metric.id}</td>
-                          <td className="px-4 py-3 text-sm font-medium text-slate-900 border border-slate-200">{metric.metric}</td>
+                          <td className="px-4 py-3 text-sm font-bold text-slate-900 border border-slate-200">{metric.metric}</td>
                           <td className="px-4 py-3 text-sm text-slate-600 border border-slate-200">{metric.description}</td>
                           <td className="px-4 py-3 text-sm text-slate-600 border border-slate-200">{metric.formula}</td>
                           <td className="px-4 py-3 border border-slate-200 bg-yellow-50">
