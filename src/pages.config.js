@@ -60,6 +60,7 @@ import ExecutiveDecisionTool from './pages/ExecutiveDecisionTool';
 import Home from './pages/Home';
 import Scorecard from './pages/Scorecard';
 import UserSettings from './pages/UserSettings';
+import SaaSMetricsDashboard from './pages/SaaSMetricsDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -77,6 +78,7 @@ export const PAGES = {
     "Home": Home,
     "Scorecard": Scorecard,
     "UserSettings": UserSettings,
+    "SaaSMetricsDashboard": SaaSMetricsDashboard,
 }
 
 export const pagesConfig = {
