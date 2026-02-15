@@ -54,7 +54,6 @@ export default function SaaSMetricsDashboard() {
   const [metrics, setMetrics] = useState({});
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [viewMode, setViewMode] = useState('dashboard'); // 'dashboard' or 'table'
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -80,9 +79,6 @@ export default function SaaSMetricsDashboard() {
       setIndustry(data.industry || '');
       setCountry(data.country || '');
       setMetrics(data.metrics_data || {});
-      setViewMode('dashboard');
-    } else {
-      setViewMode('table');
     }
   }, [savedData]);
 
@@ -161,19 +157,6 @@ export default function SaaSMetricsDashboard() {
     toast.success('File downloaded successfully');
   };
 
-  const keyMetrics = [
-    { id: 5, label: "# of current customers", key: 5 },
-    { id: 7, label: "Customer Retention rate", key: 7 },
-    { id: 8, label: "Churn rate", key: 8 },
-    { id: 11, label: "CAC", key: 11 },
-    { id: 12, label: "Customer LTV", key: 12 },
-    { id: 17, label: "Gross margin", key: 17 },
-    { id: 18, label: "Net margin", key: 18 },
-    { id: 20, label: "CAC payback time", key: 20 },
-    { id: 23, label: "Monthly Recurring Revenue (MRR)", key: 23 },
-    { id: 26, label: "Gross Revenue Retention (GRR)", key: 26 }
-  ];
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       <LoginPromptMetricsDialog 
@@ -190,63 +173,11 @@ export default function SaaSMetricsDashboard() {
           </Link>
         </div>
 
-        <div className="flex items-center justify-between mb-8">
+        <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900">SaaS Metrics Dashboard</h1>
-          {savedData.length > 0 && (
-            <Button
-              onClick={() => setViewMode(viewMode === 'dashboard' ? 'table' : 'dashboard')}
-              variant="outline"
-            >
-              {viewMode === 'dashboard' ? 'Edit Metrics' : 'View Dashboard'}
-            </Button>
-          )}
         </div>
 
-        {viewMode === 'dashboard' && savedData.length > 0 ? (
-          <div className="space-y-6">
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
-              <div className="mb-6">
-                <h2 className="text-2xl font-bold text-slate-900 mb-2">{companyName || 'Your Company'}</h2>
-                <div className="flex gap-4 text-sm text-slate-600">
-                  {industry && <span>Industry: {industry}</span>}
-                  {country && <span>• Country: {country}</span>}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {keyMetrics.map(metric => {
-                  const value = metrics[metric.key]?.value;
-                  return value ? (
-                    <div key={metric.id} className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                      <div className="text-xs font-medium text-slate-500 mb-1">{metric.label}</div>
-                      <div className="text-2xl font-bold text-slate-900">{value}</div>
-                      {metrics[metric.key]?.comments && (
-                        <div className="text-xs text-slate-600 mt-2 line-clamp-2">{metrics[metric.key].comments}</div>
-                      )}
-                    </div>
-                  ) : null;
-                })}
-              </div>
-
-              <div className="mt-6 flex gap-3">
-                <Button
-                  onClick={() => setViewMode('table')}
-                  variant="outline"
-                >
-                  Edit Metrics
-                </Button>
-                <Button
-                  onClick={handleExtract}
-                  variant="outline"
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  Extract to Excel
-                </Button>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -356,7 +287,6 @@ export default function SaaSMetricsDashboard() {
             </table>
           </div>
         </div>
-        )}
       </div>
     </div>
   );
