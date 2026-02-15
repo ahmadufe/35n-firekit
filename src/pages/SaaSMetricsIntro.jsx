@@ -65,8 +65,10 @@ export default function SaaSMetricsIntro() {
               <li>Understand the key metrics and how to calculate them</li>
               <li>Tracks these metrics in a consolidated dashboard that ties them together so you can tell what's driving performance</li>
             </ol>
+          </div>
 
-            <p className="text-lg text-slate-700 mt-6 mb-3">To get the best out of it, we recommend the following:</p>
+          <div className="bg-slate-100 rounded-lg p-6 mb-8">
+            <p className="text-lg text-slate-700 mb-3 font-medium">To get the best out of it, we recommend the following:</p>
             <ul className="space-y-2 text-slate-700 ml-6">
               <li>Read the description and logic carefully</li>
               <li>Update it consistently (monthly at minimum)</li>
@@ -91,7 +93,7 @@ export default function SaaSMetricsIntro() {
 
         {user && savedMetrics.length > 0 && (
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
-            <h2 className="text-2xl font-bold text-slate-900 mb-6">Previous Submissions</h2>
+            <h2 className="text-2xl font-bold text-slate-900 mb-6">Your Saved items</h2>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse">
                 <thead>
