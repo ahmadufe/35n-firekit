@@ -240,51 +240,57 @@ export default function SaaSMetricsDashboard() {
             </Button>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="bg-slate-100 border-b-2 border-slate-300">
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 border border-slate-300">#</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 border border-slate-300 w-32">Category</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 border border-slate-300 w-40">Metric</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 border border-slate-300 w-48">Description</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 border border-slate-300 w-48">Calculation formula / method</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 border border-slate-300 bg-yellow-50 w-56">Value</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 border border-slate-300 bg-yellow-50 w-64">Comments</th>
-                </tr>
-              </thead>
-              <tbody>
-                {metricsData.map((metric, index) => (
-                  <tr key={metric.id} className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                    <td className="px-4 py-3 text-sm text-slate-600 border border-slate-200">{metric.id}</td>
-                    <td className="px-4 py-3 text-sm text-slate-600 border border-slate-200">{metric.category}</td>
-                    <td className="px-4 py-3 text-sm font-medium text-slate-900 border border-slate-200">{metric.metric}</td>
-                    <td className="px-4 py-3 text-sm text-slate-600 border border-slate-200">{metric.description}</td>
-                    <td className="px-4 py-3 text-sm text-slate-600 border border-slate-200">{metric.formula}</td>
-                    <td className="px-4 py-3 border border-slate-200 bg-yellow-50">
-                      <Input
-                        value={metrics[metric.id]?.value || ''}
-                        onChange={(e) => handleMetricChange(metric.id, 'value', e.target.value)}
-                        onFocus={() => !user && setShowLoginPrompt(true)}
-                        placeholder="Enter value"
-                        disabled={!user}
-                        className={`text-sm ${!user ? 'bg-slate-100 cursor-not-allowed' : 'bg-white'}`}
-                      />
-                    </td>
-                    <td className="px-4 py-3 border border-slate-200 bg-yellow-50">
-                      <Textarea
-                        value={metrics[metric.id]?.comments || ''}
-                        onChange={(e) => handleMetricChange(metric.id, 'comments', e.target.value)}
-                        onFocus={() => !user && setShowLoginPrompt(true)}
-                        placeholder="Add comments"
-                        disabled={!user}
-                        className={`text-sm min-h-[60px] resize-none ${!user ? 'bg-slate-100 cursor-not-allowed' : 'bg-white'}`}
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="space-y-8">
+            {['Market size & Opportunity', 'Customer base', 'Product / market fit', 'Customer Acquisition', 'Financials', 'Growth & Retention', 'Brand equity & positionning'].map(category => {
+              const categoryMetrics = metricsData.filter(m => m.category === category);
+              return (
+                <div key={category} className="overflow-x-auto">
+                  <h2 className="text-xl font-semibold text-slate-900 mb-4">{category}</h2>
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-slate-100 border-b-2 border-slate-300">
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 border border-slate-300">#</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 border border-slate-300 w-40">Metric</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 border border-slate-300 w-48">Description</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 border border-slate-300 w-48">Calculation formula / method</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 border border-slate-300 bg-yellow-50 w-56">Value</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 border border-slate-300 bg-yellow-50 w-64">Comments</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {categoryMetrics.map((metric, index) => (
+                        <tr key={metric.id} className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                          <td className="px-4 py-3 text-sm text-slate-600 border border-slate-200">{metric.id}</td>
+                          <td className="px-4 py-3 text-sm font-medium text-slate-900 border border-slate-200">{metric.metric}</td>
+                          <td className="px-4 py-3 text-sm text-slate-600 border border-slate-200">{metric.description}</td>
+                          <td className="px-4 py-3 text-sm text-slate-600 border border-slate-200">{metric.formula}</td>
+                          <td className="px-4 py-3 border border-slate-200 bg-yellow-50">
+                            <Input
+                              value={metrics[metric.id]?.value || ''}
+                              onChange={(e) => handleMetricChange(metric.id, 'value', e.target.value)}
+                              onFocus={() => !user && setShowLoginPrompt(true)}
+                              placeholder="Enter value"
+                              disabled={!user}
+                              className={`text-sm ${!user ? 'bg-slate-100 cursor-not-allowed' : 'bg-white'}`}
+                            />
+                          </td>
+                          <td className="px-4 py-3 border border-slate-200 bg-yellow-50">
+                            <Textarea
+                              value={metrics[metric.id]?.comments || ''}
+                              onChange={(e) => handleMetricChange(metric.id, 'comments', e.target.value)}
+                              onFocus={() => !user && setShowLoginPrompt(true)}
+                              placeholder="Add comments"
+                              disabled={!user}
+                              className={`text-sm min-h-[60px] resize-none ${!user ? 'bg-slate-100 cursor-not-allowed' : 'bg-white'}`}
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
