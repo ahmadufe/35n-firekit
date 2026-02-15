@@ -245,7 +245,7 @@ export default function SaaSMetricsDashboard() {
 
           <div className="mb-8">
             <h3 className="text-lg font-semibold text-slate-900 mb-4">Key Metrics Summary</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
               {[
                 { id: 5, label: "# of current customers" },
                 { id: 7, label: "Customer Retention rate" },
@@ -260,9 +260,9 @@ export default function SaaSMetricsDashboard() {
               ].map(metric => {
                 const value = metrics[metric.id]?.value;
                 return (
-                  <div key={metric.id} className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                    <div className="text-xs font-medium text-slate-500 mb-1 line-clamp-2">{metric.label}</div>
-                    <div className="text-xl font-bold text-slate-900">{value || '-'}</div>
+                  <div key={metric.id} className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-lg p-3 hover:shadow-md transition-shadow">
+                    <div className="text-xs font-medium text-slate-500 mb-1 line-clamp-2 min-h-[2rem]">{metric.label}</div>
+                    <div className="text-lg font-bold text-slate-900 truncate">{value || '-'}</div>
                   </div>
                 );
               })}
