@@ -48,7 +48,7 @@ export default function SaaSMetricsIntro() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       <div className="max-w-6xl mx-auto px-6 py-8">
-        <div className="flex items-center gap-4 mb-4">
+        <div className="flex items-center gap-4 mb-6 mt-12 sm:mt-16">
           <Link to={createPageUrl('Dashboard')}>
             <Button variant="ghost" size="icon" className="hover:bg-slate-100">
               <ArrowLeft className="h-5 w-5" />
