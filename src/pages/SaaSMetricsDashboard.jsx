@@ -182,15 +182,16 @@ export default function SaaSMetricsDashboard() {
       />
 
       <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="flex items-center gap-4 mb-4">
+          <Link to={createPageUrl('Dashboard')}>
+            <Button variant="ghost" size="icon" className="hover:bg-slate-100">
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          </Link>
+        </div>
+
         <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <Link to={createPageUrl('Dashboard')}>
-              <Button variant="ghost" size="icon" className="hover:bg-slate-100">
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-            </Link>
-            <h1 className="text-3xl font-bold text-slate-900">SaaS Metrics Dashboard</h1>
-          </div>
+          <h1 className="text-3xl font-bold text-slate-900">SaaS Metrics Dashboard</h1>
           {savedData.length > 0 && (
             <Button
               onClick={() => setViewMode(viewMode === 'dashboard' ? 'table' : 'dashboard')}
