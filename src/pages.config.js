@@ -59,9 +59,9 @@ import DigitalOnboarding from './pages/DigitalOnboarding';
 import ExecutiveDecisionTool from './pages/ExecutiveDecisionTool';
 import Home from './pages/Home';
 import SaaSMetricsDashboard from './pages/SaaSMetricsDashboard';
+import SaaSMetricsIntro from './pages/SaaSMetricsIntro';
 import Scorecard from './pages/Scorecard';
 import UserSettings from './pages/UserSettings';
-import SaaSMetricsIntro from './pages/SaaSMetricsIntro';
 import __Layout from './Layout.jsx';
 
 
@@ -78,9 +78,9 @@ export const PAGES = {
     "ExecutiveDecisionTool": ExecutiveDecisionTool,
     "Home": Home,
     "SaaSMetricsDashboard": SaaSMetricsDashboard,
+    "SaaSMetricsIntro": SaaSMetricsIntro,
     "Scorecard": Scorecard,
     "UserSettings": UserSettings,
-    "SaaSMetricsIntro": SaaSMetricsIntro,
 }
 
 export const pagesConfig = {

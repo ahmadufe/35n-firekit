@@ -87,13 +87,6 @@ export default function SaaSMetricsDashboard() {
         setMetrics(targetData.metrics_data || {});
         setCurrentEditId(editId || null);
       }
-    } else if (savedData.length > 0) {
-      const data = savedData[0];
-      setCompanyName(data.company_name || '');
-      setIndustry(data.industry || '');
-      setCountry(data.country || '');
-      setMetrics(data.metrics_data || {});
-      setCurrentEditId(data.id);
     }
   }, [savedData, location.state]);
 
