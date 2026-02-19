@@ -85,10 +85,10 @@ export default function ToolCard({
   };
 
   const handleClick = () => {
-    if (fileUrl) {
-      window.open(fileUrl, '_blank');
-    } else if (link) {
+    if (link) {
       window.open(link, '_blank');
+    } else if (fileUrl) {
+      window.open(fileUrl, '_blank');
     }
   };
 
