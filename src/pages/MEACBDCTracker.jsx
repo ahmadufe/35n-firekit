@@ -757,8 +757,8 @@ export default function MEACBDCTracker() {
             <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-3">
               CBDC Progress<br />Middle East & Africa
             </h1>
-            <p className="text-slate-600 max-w-2xl leading-relaxed mb-6">
-              Mapping 22 countries by exploration stage, pilots, launches & regulatory posture — with implications for financial institutions, fintechs & policymakers.
+            <p className="text-slate-600 leading-relaxed mb-6 whitespace-nowrap">
+              Mapping 22 countries by exploration stage, pilots, launches & regulatory posture
             </p>
             
             {/* Stats */}

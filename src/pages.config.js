@@ -58,11 +58,11 @@ import DetailedAssessmentTool from './pages/DetailedAssessmentTool';
 import DigitalOnboarding from './pages/DigitalOnboarding';
 import ExecutiveDecisionTool from './pages/ExecutiveDecisionTool';
 import Home from './pages/Home';
+import MEACBDCTracker from './pages/MEACBDCTracker';
 import SaaSMetricsDashboard from './pages/SaaSMetricsDashboard';
 import SaaSMetricsIntro from './pages/SaaSMetricsIntro';
 import Scorecard from './pages/Scorecard';
 import UserSettings from './pages/UserSettings';
-import MEACBDCTracker from './pages/MEACBDCTracker';
 import __Layout from './Layout.jsx';
 
 
@@ -78,11 +78,11 @@ export const PAGES = {
     "DigitalOnboarding": DigitalOnboarding,
     "ExecutiveDecisionTool": ExecutiveDecisionTool,
     "Home": Home,
+    "MEACBDCTracker": MEACBDCTracker,
     "SaaSMetricsDashboard": SaaSMetricsDashboard,
     "SaaSMetricsIntro": SaaSMetricsIntro,
     "Scorecard": Scorecard,
     "UserSettings": UserSettings,
-    "MEACBDCTracker": MEACBDCTracker,
 }
 
 export const pagesConfig = {
