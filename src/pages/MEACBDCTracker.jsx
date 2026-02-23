@@ -930,54 +930,6 @@ export default function MEACBDCTracker() {
           </div>
         )}
 
-        {/* Strategic Implications */}
-        <div className="mt-16 pt-12 border-t-2 border-slate-200">
-          <div className="flex items-center gap-4 mb-8">
-            <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">
-              Strategic Implications
-            </h2>
-            <div className="flex-1 h-px bg-gradient-to-r from-slate-300 to-transparent" />
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-6">
-            <Card className="border-t-4 border-emerald-500">
-              <CardContent className="p-6">
-                <div className="text-3xl mb-3">🏦</div>
-                <h3 className="text-lg font-bold text-slate-900 mb-4">For Financial Institutions</h3>
-                <ul className="space-y-3 text-sm text-slate-700">
-                  <li><strong>Disintermediation risk:</strong> Retail CBDCs (UAE Digital Dirham, Ghana eCedi) threaten deposit bases. IMF models suggest CBDC captures up to 10% of money supply in cash-heavy markets.</li>
-                  <li><strong>Wholesale opportunity:</strong> Wholesale CBDCs (SA Khokha, mBridge) create new DLT infrastructure layers. Banks investing early in settlement technology secure first-mover advantage.</li>
-                  <li><strong>Correspondent banking disruption:</strong> mBridge + bilateral CBDC rails reduce need for USD-clearing correspondent networks.</li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card className="border-t-4 border-amber-500">
-              <CardContent className="p-6">
-                <div className="text-3xl mb-3">⚡</div>
-                <h3 className="text-lg font-bold text-slate-900 mb-4">For Fintechs</h3>
-                <ul className="space-y-3 text-sm text-slate-700">
-                  <li><strong>Don't assume demand (Nigeria lesson):</strong> eNaira's 98.5% inactive wallets prove CBDC infrastructure ≠ automatic market.</li>
-                  <li><strong>Cross-border corridor plays:</strong> Morocco–Egypt–France, Tunisia–France, Gulf–South Asia CBDC pilots create regulated remittance infrastructure.</li>
-                  <li><strong>Programmable money use cases:</strong> Build on-top use cases: agricultural subsidies, trade finance, SME payroll, social benefits.</li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card className="border-t-4 border-blue-500">
-              <CardContent className="p-6">
-                <div className="text-3xl mb-3">🔬</div>
-                <h3 className="text-lg font-bold text-slate-900 mb-4">For Policymakers</h3>
-                <ul className="space-y-3 text-sm text-slate-700">
-                  <li><strong>Nigeria's cautionary design lesson:</strong> Retail CBDC without compelling use case over incumbents fails. Wholesale-first model now emerging as MEA consensus.</li>
-                  <li><strong>Mobile money coexistence:</strong> Africa's CBDC challenge is Kenya (M-Pesa), Ethiopia (Telebirr), Ghana (MTN MoMo). Policy design must define complementarity clearly.</li>
-                  <li><strong>Geopolitics of mBridge:</strong> UAE + Saudi in China-led mBridge MVP creates de-dollarization infrastructure optionality.</li>
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
         {/* Footer */}
         <div className="mt-12 pt-8 border-t border-slate-200 text-center text-xs text-slate-500">
           <p className="leading-relaxed">
