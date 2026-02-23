@@ -749,22 +749,20 @@ export default function MEACBDCTracker() {
             </Button>
           </Link>
           
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-            <div>
-              <div className="flex items-center gap-2 text-xs font-medium text-orange-600 uppercase tracking-wider mb-3">
-                <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
-                Live Intelligence Tracker · MEA Region · Updated Feb 2025
-              </div>
-              <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-3">
-                CBDC Progress<br />Middle East & Africa
-              </h1>
-              <p className="text-slate-600 max-w-2xl leading-relaxed">
-                Mapping 22 countries by exploration stage, pilots, launches & regulatory posture — with implications for financial institutions, fintechs & policymakers.
-              </p>
+          <div>
+            <div className="flex items-center gap-2 text-xs font-medium text-orange-600 uppercase tracking-wider mb-3">
+              <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
+              Live Intelligence Tracker · MEA Region · Updated Feb 2025
             </div>
+            <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-3">
+              CBDC Progress<br />Middle East & Africa
+            </h1>
+            <p className="text-slate-600 max-w-2xl leading-relaxed mb-6">
+              Mapping 22 countries by exploration stage, pilots, launches & regulatory posture — with implications for financial institutions, fintechs & policymakers.
+            </p>
             
             {/* Stats */}
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3 mb-6">
               <div className="bg-white rounded-lg border-2 border-emerald-200 p-4 text-center min-w-[80px]">
                 <div className="text-2xl font-bold text-emerald-600">{stats.launched}</div>
                 <div className="text-xs text-slate-500 uppercase tracking-wide">Launched</div>
