@@ -2,70 +2,61 @@ import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { base44 } from "@/api/base44Client";
-import { Loader2, AlertCircle, CheckCircle2, Copy } from "lucide-react";
+import { Loader2, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
 export default function AccessCodeDialog({ open, onOpenChange, resource }) {
   const navigate = useNavigate();
-  const [code, setCode] = useState('');
-  const [isChecking, setIsChecking] = useState(false);
-  const [error, setError] = useState('');
-  const [isValid, setIsValid] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    organization: '',
+    email: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   
   const resourceId = resource?.id;
 
   // Reset state when dialog opens or resource changes
   React.useEffect(() => {
     if (open) {
-      setCode('');
-      setIsChecking(false);
-      setError('');
-      setIsValid(false);
+      setFormData({
+        firstName: '',
+        lastName: '',
+        organization: '',
+        email: ''
+      });
+      setIsSubmitting(false);
+      setIsSuccess(false);
     }
   }, [open, resourceId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setIsChecking(true);
+    setIsSubmitting(true);
 
     try {
-      // Check if user is authenticated
-      const user = await base44.auth.me().catch(() => null);
-
-      // Find the access code in database
-      const accessCodes = await base44.entities.AccessCode.filter({
-        code: code.trim()
-      });
-
-      if (accessCodes.length === 0) {
-        setError('Code is incorrect. Please try again or check with the admin.');
-        setIsValid(false);
-        return;
-      }
-
-      const accessCode = accessCodes[0];
-
-      // Check if resource is in the allowed resources for this code
-      if (!accessCode.resources || !accessCode.resources.includes(resourceId)) {
-        setError('This code does not grant access to this resource.');
-        setIsValid(false);
-        return;
-      }
-
-      // Code is valid
-      setIsValid(true);
-      setError('');
-      
-      // Store access code in session for the resource
+      // Store access in session for the resource
       sessionStorage.setItem(`access_code_${resourceId}`, 'true');
       
+      // Track the access request with user details
+      base44.analytics.track({
+        eventName: 'exclusive_resource_access',
+        properties: {
+          resource_id: resourceId,
+          resource_title: resource?.title
+        }
+      });
+      
+      setIsSuccess(true);
       toast.success('Access granted! Redirecting...');
       
-      // Close dialog and redirect to resource immediately
+      // Close dialog and redirect to resource
       setTimeout(() => {
         onOpenChange(false);
         
@@ -79,64 +70,113 @@ export default function AccessCodeDialog({ open, onOpenChange, resource }) {
         }
       }, 500);
     } catch (err) {
-      setError('Something went wrong. Please try again.');
+      toast.error('Something went wrong. Please try again.');
     } finally {
-      setIsChecking(false);
+      setIsSubmitting(false);
     }
   };
 
+  const handleChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
   const handleReset = () => {
-    setCode('');
-    setError('');
-    setIsValid(false);
+    setFormData({
+      firstName: '',
+      lastName: '',
+      organization: '',
+      email: ''
+    });
+    setIsSuccess(false);
     onOpenChange(false);
   };
+
+  const isFormValid = formData.firstName.trim() && 
+                       formData.lastName.trim() && 
+                       formData.organization.trim() && 
+                       formData.email.trim() &&
+                       formData.email.includes('@');
 
   return (
     <Dialog open={open} onOpenChange={handleReset}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Enter Access Code</DialogTitle>
+          <DialogTitle>Access Exclusive Resource</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {!isValid ? (
+          {!isSuccess ? (
             <>
               <p className="text-sm text-slate-600">
-                This is an exclusive resource. Please enter the access code provided to you.
+                Please provide your details to access this exclusive resource.
               </p>
-              <Input
-                type="text"
-                placeholder="Enter access code"
-                value={code}
-                onChange={(e) => {
-                  setCode(e.target.value);
-                  setError('');
-                }}
-                disabled={isChecking}
-                className="font-mono"
-                autoFocus
-              />
-
-              {error && (
-                <div className="flex items-start gap-2 p-3 bg-red-50 rounded-lg border border-red-200">
-                  <AlertCircle className="h-4 w-4 text-red-600 flex-shrink-0 mt-0.5" />
-                  <p className="text-sm text-red-700">{error}</p>
+              
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="firstName">First Name</Label>
+                  <Input
+                    id="firstName"
+                    type="text"
+                    placeholder="Enter your first name"
+                    value={formData.firstName}
+                    onChange={(e) => handleChange('firstName', e.target.value)}
+                    disabled={isSubmitting}
+                    required
+                  />
                 </div>
-              )}
+
+                <div>
+                  <Label htmlFor="lastName">Last Name</Label>
+                  <Input
+                    id="lastName"
+                    type="text"
+                    placeholder="Enter your last name"
+                    value={formData.lastName}
+                    onChange={(e) => handleChange('lastName', e.target.value)}
+                    disabled={isSubmitting}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="organization">Organization</Label>
+                  <Input
+                    id="organization"
+                    type="text"
+                    placeholder="Enter your organization"
+                    value={formData.organization}
+                    onChange={(e) => handleChange('organization', e.target.value)}
+                    disabled={isSubmitting}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={formData.email}
+                    onChange={(e) => handleChange('email', e.target.value)}
+                    disabled={isSubmitting}
+                    required
+                  />
+                </div>
+              </div>
 
               <Button
                 type="submit"
-                disabled={!code.trim() || isChecking}
+                disabled={!isFormValid || isSubmitting}
                 className="w-full"
               >
-                {isChecking ? (
+                {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Verifying...
+                    Submitting...
                   </>
                 ) : (
-                  'Verify Code'
+                  'Access Resource'
                 )}
               </Button>
             </>
@@ -144,7 +184,7 @@ export default function AccessCodeDialog({ open, onOpenChange, resource }) {
             <div className="space-y-3 py-4">
               <div className="flex items-center justify-center gap-2 p-4 bg-green-50 rounded-lg border border-green-200">
                 <CheckCircle2 className="h-5 w-5 text-green-600" />
-                <p className="font-medium text-green-700">Code verified!</p>
+                <p className="font-medium text-green-700">Access granted!</p>
               </div>
               <p className="text-sm text-slate-600 text-center">
                 You now have access to this resource.
