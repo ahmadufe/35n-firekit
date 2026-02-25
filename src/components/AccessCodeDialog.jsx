@@ -41,6 +41,16 @@ export default function AccessCodeDialog({ open, onOpenChange, resource }) {
     setIsSubmitting(true);
 
     try {
+      // Save lead to database
+      await base44.entities.Lead.create({
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        organization: formData.organization,
+        email: formData.email,
+        resource_id: resourceId,
+        resource_title: resource?.title
+      });
+
       // Store access in session for the resource
       sessionStorage.setItem(`access_code_${resourceId}`, 'true');
       

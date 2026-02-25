@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, BarChart3, LogIn, Users, FolderOpen, Layout, Lightbulb } from "lucide-react";
+import { ArrowLeft, BarChart3, LogIn, Users, FolderOpen, Layout, Lightbulb, UserPlus } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import InsightsTab from "@/components/admin/InsightsTab";
@@ -15,6 +15,7 @@ import SuggestedResourcesTab from "@/components/admin/SuggestedResourcesTab";
 import FeedbackTab from "@/components/admin/FeedbackTab";
 import AccessRequestsTab from "@/components/admin/AccessRequestsTab";
 import AccessCodesTab from "@/components/admin/AccessCodesTab";
+import LeadsTab from "@/components/admin/LeadsTab";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('manage');
@@ -109,6 +110,10 @@ export default function AdminDashboard() {
               <Lightbulb className="h-4 w-4" />
               Suggestions
             </TabsTrigger>
+            <TabsTrigger value="leads" className="flex items-center gap-2">
+              <UserPlus className="h-4 w-4" />
+              Leads
+            </TabsTrigger>
             </TabsList>
 
           <TabsContent value="insights">
@@ -145,6 +150,10 @@ export default function AdminDashboard() {
 
           <TabsContent value="codes">
             <AccessCodesTab />
+          </TabsContent>
+
+          <TabsContent value="leads">
+            <LeadsTab />
           </TabsContent>
           </Tabs>
       </main>
