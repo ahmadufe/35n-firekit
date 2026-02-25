@@ -22,34 +22,62 @@ export default function AccessCodeDialog({ open, onOpenChange, resource }) {
   
   const resourceId = resource?.id;
 
-  // Reset state when dialog opens or resource changes
+  // Load saved user details and auto-submit if available
   React.useEffect(() => {
     if (open) {
-      setFormData({
-        firstName: '',
-        lastName: '',
-        organization: '',
-        email: ''
-      });
+      // Check if user already has access to this resource
+      const hasAccess = sessionStorage.getItem(`access_code_${resourceId}`);
+      if (hasAccess) {
+        onOpenChange(false);
+        return;
+      }
+
+      // Try to load saved user details
+      const savedDetails = localStorage.getItem('user_lead_details');
+      if (savedDetails) {
+        try {
+          const details = JSON.parse(savedDetails);
+          setFormData(details);
+          // Auto-submit with saved details
+          setTimeout(() => {
+            handleAutoSubmit(details);
+          }, 100);
+        } catch (error) {
+          // If parsing fails, reset to empty form
+          setFormData({
+            firstName: '',
+            lastName: '',
+            organization: '',
+            email: ''
+          });
+        }
+      } else {
+        setFormData({
+          firstName: '',
+          lastName: '',
+          organization: '',
+          email: ''
+        });
+      }
       setIsSubmitting(false);
       setIsSuccess(false);
     }
   }, [open, resourceId]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
+  const processAccess = async (details) => {
     try {
       // Save lead to database
       await base44.entities.Lead.create({
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        organization: formData.organization,
-        email: formData.email,
+        first_name: details.firstName,
+        last_name: details.lastName,
+        organization: details.organization,
+        email: details.email,
         resource_id: resourceId,
         resource_title: resource?.title
       });
+
+      // Save user details for future use
+      localStorage.setItem('user_lead_details', JSON.stringify(details));
 
       // Store access in session for the resource
       sessionStorage.setItem(`access_code_${resourceId}`, 'true');
@@ -81,6 +109,28 @@ export default function AccessCodeDialog({ open, onOpenChange, resource }) {
       }, 500);
     } catch (err) {
       toast.error('Something went wrong. Please try again.');
+      throw err;
+    }
+  };
+
+  const handleAutoSubmit = async (details) => {
+    setIsSubmitting(true);
+    try {
+      await processAccess(details);
+    } catch (err) {
+      // If auto-submit fails, show the form
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      await processAccess(formData);
+    } catch (err) {
+      // Error already handled in processAccess
     } finally {
       setIsSubmitting(false);
     }
