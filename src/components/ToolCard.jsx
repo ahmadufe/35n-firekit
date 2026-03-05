@@ -301,7 +301,7 @@ export default function ToolCard({
           <div className="mt-auto">
             <div className="flex items-center justify-between">
               <div className={`flex items-center font-medium text-sm group-hover:translate-x-2 transition-transform duration-300 ${isComingSoon ? 'text-slate-400 opacity-60' : 'text-slate-900'}`}>
-                Access
+                Get for free
                 <ArrowRight className="ml-2 h-4 w-4" />
               </div>
               {showBookmark && (
