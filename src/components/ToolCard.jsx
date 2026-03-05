@@ -138,13 +138,13 @@ export default function ToolCard({
       <div onClick={actualClickHandler} className="cursor-pointer h-full">
          <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col`}>
          
-         {/* Cover Image */}
-         <div className={`relative overflow-hidden bg-gradient-to-br ${getGradient(resourceId)} flex-shrink-0`} style={{ aspectRatio: '1080/1920' }}>
+         {/* Cover Image Placeholder */}
+         <div className={`relative h-40 overflow-hidden bg-gradient-to-br ${getGradient(resourceId)} flex-shrink-0`}>
            {coverImage ? (
              <img src={coverImage} alt={title} className="w-full h-full object-cover" />
            ) : (
              <div className="absolute inset-0 flex items-center justify-center opacity-20">
-               <Icon className="h-16 w-16 text-white" />
+               <Icon className="h-20 w-20 text-white" />
              </div>
            )}
            {comingSoon && !hasAccessCode && (
@@ -260,13 +260,13 @@ export default function ToolCard({
    <CardWrapper {...wrapperProps} onClick={cardClickHandler} className="h-full">
      <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col cursor-pointer`}>
 
-       {/* Cover Image */}
-       <div className={`relative overflow-hidden bg-gradient-to-br ${getGradient(resourceId)} flex-shrink-0`} style={{ aspectRatio: '1080/1920' }}>
+       {/* Cover Image Placeholder */}
+       <div className={`relative h-40 overflow-hidden bg-gradient-to-br ${getGradient(resourceId)} flex-shrink-0`}>
          {coverImage ? (
            <img src={coverImage} alt={title} className="w-full h-full object-cover" />
          ) : (
            <div className="absolute inset-0 flex items-center justify-center opacity-20">
-             <Icon className="h-16 w-16 text-white" />
+             <Icon className="h-20 w-20 text-white" />
            </div>
          )}
          {shouldBlock && (

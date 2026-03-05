@@ -758,7 +758,6 @@ export default function Dashboard() {
                   type={tool.asset_type || tool.sectionTitle}
                   topics={tool.topics || []}
                   resourceId={tool.id}
-                  coverImage={tool.cover_image}
                 />
               );
             })}
