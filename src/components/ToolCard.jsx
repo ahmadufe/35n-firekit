@@ -144,7 +144,7 @@ export default function ToolCard({
              <img src={coverImage} alt={title} className="absolute inset-0 w-full h-full object-cover" />
            ) : (
              <div className="absolute inset-0 flex items-center justify-center opacity-20">
-               <Icon className="h-20 w-20 text-white" />
+               <Icon className="h-24 w-24 text-white" />
              </div>
            )}
            {comingSoon && !hasAccessCode && (
