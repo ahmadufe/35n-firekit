@@ -198,6 +198,10 @@ export default function Dashboard() {
     if (pendingResource) {
       navigateToResource(pendingResource);
       setPendingResource(null);
+    } else if (sharedResourceId) {
+      // Navigate to the shared resource after lead submission
+      const sharedTool = allTools.find(t => t.id === sharedResourceId);
+      if (sharedTool) navigateToResource(sharedTool);
     }
   };
 
