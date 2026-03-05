@@ -109,20 +109,8 @@ export default function ToolCard({
     }
   };
 
-  // Check access code for exclusive resources
-  React.useEffect(() => {
-    if (comingSoon && resourceId) {
-      const hasAccess = sessionStorage.getItem(`access_code_${resourceId}`);
-      if (hasAccess) {
-        // Resource can be accessed
-      }
-    }
-  }, [comingSoon, resourceId]);
-
   // If there's a file or link, use div with onClick; otherwise use Link
   if (fileUrl || link) {
-    // Check if user has access to exclusive resource
-    const hasAccessCode = comingSoon && resourceId ? sessionStorage.getItem(`access_code_${resourceId}`) : null;
     
     const actualClickHandler = () => {
       if (comingSoon) {
