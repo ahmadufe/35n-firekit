@@ -53,7 +53,6 @@ import AdminDashboard from './pages/AdminDashboard';
 import Bookmarks from './pages/Bookmarks';
 import BuildVSBuyMatrix from './pages/BuildVSBuyMatrix';
 import CloudRegulationsMap from './pages/CloudRegulationsMap';
-import Dashboard from './pages/Dashboard';
 import DetailedAssessmentTool from './pages/DetailedAssessmentTool';
 import DigitalOnboarding from './pages/DigitalOnboarding';
 import ExecutiveDecisionTool from './pages/ExecutiveDecisionTool';
@@ -63,6 +62,7 @@ import SaaSMetricsDashboard from './pages/SaaSMetricsDashboard';
 import SaaSMetricsIntro from './pages/SaaSMetricsIntro';
 import Scorecard from './pages/Scorecard';
 import UserSettings from './pages/UserSettings';
+import Dashboard from './pages/Dashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -73,7 +73,6 @@ export const PAGES = {
     "Bookmarks": Bookmarks,
     "BuildVSBuyMatrix": BuildVSBuyMatrix,
     "CloudRegulationsMap": CloudRegulationsMap,
-    "Dashboard": Dashboard,
     "DetailedAssessmentTool": DetailedAssessmentTool,
     "DigitalOnboarding": DigitalOnboarding,
     "ExecutiveDecisionTool": ExecutiveDecisionTool,
@@ -83,6 +82,7 @@ export const PAGES = {
     "SaaSMetricsIntro": SaaSMetricsIntro,
     "Scorecard": Scorecard,
     "UserSettings": UserSettings,
+    "Dashboard": Dashboard,
 }
 
 export const pagesConfig = {
