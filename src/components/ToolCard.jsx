@@ -5,8 +5,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Lock, Share2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { base44 } from "@/api/base44Client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 const PLACEHOLDER_GRADIENTS = [
