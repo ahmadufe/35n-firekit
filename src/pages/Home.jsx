@@ -1,28 +1,11 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
-import BrevoLeadDialog, { hasSubmittedLead } from '@/components/BrevoLeadDialog';
 
 Home.public = true;
 
 export default function Home() {
-  const navigate = useNavigate();
-  const [showLeadDialog, setShowLeadDialog] = useState(false);
-
-  const handleExploreClick = () => {
-    if (hasSubmittedLead()) {
-      navigate(createPageUrl('Dashboard'));
-    } else {
-      setShowLeadDialog(true);
-    }
-  };
-
-  const handleLeadSuccess = () => {
-    setShowLeadDialog(false);
-    navigate(createPageUrl('Dashboard'));
-  };
-
   return (
     <div
       className="min-h-screen relative"
@@ -50,16 +33,15 @@ export default function Home() {
             Practical insights, tools & frameworks for leaders, founders & innovators building great things
           </p>
 
-          <Button
-            size="lg"
-            onClick={handleExploreClick}
-            className="bg-white text-black hover:bg-slate-200 text-2xl px-10 py-4 h-auto font-semibold rounded-full">
-            Explore
-          </Button>
+          <Link to={createPageUrl('Dashboard')}>
+            <Button
+              size="lg"
+              className="bg-white text-black hover:bg-slate-200 text-2xl px-10 py-4 h-auto font-semibold rounded-full">
+              Explore
+            </Button>
+          </Link>
         </div>
       </div>
-
-      <BrevoLeadDialog open={showLeadDialog} onSuccess={handleLeadSuccess} />
     </div>
   );
 }
