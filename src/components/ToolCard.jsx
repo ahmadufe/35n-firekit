@@ -257,14 +257,28 @@ export default function ToolCard({
   } : undefined;
 
   return (
-    <CardWrapper {...wrapperProps} onClick={cardClickHandler} className="h-full">
-      <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col cursor-pointer`}>
-         <div className={`absolute inset-0 bg-gradient-to-br ${comingSoon ? 'from-orange-50 to-orange-50/50' : isComingSoon ? 'from-sky-100 to-sky-50' : 'from-slate-50 to-white'}`} />
-        <div className="absolute top-0 right-0 w-32 h-32 bg-slate-100 rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700" />
+   <CardWrapper {...wrapperProps} onClick={cardClickHandler} className="h-full">
+     <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col cursor-pointer`}>
 
-        <CardContent className="relative p-6 flex flex-col h-full">
-          {/* Header: Icon, Type, and Exclusive Badge */}
-          <div className="flex items-center justify-between mb-3">
+       {/* Cover Image Placeholder */}
+       <div className={`relative h-40 overflow-hidden bg-gradient-to-br ${getGradient(resourceId)} flex-shrink-0`}>
+         {coverImage ? (
+           <img src={coverImage} alt={title} className="w-full h-full object-cover" />
+         ) : (
+           <div className="absolute inset-0 flex items-center justify-center opacity-20">
+             <Icon className="h-20 w-20 text-white" />
+           </div>
+         )}
+         {shouldBlock && (
+           <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+             <Lock className="h-8 w-8 text-white opacity-80" />
+           </div>
+         )}
+       </div>
+
+       <CardContent className="relative p-5 flex flex-col h-full">
+         {/* Header: Icon, Type, and Exclusive Badge */}
+         <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <div className={`p-2 rounded-lg bg-slate-900`}>
                 <Icon className={`h-4 w-4 text-white`} />
