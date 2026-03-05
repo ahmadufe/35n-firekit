@@ -54,6 +54,8 @@ export default function Dashboard() {
   const [selectedResource, setSelectedResource] = useState(null);
   const [showLeadDialog, setShowLeadDialog] = useState(false);
   const [pendingResource, setPendingResource] = useState(null);
+  const urlParams = new URLSearchParams(window.location.search);
+  const sharedResourceId = urlParams.get('shared_resource');
   const [leadSubmitted, setLeadSubmitted] = useState(hasSubmittedLead());
   const queryClient = useQueryClient();
 
