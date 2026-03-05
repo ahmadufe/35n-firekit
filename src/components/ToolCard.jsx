@@ -41,7 +41,6 @@ export default function ToolCard({
   showBookmark = true,
   coverImage
 }) {
-  const queryClient = useQueryClient();
 
   const handleShareClick = (e) => {
     e.preventDefault();
