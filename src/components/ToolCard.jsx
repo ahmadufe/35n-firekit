@@ -125,10 +125,8 @@ export default function ToolCard({
     const hasAccessCode = comingSoon && resourceId ? sessionStorage.getItem(`access_code_${resourceId}`) : null;
     
     const actualClickHandler = () => {
-      if (comingSoon && !hasAccessCode) {
-        if (onExclusiveClick) {
-          onExclusiveClick();
-        }
+      if (comingSoon) {
+        if (onExclusiveClick) onExclusiveClick();
         return;
       }
       handleClick();
