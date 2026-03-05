@@ -238,20 +238,15 @@ export default function ToolCard({
                 Get for free
                 <ArrowRight className="ml-2 h-4 w-4" />
               </div>
-              {showBookmark && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleBookmarkClick}
-                  className="h-8 w-8 hover:bg-slate-200 z-10"
-                >
-                  {isBookmarked ? (
-                    <BookmarkCheck className="h-4 w-4 text-slate-900 fill-slate-900" />
-                  ) : (
-                    <Bookmark className="h-4 w-4 text-slate-500" />
-                  )}
-                </Button>
-              )}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleShareClick}
+                className="h-8 w-8 hover:bg-slate-200 z-10"
+                title="Share this resource"
+              >
+                <Share2 className="h-4 w-4 text-slate-500" />
+              </Button>
             </div>
           </div>
         </CardContent>
