@@ -22,7 +22,7 @@ import ThankYouDialog from "@/components/ThankYouDialog";
 import FeedbackDialog from "@/components/FeedbackDialog";
 import FeedbackThankYouDialog from "@/components/FeedbackThankYouDialog";
 import AccessRequestDialog from "@/components/AccessRequestDialog";
-import AccessCodeDialog from "@/components/AccessCodeDialog";
+import BrevoLeadDialog, { hasSubmittedLead } from "@/components/BrevoLeadDialog";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
