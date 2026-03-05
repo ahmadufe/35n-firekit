@@ -75,7 +75,7 @@ export default function BrevoLeadDialog({ open, onSuccess, onClose }) {
   };
 
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen && onClose) onClose(); }}>
       <DialogContent className="max-w-md p-0 overflow-hidden" hideCloseButton>
         {/* Header */}
         <div className="bg-black px-8 pt-8 pb-6 text-white">
