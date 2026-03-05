@@ -287,7 +287,7 @@ export default function ToolCard({
             <div className="flex flex-wrap gap-1.5 mb-3 min-h-[1.5rem]">
               {topics.slice(0, 3).map((topic, index) => (
                 <span key={index} className="text-xs text-blue-600 font-medium">
-                  #{topic.toLowerCase().replace(/\s+/g, '')}
+                  {topic}
                 </span>
               ))}
               {topics.length > 3 && (
