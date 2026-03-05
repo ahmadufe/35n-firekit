@@ -45,60 +45,16 @@ export default function ToolCard({
 }) {
   const queryClient = useQueryClient();
 
-  const { data: user } = useQuery({
-    queryKey: ['currentUser'],
-    queryFn: async () => {
-      try {
-        return await base44.auth.me();
-      } catch (error) {
-        return null;
-      }
-    }
-  });
-
-  const { data: bookmarks = [] } = useQuery({
-    queryKey: ['bookmarks', user?.email],
-    queryFn: () => base44.entities.Bookmark.filter({ user_email: user?.email }),
-    enabled: !!user?.email && showBookmark
-  });
-
-  const isBookmarked = bookmarks.some(b => b.resource_id === resourceId);
-
-  const bookmarkMutation = useMutation({
-    mutationFn: async () => {
-      if (isBookmarked) {
-        const bookmark = bookmarks.find(b => b.resource_id === resourceId);
-        await base44.entities.Bookmark.delete(bookmark.id);
-      } else {
-        await base44.entities.Bookmark.create({
-          user_email: user.email,
-          resource_id: resourceId,
-          resource_title: title,
-          resource_description: description,
-          resource_icon: Icon.name || 'ClipboardCheck',
-          resource_type: type,
-          resource_topics: topics,
-          resource_page: href?.includes('?') ? href.split('?')[0].replace('/app/', '') : href?.replace('/app/', ''),
-          resource_file_url: fileUrl || null,
-          resource_link: link || null,
-          resource_coming_soon: comingSoon
-        });
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bookmarks'] });
-      toast.success(isBookmarked ? 'Bookmark removed' : 'Bookmark added');
-    }
-  });
-
-  const handleBookmarkClick = (e) => {
+  const handleShareClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!user) {
-      toast.error('Please sign in to save this resource in your bookmarks');
-      return;
-    }
-    bookmarkMutation.mutate();
+    const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/Dashboard');
+    const shareUrl = `${window.location.origin}/Dashboard?shared_resource=${resourceId}`;
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      toast.success('Share link copied to clipboard!');
+    }).catch(() => {
+      toast.error('Could not copy link');
+    });
   };
 
   const handleClick = () => {
