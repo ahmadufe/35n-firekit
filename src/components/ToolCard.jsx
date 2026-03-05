@@ -139,9 +139,9 @@ export default function ToolCard({
          <Card className={`group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col`}>
          
          {/* Cover Image Placeholder */}
-         <div className={`relative h-40 overflow-hidden bg-gradient-to-br ${getGradient(resourceId)} flex-shrink-0`}>
+         <div className={`relative w-full overflow-hidden bg-gradient-to-br ${getGradient(resourceId)} flex-shrink-0`} style={{paddingBottom: '56.25%'}}>
            {coverImage ? (
-             <img src={coverImage} alt={title} className="w-full h-full object-cover" />
+             <img src={coverImage} alt={title} className="absolute inset-0 w-full h-full object-cover" />
            ) : (
              <div className="absolute inset-0 flex items-center justify-center opacity-20">
                <Icon className="h-20 w-20 text-white" />
