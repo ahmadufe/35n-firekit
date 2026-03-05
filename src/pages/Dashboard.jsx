@@ -120,14 +120,16 @@ export default function Dashboard() {
 
   // Handle shared resource link
   useEffect(() => {
-    if (sharedResourceId && !leadSubmitted && !publishedConfig) return; // wait for data
-    if (sharedResourceId && !leadSubmitted) {
+    if (!sharedResourceId) return;
+    if (!leadSubmitted) {
+      // Show lead form, then navigate after submission
       setShowLeadDialog(true);
-    } else if (sharedResourceId && leadSubmitted && publishedConfig) {
+    } else if (publishedConfig && allTools.length > 0) {
+      // Already submitted lead, navigate directly
       const sharedTool = allTools.find(t => t.id === sharedResourceId);
       if (sharedTool) navigateToResource(sharedTool);
     }
-  }, [sharedResourceId, leadSubmitted, publishedConfig]);
+  }, [sharedResourceId, leadSubmitted, publishedConfig, allTools.length]);
 
   // Track login
   useEffect(() => {
