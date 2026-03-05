@@ -54,6 +54,7 @@ export default function Dashboard() {
   const [selectedResource, setSelectedResource] = useState(null);
   const [showLeadDialog, setShowLeadDialog] = useState(false);
   const [pendingResource, setPendingResource] = useState(null);
+  const [leadSubmitted, setLeadSubmitted] = useState(hasSubmittedLead());
   const queryClient = useQueryClient();
 
   const { data: user, isLoading: userLoading } = useQuery({
