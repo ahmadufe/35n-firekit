@@ -192,6 +192,7 @@ export default function Dashboard() {
 
   const handleLeadSuccess = () => {
     setShowLeadDialog(false);
+    setLeadSubmitted(true);
     if (pendingResource) {
       navigateToResource(pendingResource);
       setPendingResource(null);
