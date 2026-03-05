@@ -9,6 +9,22 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+const PLACEHOLDER_GRADIENTS = [
+  'from-violet-400 to-purple-600',
+  'from-blue-400 to-cyan-600',
+  'from-emerald-400 to-teal-600',
+  'from-orange-400 to-rose-500',
+  'from-pink-400 to-fuchsia-600',
+  'from-amber-400 to-orange-500',
+  'from-sky-400 to-blue-600',
+  'from-green-400 to-emerald-600',
+];
+
+function getGradient(id) {
+  const index = id ? id.charCodeAt(id.length - 1) % PLACEHOLDER_GRADIENTS.length : 0;
+  return PLACEHOLDER_GRADIENTS[index];
+}
+
 export default function ToolCard({ 
   title, 
   description, 
@@ -24,7 +40,8 @@ export default function ToolCard({
   onClick,
   onExclusiveClick,
   resourceId,
-  showBookmark = true
+  showBookmark = true,
+  coverImage
 }) {
   const queryClient = useQueryClient();
 
