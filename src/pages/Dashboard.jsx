@@ -561,24 +561,46 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Tools grouped by section */}
-        {publishedConfig?.sections?.filter(section => section.tools?.length > 0).map((section) => {
+        {/* Tools grouped by asset_type category */}
+        {(() => {
           const iconMap = { ClipboardCheck, BookOpen, Wrench };
-          return (
-            <div key={section.id} className="mb-14">
+          const categoryOrder = ['Tools', 'Insights', 'Playbooks', 'Deep dive series'];
+          
+          // Group all tools by asset_type, falling back to section title
+          const grouped = {};
+          publishedConfig?.sections?.forEach(section => {
+            (section.tools || []).forEach(tool => {
+              const category = tool.asset_type || section.title || 'Other';
+              if (!grouped[category]) grouped[category] = [];
+              grouped[category].push({ ...tool, sectionTitle: section.title, sectionId: section.id, sectionComingSoon: section.coming_soon });
+            });
+          });
+
+          // Sort by known order, then alphabetically for unknown
+          const sortedCategories = Object.keys(grouped).sort((a, b) => {
+            const ai = categoryOrder.indexOf(a);
+            const bi = categoryOrder.indexOf(b);
+            if (ai === -1 && bi === -1) return a.localeCompare(b);
+            if (ai === -1) return 1;
+            if (bi === -1) return -1;
+            return ai - bi;
+          });
+
+          return sortedCategories.map(category => (
+            <div key={category} className="mb-14">
               <h2 className="text-2xl font-semibold text-slate-900 mb-6 pb-3 border-b border-slate-200">
-                {section.title}
+                {category}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {section.tools.map((tool) => {
+                {grouped[category].map((tool) => {
                   const IconComponent = iconMap[tool.icon] || ClipboardCheck;
-                  const isToolOrDeepDive = section.id === 'deep-dive' || section.title?.toLowerCase().includes('tool');
+                  const isToolOrDeepDive = tool.sectionId === 'deep-dive' || tool.sectionTitle?.toLowerCase().includes('tool');
                   const needsLoginCheck = !user && isToolOrDeepDive && tool.page;
                   return (
                     <ToolCard
                       key={tool.id}
                       onClick={needsLoginCheck ? () => handleResourceClick(tool) : undefined}
-                      onExclusiveClick={() => handleExclusiveResourceClick({ ...tool, sectionTitle: section.title, sectionId: section.id })}
+                      onExclusiveClick={() => handleExclusiveResourceClick(tool)}
                       title={tool.title}
                       description={tool.description}
                       icon={IconComponent}
@@ -587,8 +609,8 @@ export default function Dashboard() {
                       isComingSoon={tool.is_coming_soon}
                       fileUrl={tool.file_url}
                       link={tool.link}
-                      actionText={getActionText(section.id)}
-                      type={tool.asset_type || section.title}
+                      actionText={getActionText(tool.sectionId)}
+                      type={tool.asset_type || tool.sectionTitle}
                       topics={tool.topics || []}
                       resourceId={tool.id}
                     />
@@ -596,8 +618,8 @@ export default function Dashboard() {
                 })}
               </div>
             </div>
-          );
-        })}
+          ));
+        })()}
       </main>
 
       {/* Footer */}
