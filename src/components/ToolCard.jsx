@@ -235,23 +235,17 @@ export default function ToolCard({
          }
 
   // For pages or coming soon
-   const hasAccessCode = comingSoon && resourceId ? sessionStorage.getItem(`access_code_${resourceId}`) : null;
-   const shouldBlock = comingSoon && !hasAccessCode;
+   const shouldBlock = comingSoon;
 
-   // If not exclusive (comingSoon=false), allow direct navigation
    const CardWrapper = shouldBlock ? 'div' : Link;
    const wrapperProps = shouldBlock ? {} : { to: href };
 
   const cardClickHandler = shouldBlock ? (e) => {
     e.preventDefault();
-    if (onExclusiveClick) {
-      onExclusiveClick();
-    }
+    if (onExclusiveClick) onExclusiveClick();
   } : onClick ? (e) => {
-    if (!hasAccessCode) {
-      e.preventDefault();
-      onClick();
-    }
+    e.preventDefault();
+    onClick();
   } : undefined;
 
   return (
