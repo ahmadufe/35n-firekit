@@ -154,15 +154,9 @@ export default function ToolCard({
              )}
            </div>
            {comingSoon && (
-             hasAccessCode ? (
-               <Badge className="bg-green-100 text-green-700 border-green-200 text-xs px-2 py-0.5">
-                 Unlocked
-               </Badge>
-             ) : (
                <Badge className="bg-orange-100 text-orange-700 border-orange-200 text-xs px-2 py-0.5">
                  Exclusive
                </Badge>
-             )
            )}
            {isComingSoon && (
              <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-xs px-2 py-0.5">
