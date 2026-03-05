@@ -758,12 +758,12 @@ export default function Dashboard() {
                 <ToolCard
                   key={tool.id}
                   onClick={needsLoginCheck ? () => handleResourceClick(tool) : undefined}
-                  onExclusiveClick={isExclusive ? () => handleExclusiveResourceClick(tool) : undefined}
+                  onExclusiveClick={() => handleExclusiveResourceClick(tool)}
                   title={tool.title}
                   description={tool.description}
                   icon={IconComponent}
                   href={tool.page ? createPageUrl(tool.page) : '#'}
-                  comingSoon={isExclusive && !hasSubmittedLead()}
+                  comingSoon={!hasSubmittedLead()}
                   isComingSoon={tool.is_coming_soon}
                   fileUrl={tool.file_url}
                   link={tool.link}
