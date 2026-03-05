@@ -170,17 +170,31 @@ export default function Dashboard() {
   };
 
   const handleExclusiveResourceClick = (resource) => {
-    // For authenticated users, check if they already have access code in session
-    if (user) {
-      const hasAccessCode = sessionStorage.getItem(`access_code_${resource.id}`);
-      if (hasAccessCode) {
-        return; // Already have access, let the card handle the navigation
-      }
+    if (hasSubmittedLead()) {
+      // Already gave details — navigate directly
+      navigateToResource(resource);
+    } else {
+      setPendingResource(resource);
+      setShowLeadDialog(true);
     }
-    
-    // Show access code dialog for everyone (authenticated or not)
-    setSelectedExclusiveResource(resource);
-    setShowAccessCodeDialog(true);
+  };
+
+  const navigateToResource = (resource) => {
+    if (resource.page) {
+      window.location.href = createPageUrl(resource.page);
+    } else if (resource.file_url) {
+      window.open(resource.file_url, '_blank');
+    } else if (resource.link) {
+      window.open(resource.link, '_blank');
+    }
+  };
+
+  const handleLeadSuccess = () => {
+    setShowLeadDialog(false);
+    if (pendingResource) {
+      navigateToResource(pendingResource);
+      setPendingResource(null);
+    }
   };
 
   const handleSuggestResource = () => {
