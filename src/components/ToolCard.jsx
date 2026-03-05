@@ -44,10 +44,9 @@ export default function ToolCard({
   const handleShareClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/Dashboard');
-    const shareUrl = `${window.location.origin}/Dashboard?shared_resource=${resourceId}`;
+    const shareUrl = `${window.location.origin}${window.location.pathname}?shared_resource=${resourceId}`;
     navigator.clipboard.writeText(shareUrl).then(() => {
-      toast.success('Share link copied to clipboard!');
+      toast.success('Share link copied! Anyone with this link can access this resource.');
     }).catch(() => {
       toast.error('Could not copy link');
     });
