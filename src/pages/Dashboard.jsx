@@ -564,7 +564,7 @@ export default function Dashboard() {
         {/* Tools grouped by asset_type category */}
         {(() => {
           const iconMap = { ClipboardCheck, BookOpen, Wrench };
-          const categoryOrder = ['Tools', 'Insights', 'Playbooks', 'Deep dive series'];
+          const categoryOrder = ['Insights', 'Tools', 'Playbooks', 'Deep dive series'];
           
           // Group all tools by asset_type, falling back to section title
           const grouped = {};
