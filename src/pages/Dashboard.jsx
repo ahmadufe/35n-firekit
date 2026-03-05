@@ -763,7 +763,7 @@ export default function Dashboard() {
                   description={tool.description}
                   icon={IconComponent}
                   href={tool.page ? createPageUrl(tool.page) : '#'}
-                  comingSoon={isExclusive}
+                  comingSoon={isExclusive && !hasSubmittedLead()}
                   isComingSoon={tool.is_coming_soon}
                   fileUrl={tool.file_url}
                   link={tool.link}
