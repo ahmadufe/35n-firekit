@@ -439,6 +439,7 @@ export default function Dashboard() {
       <BrevoLeadDialog
         open={showLeadDialog}
         onSuccess={handleLeadSuccess}
+        onClose={() => { setShowLeadDialog(false); setPendingResource(null); }}
       />
 
       {/* Header */}
