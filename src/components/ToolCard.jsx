@@ -133,7 +133,7 @@ export default function ToolCard({
                <Icon className="h-24 w-24 text-white" />
              </div>
            )}
-           {comingSoon && !hasAccessCode && (
+           {comingSoon && (
              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
                <Lock className="h-8 w-8 text-white opacity-80" />
              </div>
