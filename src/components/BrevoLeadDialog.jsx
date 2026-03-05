@@ -15,7 +15,7 @@ export function hasSubmittedLead() {
   }
 }
 
-export default function BrevoLeadDialog({ open, onSuccess }) {
+export default function BrevoLeadDialog({ open, onSuccess, onClose }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
