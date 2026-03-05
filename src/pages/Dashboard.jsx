@@ -118,6 +118,17 @@ export default function Dashboard() {
     }
   }, [user, hasShownTimedPrompt]);
 
+  // Handle shared resource link
+  useEffect(() => {
+    if (sharedResourceId && !leadSubmitted && !publishedConfig) return; // wait for data
+    if (sharedResourceId && !leadSubmitted) {
+      setShowLeadDialog(true);
+    } else if (sharedResourceId && leadSubmitted && publishedConfig) {
+      const sharedTool = allTools.find(t => t.id === sharedResourceId);
+      if (sharedTool) navigateToResource(sharedTool);
+    }
+  }, [sharedResourceId, leadSubmitted, publishedConfig]);
+
   // Track login
   useEffect(() => {
     const trackLogin = async () => {
