@@ -436,10 +436,9 @@ export default function Dashboard() {
         onOpenChange={setShowAccessRequestDialog}
       />
 
-      <AccessCodeDialog
-        open={showAccessCodeDialog}
-        onOpenChange={setShowAccessCodeDialog}
-        resource={selectedExclusiveResource}
+      <BrevoLeadDialog
+        open={showLeadDialog}
+        onSuccess={handleLeadSuccess}
       />
 
       {/* Header */}
