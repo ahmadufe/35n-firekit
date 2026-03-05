@@ -561,53 +561,43 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Tools Grid */}
-        {filteredTools.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredTools.map((tool) => {
-              const iconMap = {
-                ClipboardCheck,
-                BookOpen,
-                Wrench
-              };
-              const IconComponent = iconMap[tool.icon] || ClipboardCheck;
-
-              const isToolOrDeepDive = tool.sectionId === 'deep-dive' || 
-                                       tool.sectionTitle?.toLowerCase().includes('tool');
-              const needsLoginCheck = !user && isToolOrDeepDive && tool.page;
-
-              const isExclusive = tool.coming_soon || tool.sectionComingSoon;
-              
-              return (
-                <ToolCard
-                  key={tool.id}
-                  onClick={needsLoginCheck ? () => handleResourceClick(tool) : undefined}
-                  onExclusiveClick={() => handleExclusiveResourceClick(tool)}
-                  title={tool.title}
-                  description={tool.description}
-                  icon={IconComponent}
-                  href={tool.page ? createPageUrl(tool.page) : '#'}
-                  comingSoon={!hasSubmittedLead()}
-                  isComingSoon={tool.is_coming_soon}
-                  fileUrl={tool.file_url}
-                  link={tool.link}
-                  actionText={getActionText(tool.sectionId)}
-                  type={tool.asset_type || tool.sectionTitle}
-                  topics={tool.topics || []}
-                  resourceId={tool.id}
-                />
-              );
-            })}
-          </div>
-        ) : (
-          <div className="text-center py-16">
-            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Search className="h-8 w-8 text-slate-400" />
+        {/* Tools grouped by section */}
+        {publishedConfig?.sections?.filter(section => section.tools?.length > 0).map((section) => {
+          const iconMap = { ClipboardCheck, BookOpen, Wrench };
+          return (
+            <div key={section.id} className="mb-14">
+              <h2 className="text-2xl font-semibold text-slate-900 mb-6 pb-3 border-b border-slate-200">
+                {section.title}
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {section.tools.map((tool) => {
+                  const IconComponent = iconMap[tool.icon] || ClipboardCheck;
+                  const isToolOrDeepDive = section.id === 'deep-dive' || section.title?.toLowerCase().includes('tool');
+                  const needsLoginCheck = !user && isToolOrDeepDive && tool.page;
+                  return (
+                    <ToolCard
+                      key={tool.id}
+                      onClick={needsLoginCheck ? () => handleResourceClick(tool) : undefined}
+                      onExclusiveClick={() => handleExclusiveResourceClick({ ...tool, sectionTitle: section.title, sectionId: section.id })}
+                      title={tool.title}
+                      description={tool.description}
+                      icon={IconComponent}
+                      href={tool.page ? createPageUrl(tool.page) : '#'}
+                      comingSoon={!hasSubmittedLead()}
+                      isComingSoon={tool.is_coming_soon}
+                      fileUrl={tool.file_url}
+                      link={tool.link}
+                      actionText={getActionText(section.id)}
+                      type={tool.asset_type || section.title}
+                      topics={tool.topics || []}
+                      resourceId={tool.id}
+                    />
+                  );
+                })}
+              </div>
             </div>
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">No results found</h3>
-            <p className="text-slate-500">Try adjusting your search or filters</p>
-          </div>
-        )}
+          );
+        })}
       </main>
 
       {/* Footer */}
