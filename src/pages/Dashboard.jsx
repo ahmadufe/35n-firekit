@@ -118,18 +118,19 @@ export default function Dashboard() {
     }
   }, [user, hasShownTimedPrompt]);
 
-  // Handle shared resource link
+  // Handle shared resource link (allTools derived inline to avoid hoisting issues)
   useEffect(() => {
     if (!sharedResourceId) return;
     if (!leadSubmitted) {
-      // Show lead form, then navigate after submission
       setShowLeadDialog(true);
-    } else if (publishedConfig && allTools.length > 0) {
-      // Already submitted lead, navigate directly
-      const sharedTool = allTools.find(t => t.id === sharedResourceId);
+    } else if (publishedConfig) {
+      const tools = publishedConfig.sections
+        ? publishedConfig.sections.flatMap(s => (s.tools || []).map(t => ({ ...t, sectionId: s.id })))
+        : [];
+      const sharedTool = tools.find(t => t.id === sharedResourceId);
       if (sharedTool) navigateToResource(sharedTool);
     }
-  }, [sharedResourceId, leadSubmitted, publishedConfig, allTools.length]);
+  }, [sharedResourceId, leadSubmitted, publishedConfig]);
 
   // Track login
   useEffect(() => {
