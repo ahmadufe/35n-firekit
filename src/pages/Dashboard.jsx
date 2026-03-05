@@ -212,9 +212,11 @@ export default function Dashboard() {
     if (pendingResource) {
       navigateToResource(pendingResource);
       setPendingResource(null);
-    } else if (sharedResourceId) {
-      // Navigate to the shared resource after lead submission
-      const sharedTool = allTools.find(t => t.id === sharedResourceId);
+    } else if (sharedResourceId && publishedConfig) {
+      const tools = publishedConfig.sections
+        ? publishedConfig.sections.flatMap(s => (s.tools || []).map(t => ({ ...t, sectionId: s.id })))
+        : [];
+      const sharedTool = tools.find(t => t.id === sharedResourceId);
       if (sharedTool) navigateToResource(sharedTool);
     }
   };
