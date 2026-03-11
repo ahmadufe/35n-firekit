@@ -325,10 +325,20 @@ export default function ResourcesManagementTab() {
   const handleFileUpload = async (file) => {
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      setFormData({ ...formData, file_url });
+      setFormData(prev => ({ ...prev, file_url }));
       toast.success('File uploaded');
     } catch (error) {
       toast.error('Failed to upload file');
+    }
+  };
+
+  const handleCoverImageUpload = async (file) => {
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setFormData(prev => ({ ...prev, cover_image: file_url }));
+      toast.success('Cover image uploaded');
+    } catch (error) {
+      toast.error('Failed to upload cover image');
     }
   };
 
