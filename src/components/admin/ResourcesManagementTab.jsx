@@ -145,6 +145,7 @@ export default function ResourcesManagementTab() {
         page: '',
         link: '',
         file_url: '',
+        cover_image: '',
         coming_soon: false,
         is_coming_soon: false,
         published_date: '',
