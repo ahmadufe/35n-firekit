@@ -253,8 +253,8 @@ export default function Dashboard() {
 
 
   // Extract all tools from all sections
-  const allTools = publishedConfig?.sections 
-    ? publishedConfig.sections.flatMap(section => 
+  const allTools = activeConfig?.sections 
+    ? activeConfig.sections.flatMap(section => 
         (section.tools || []).map(tool => ({
           ...tool,
           sectionTitle: section.title,
