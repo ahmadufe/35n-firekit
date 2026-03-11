@@ -224,9 +224,9 @@ export default function Dashboard() {
     if (pendingResource) {
       navigateToResource(pendingResource);
       setPendingResource(null);
-    } else if (sharedResourceId && publishedConfig) {
-      const tools = publishedConfig.sections
-        ? publishedConfig.sections.flatMap(s => (s.tools || []).map(t => ({ ...t, sectionId: s.id })))
+    } else if (sharedResourceId && activeConfig) {
+      const tools = activeConfig.sections
+        ? activeConfig.sections.flatMap(s => (s.tools || []).map(t => ({ ...t, sectionId: s.id })))
         : [];
       const sharedTool = tools.find(t => t.id === sharedResourceId);
       if (sharedTool) navigateToResource(sharedTool);
