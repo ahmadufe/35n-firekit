@@ -604,7 +604,7 @@ export default function Dashboard() {
           
           // Group all tools by asset_type, falling back to section title
           const grouped = {};
-          publishedConfig?.sections?.forEach(section => {
+          activeConfig?.sections?.forEach(section => {
             (section.tools || []).forEach(tool => {
               const category = tool.asset_type || section.title || 'Other';
               if (!grouped[category]) grouped[category] = [];
