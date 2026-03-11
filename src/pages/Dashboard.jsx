@@ -142,7 +142,7 @@ export default function Dashboard() {
       const sharedTool = tools.find(t => t.id === sharedResourceId);
       if (sharedTool) navigateToResource(sharedTool);
     }
-  }, [sharedResourceId, leadSubmitted, publishedConfig]);
+  }, [sharedResourceId, leadSubmitted, activeConfig]);
 
   // Track login
   useEffect(() => {
