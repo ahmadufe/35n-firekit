@@ -174,6 +174,7 @@ export default function ResourcesManagementTab() {
       page: formData.page || null,
       link: formData.link || null,
       file_url: formData.file_url || null,
+      cover_image: formData.cover_image || null,
       coming_soon: formData.coming_soon,
       is_coming_soon: formData.is_coming_soon,
       published_date: formData.published_date || new Date().toISOString(),
