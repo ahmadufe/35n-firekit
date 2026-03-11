@@ -128,6 +128,7 @@ export default function ResourcesManagementTab() {
         page: resource.page || '',
         link: resource.link || '',
         file_url: resource.file_url || '',
+        cover_image: resource.cover_image || '',
         coming_soon: resource.coming_soon || false,
         is_coming_soon: resource.is_coming_soon || false,
         published_date: resource.published_date || '',
