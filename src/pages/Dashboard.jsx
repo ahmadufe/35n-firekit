@@ -337,8 +337,8 @@ export default function Dashboard() {
     const matchesNew = !showNewOnly || (() => {
       const toolDate = tool.published_date 
         ? new Date(tool.published_date) 
-        : publishedConfig?.updated_date 
-          ? new Date(publishedConfig.updated_date)
+        : activeConfig?.updated_date 
+          ? new Date(activeConfig.updated_date)
           : null;
 
       if (!toolDate) return false;
