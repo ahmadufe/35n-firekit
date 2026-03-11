@@ -668,6 +668,43 @@ export default function ResourcesManagementTab() {
             </div>
 
             <div>
+              <Label>Cover Image (optional)</Label>
+              <div className="flex items-center gap-3 mt-2">
+                {formData.cover_image ? (
+                  <div className="flex items-center gap-3">
+                    <img src={formData.cover_image} alt="Cover" className="h-16 w-28 object-cover rounded border border-slate-200" />
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setFormData(prev => ({ ...prev, cover_image: '' }))}
+                    >
+                      <X className="h-4 w-4 text-red-500" />
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => document.getElementById('cover-image-upload').click()}
+                  >
+                    <Upload className="mr-2 h-4 w-4" />
+                    Upload Cover Image
+                  </Button>
+                )}
+                <input
+                  id="cover-image-upload"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) handleCoverImageUpload(file);
+                  }}
+                />
+              </div>
+            </div>
+
+            <div>
               <Label>Attachment (optional)</Label>
               <div className="flex items-center gap-3 mt-2">
                 <Button
