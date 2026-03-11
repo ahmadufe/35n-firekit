@@ -86,6 +86,18 @@ export default function Dashboard() {
     }
   });
 
+  const { data: draftConfig } = useQuery({
+    queryKey: ['draftLandingPage'],
+    queryFn: async () => {
+      const configs = await base44.entities.LandingPageConfig.filter({ config_name: 'draft' });
+      return configs[0];
+    },
+    enabled: user?.role === 'admin'
+  });
+
+  const activeConfig = user?.role === 'admin' && draftConfig ? draftConfig : publishedConfig;
+  const isViewingDraft = user?.role === 'admin' && !!draftConfig;
+
   const { data: lastLogin } = useQuery({
     queryKey: ['lastLogin', user?.email],
     queryFn: async () => {
