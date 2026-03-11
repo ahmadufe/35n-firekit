@@ -560,6 +560,13 @@ export default function Dashboard() {
         </div>
       </header>
 
+      {/* Draft preview banner for admins */}
+      {isViewingDraft && (
+        <div className="bg-amber-50 border-b border-amber-200 px-6 py-2 text-center text-sm text-amber-700 font-medium">
+          👁 You're previewing the <strong>draft</strong> config — publish to make it live for everyone
+        </div>
+      )}
+
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-12">
         {/* Hero */}
