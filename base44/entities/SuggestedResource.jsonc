@@ -1,0 +1,47 @@
+{
+  "name": "SuggestedResource",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user who suggested the resource"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Name of the user"
+    },
+    "company": {
+      "type": "string",
+      "description": "Company of the user"
+    },
+    "team": {
+      "type": "string",
+      "description": "Team of the user"
+    },
+    "title": {
+      "type": "string",
+      "description": "Suggested resource title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Suggested resource description"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "reviewed",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "Status of the suggestion"
+    }
+  },
+  "required": [
+    "user_email",
+    "user_name",
+    "title",
+    "description"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "LoginHistory",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user who logged in"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Name of the user"
+    },
+    "login_type": {
+      "type": "string",
+      "enum": [
+        "first_time",
+        "returning"
+      ],
+      "description": "Type of login"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

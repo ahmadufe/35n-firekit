@@ -1,0 +1,58 @@
+{
+  "name": "Bookmark",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user who bookmarked the resource"
+    },
+    "resource_id": {
+      "type": "string",
+      "description": "ID of the bookmarked resource"
+    },
+    "resource_title": {
+      "type": "string",
+      "description": "Title of the bookmarked resource"
+    },
+    "resource_description": {
+      "type": "string",
+      "description": "Description of the resource"
+    },
+    "resource_icon": {
+      "type": "string",
+      "description": "Icon name for the resource"
+    },
+    "resource_type": {
+      "type": "string",
+      "description": "Type/section of the resource"
+    },
+    "resource_topics": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Topics associated with the resource"
+    },
+    "resource_page": {
+      "type": "string",
+      "description": "Page route for the resource"
+    },
+    "resource_file_url": {
+      "type": "string",
+      "description": "File URL if resource has attachment"
+    },
+    "resource_link": {
+      "type": "string",
+      "description": "External link if resource has one"
+    },
+    "resource_coming_soon": {
+      "type": "boolean",
+      "description": "Whether resource is exclusive"
+    }
+  },
+  "required": [
+    "user_email",
+    "resource_id",
+    "resource_title"
+  ]
+}
