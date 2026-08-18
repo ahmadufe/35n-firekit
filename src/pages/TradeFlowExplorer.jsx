@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // ---------------------------------------------------------------------------
 // FILE: pages/TradeFlowExplorer.jsx  (FALLBACK VERSION)
@@ -18,6 +19,7 @@ import React, { useEffect, useState } from "react";
 const TOOL_URL = "https://media.base44.com/files/public/695a4c3829d04b83a5c959f0/a33785ea9_gulf-egypt-trade-flows1.html";
 
 export default function TradeFlowExplorer() {
+  const navigate = useNavigate();
   const [html, setHtml] = useState("");
   const [error, setError] = useState("");
 
@@ -61,10 +63,31 @@ export default function TradeFlowExplorer() {
 
   return (
     <div style={{ width: "100%", height: "calc(100vh - 64px)", minHeight: "600px" }}>
+      <div style={{ padding: "12px 24px", display: "flex", alignItems: "center", gap: "12px", borderBottom: "1px solid #E9EDF3" }}>
+        <button
+          onClick={() => navigate("/Dashboard")}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "6px",
+            padding: "6px 14px",
+            background: "#0F172A",
+            color: "#fff",
+            border: "none",
+            borderRadius: "6px",
+            fontSize: "13px",
+            fontWeight: 600,
+            cursor: "pointer",
+            fontFamily: "Inter, system-ui, sans-serif",
+          }}
+        >
+          ← Back
+        </button>
+      </div>
       <iframe
         title="Trade Flow Explorer"
         srcDoc={html}
-        style={{ width: "100%", height: "100%", border: "none", display: "block" }}
+        style={{ width: "100%", height: "calc(100% - 49px)", border: "none", display: "block" }}
       />
     </div>
   );

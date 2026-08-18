@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Layout({ children, currentPageName }) {
   // Pages that should not show the logo (they have their own custom layouts)
-  const pagesWithoutLogo = ['Home', 'Dashboard'];
+  const pagesWithoutLogo = ['Home', 'Dashboard', 'TradeFlowExplorer'];
 
   const shouldShowLogo = !pagesWithoutLogo.includes(currentPageName);
 
