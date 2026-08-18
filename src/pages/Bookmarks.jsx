@@ -218,10 +218,10 @@ export default function Bookmarks() {
                       title={bookmark.resource_title}
                       description={bookmark.resource_description}
                       icon={IconComponent}
-                      href={bookmark.resource_page ? createPageUrl(bookmark.resource_page) : '#'}
+                      href={bookmark.resource_page ? createPageUrl(bookmark.resource_page) + (bookmark.resource_page === 'HtmlResource' ? `?resource_id=${bookmark.resource_id}` : '') : '#'}
                       comingSoon={bookmark.resource_coming_soon}
-                      fileUrl={bookmark.resource_file_url}
-                      link={bookmark.resource_link}
+                      fileUrl={bookmark.resource_page === 'HtmlResource' ? null : bookmark.resource_file_url}
+                      link={bookmark.resource_page === 'HtmlResource' ? null : bookmark.resource_link}
                       type={bookmark.resource_type}
                       topics={bookmark.resource_topics || []}
                       resourceId={bookmark.resource_id}

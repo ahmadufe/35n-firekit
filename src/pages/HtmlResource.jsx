@@ -66,6 +66,29 @@ export default function HtmlResource() {
     );
   }
 
+  // If the resource has a file_url (e.g., a standalone HTML file), render it in a full-page iframe
+  if (resource.file_url && !resource.html_content) {
+    return (
+      <div className="min-h-screen bg-white">
+        <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 px-6 py-3">
+          <Link to={createPageUrl('Dashboard')}>
+            <Button variant="ghost" size="sm" className="text-slate-600 hover:text-slate-900">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Dashboard
+            </Button>
+          </Link>
+        </div>
+        <iframe
+          src={resource.file_url}
+          title={resource.title}
+          className="w-full"
+          style={{ height: 'calc(100vh - 57px)', border: 'none' }}
+        />
+      </div>
+    );
+  }
+
+  // Otherwise, render inline HTML content
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-4xl mx-auto px-6 py-8">

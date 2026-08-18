@@ -749,11 +749,11 @@ export default function Dashboard() {
                   title={tool.title}
                   description={tool.description}
                   icon={IconComponent}
-                  href={tool.page ? createPageUrl(tool.page) + (tool.html_content ? `?resource_id=${tool.id}` : '') : '#'}
+                  href={tool.page ? createPageUrl(tool.page) + (tool.page === 'HtmlResource' ? `?resource_id=${tool.id}` : '') : '#'}
                   comingSoon={isExclusive}
                   isComingSoon={tool.is_coming_soon}
-                  fileUrl={tool.file_url}
-                  link={tool.link}
+                  fileUrl={tool.page === 'HtmlResource' ? null : tool.file_url}
+                  link={tool.page === 'HtmlResource' ? null : tool.link}
                   actionText={getActionText(tool.sectionId)}
                   type={tool.asset_type || tool.sectionTitle}
                   topics={tool.topics || []}
