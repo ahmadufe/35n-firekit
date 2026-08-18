@@ -1,0 +1,27 @@
+{
+  "name": "AccessRequest",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user requesting access"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Name of the user"
+    },
+    "resource_title": {
+      "type": "string",
+      "description": "Title of the resource being requested"
+    },
+    "resource_type": {
+      "type": "string",
+      "description": "Type/category of the resource"
+    }
+  },
+  "required": [
+    "user_email",
+    "user_name",
+    "resource_title"
+  ]
+}

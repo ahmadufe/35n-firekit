@@ -31,7 +31,8 @@ export default function ResourcesManagementTab() {
     is_coming_soon: false,
     published_date: '',
     featured: false,
-    asset_type: ''
+    asset_type: '',
+    html_content: ''
   });
   const [filterView, setFilterView] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -131,7 +132,8 @@ export default function ResourcesManagementTab() {
         is_coming_soon: resource.is_coming_soon || false,
         published_date: resource.published_date || '',
         featured: resource.featured || false,
-        asset_type: resource.asset_type || ''
+        asset_type: resource.asset_type || '',
+        html_content: resource.html_content || ''
       });
     } else {
       setEditingResource(null);
@@ -147,7 +149,8 @@ export default function ResourcesManagementTab() {
         is_coming_soon: false,
         published_date: '',
         featured: false,
-        asset_type: ''
+        asset_type: '',
+        html_content: ''
       });
     }
     setShowDialog(true);
@@ -168,14 +171,15 @@ export default function ResourcesManagementTab() {
       description: formData.description,
       topics: Array.isArray(formData.topics) ? formData.topics : [],
       icon: formData.icon,
-      page: formData.page || null,
-      link: formData.link || null,
-      file_url: formData.file_url || null,
+      page: formData.html_content ? 'HtmlResource' : (formData.page || null),
+      link: formData.html_content ? null : (formData.link || null),
+      file_url: formData.html_content ? null : (formData.file_url || null),
       coming_soon: formData.coming_soon,
       is_coming_soon: formData.is_coming_soon,
       published_date: formData.published_date || new Date().toISOString(),
       featured: formData.featured,
-      asset_type: formData.asset_type || null
+      asset_type: formData.asset_type || null,
+      html_content: formData.html_content || null
     };
 
     let updatedResources;
@@ -686,6 +690,20 @@ export default function ResourcesManagementTab() {
                   </div>
                 )}
               </div>
+            </div>
+
+            <div>
+              <Label>Custom HTML Content (optional)</Label>
+              <Textarea
+                value={formData.html_content}
+                onChange={(e) => setFormData({ ...formData, html_content: e.target.value })}
+                placeholder="Paste HTML code here. When provided, this resource will render as a standalone page with your custom HTML content."
+                rows={6}
+                className="font-mono text-xs"
+              />
+              <p className="text-xs text-slate-500 mt-1">
+                When HTML content is provided, the resource will open as a custom page rendering this code. Page name, link, and file attachment are ignored.
+              </p>
             </div>
 
             <div>

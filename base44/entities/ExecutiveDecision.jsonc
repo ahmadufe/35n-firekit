@@ -1,0 +1,38 @@
+{
+  "name": "ExecutiveDecision",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user who created the assessment"
+    },
+    "assessment_name": {
+      "type": "string",
+      "description": "Name given to this assessment"
+    },
+    "scores": {
+      "type": "object",
+      "description": "Question scores (1-5)"
+    },
+    "weights": {
+      "type": "object",
+      "description": "Weight percentages for each question"
+    },
+    "total_score": {
+      "type": "number",
+      "description": "Final weighted score"
+    },
+    "decision": {
+      "type": "string",
+      "description": "Decision recommendation (Strong BUILD, Lean BUILD, etc.)"
+    }
+  },
+  "required": [
+    "user_email",
+    "assessment_name",
+    "scores",
+    "weights",
+    "total_score",
+    "decision"
+  ]
+}

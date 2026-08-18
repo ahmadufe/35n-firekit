@@ -1,0 +1,99 @@
+{
+  "name": "LandingPageConfig",
+  "type": "object",
+  "properties": {
+    "config_name": {
+      "type": "string",
+      "description": "Name of the configuration (e.g., 'published', 'draft')"
+    },
+    "sections": {
+      "type": "array",
+      "description": "Array of sections on the landing page",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "coming_soon": {
+            "type": "boolean"
+          },
+          "tools": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "topics": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Array of topic tags for filtering"
+                },
+                "icon": {
+                  "type": "string"
+                },
+                "page": {
+                  "type": "string"
+                },
+                "coming_soon": {
+                  "type": "boolean"
+                },
+                "is_coming_soon": {
+                  "type": "boolean",
+                  "description": "Whether this resource is marked as coming soon"
+                },
+                "featured": {
+                  "type": "boolean",
+                  "description": "Whether this resource is featured"
+                },
+                "published_date": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Date when resource was published/added"
+                },
+                "file_url": {
+                  "type": "string",
+                  "description": "URL to an uploaded file attachment"
+                },
+                "link": {
+                  "type": "string",
+                  "description": "External link URL"
+                },
+                "asset_type": {
+                  "type": "string",
+                  "enum": [
+                    "Tools",
+                    "Insights",
+                    "Playbooks",
+                    "Deep dive series"
+                  ],
+                  "description": "Type of asset/resource"
+                },
+                "html_content": {
+                  "type": "string",
+                  "description": "Custom HTML content to render for this resource"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "config_name"
+  ]
+}
