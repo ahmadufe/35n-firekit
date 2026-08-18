@@ -15,7 +15,7 @@ import React, { useEffect, useState } from "react";
 // STEP 2: copy its public URL and paste it into TOOL_URL below.
 // ---------------------------------------------------------------------------
 
-const TOOL_URL = "PASTE_YOUR_UPLOADED_HTML_FILE_URL_HERE";
+const TOOL_URL = "https://media.base44.com/files/public/695a4c3829d04b83a5c959f0/a33785ea9_gulf-egypt-trade-flows1.html";
 
 export default function TradeFlowExplorer() {
   const [html, setHtml] = useState("");
