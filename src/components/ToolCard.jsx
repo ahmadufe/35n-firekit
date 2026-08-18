@@ -24,7 +24,8 @@ export default function ToolCard({
   onClick,
   onExclusiveClick,
   resourceId,
-  showBookmark = true
+  showBookmark = true,
+  openInNewTab = false
 }) {
   const queryClient = useQueryClient();
 
@@ -210,8 +211,18 @@ export default function ToolCard({
    const shouldBlock = comingSoon && !hasAccessCode;
 
    // If not exclusive (comingSoon=false), allow direct navigation
-   const CardWrapper = shouldBlock ? 'div' : Link;
-   const wrapperProps = shouldBlock ? {} : { to: href };
+   let CardWrapper;
+   let wrapperProps;
+   if (shouldBlock) {
+     CardWrapper = 'div';
+     wrapperProps = {};
+   } else if (openInNewTab) {
+     CardWrapper = 'a';
+     wrapperProps = { href, target: '_blank', rel: 'noopener noreferrer' };
+   } else {
+     CardWrapper = Link;
+     wrapperProps = { to: href };
+   }
 
   const cardClickHandler = shouldBlock ? (e) => {
     e.preventDefault();

@@ -754,6 +754,7 @@ export default function Dashboard() {
                   isComingSoon={tool.is_coming_soon}
                   fileUrl={tool.page === 'HtmlResource' ? null : tool.file_url}
                   link={tool.page === 'HtmlResource' ? null : tool.link}
+                  openInNewTab={tool.page === 'HtmlResource'}
                   actionText={getActionText(tool.sectionId)}
                   type={tool.asset_type || tool.sectionTitle}
                   topics={tool.topics || []}
