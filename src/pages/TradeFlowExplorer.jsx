@@ -31,7 +31,7 @@ export default function TradeFlowExplorer() {
         return r.text();
       })
       .then((t) => {
-        if (alive) setHtml(t);
+        if (alive) setHtml(t.replace(/\bat HS6\b/g, ""));
       })
       .catch((e) => {
         if (alive) setError(String(e.message || e));
