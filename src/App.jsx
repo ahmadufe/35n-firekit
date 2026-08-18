@@ -8,6 +8,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import HtmlResource from './pages/HtmlResource';
+import GulfEgyptTradeFlow from './pages/GulfEgyptTradeFlow';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -62,6 +63,11 @@ const AuthenticatedApp = () => {
       <Route path="/HtmlResource" element={
         <LayoutWrapper currentPageName="HtmlResource">
           <HtmlResource />
+        </LayoutWrapper>
+      } />
+      <Route path="/GulfEgyptTradeFlow" element={
+        <LayoutWrapper currentPageName="GulfEgyptTradeFlow">
+          <GulfEgyptTradeFlow />
         </LayoutWrapper>
       } />
       <Route path="*" element={<PageNotFound />} />
