@@ -22,7 +22,7 @@ import ThankYouDialog from "@/components/ThankYouDialog";
 import FeedbackDialog from "@/components/FeedbackDialog";
 import FeedbackThankYouDialog from "@/components/FeedbackThankYouDialog";
 import AccessRequestDialog from "@/components/AccessRequestDialog";
-import BrevoLeadDialog, { hasSubmittedLead } from "@/components/BrevoLeadDialog";
+import AccessCodeDialog from "@/components/AccessCodeDialog";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
@@ -52,11 +52,8 @@ export default function Dashboard() {
   const [showFeedbackThankYou, setShowFeedbackThankYou] = useState(false);
   const [showAccessRequestDialog, setShowAccessRequestDialog] = useState(false);
   const [selectedResource, setSelectedResource] = useState(null);
-  const [showLeadDialog, setShowLeadDialog] = useState(false);
-  const [pendingResource, setPendingResource] = useState(null);
-  const urlParams = new URLSearchParams(window.location.search);
-  const sharedResourceId = urlParams.get('shared_resource');
-  const [leadSubmitted, setLeadSubmitted] = useState(hasSubmittedLead());
+  const [showAccessCodeDialog, setShowAccessCodeDialog] = useState(false);
+  const [selectedExclusiveResource, setSelectedExclusiveResource] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: user, isLoading: userLoading } = useQuery({
@@ -85,18 +82,6 @@ export default function Dashboard() {
       return configs[0];
     }
   });
-
-  const { data: draftConfig } = useQuery({
-    queryKey: ['draftLandingPage'],
-    queryFn: async () => {
-      const configs = await base44.entities.LandingPageConfig.filter({ config_name: 'draft' });
-      return configs[0];
-    },
-    enabled: user?.role === 'admin'
-  });
-
-  const activeConfig = user?.role === 'admin' && draftConfig ? draftConfig : publishedConfig;
-  const isViewingDraft = user?.role === 'admin' && !!draftConfig;
 
   const { data: lastLogin } = useQuery({
     queryKey: ['lastLogin', user?.email],
@@ -129,20 +114,6 @@ export default function Dashboard() {
       return () => clearTimeout(timer);
     }
   }, [user, hasShownTimedPrompt]);
-
-  // Handle shared resource link (allTools derived inline to avoid hoisting issues)
-  useEffect(() => {
-    if (!sharedResourceId) return;
-    if (!leadSubmitted) {
-      setShowLeadDialog(true);
-    } else if (activeConfig) {
-      const tools = activeConfig.sections
-        ? activeConfig.sections.flatMap(s => (s.tools || []).map(t => ({ ...t, sectionId: s.id })))
-        : [];
-      const sharedTool = tools.find(t => t.id === sharedResourceId);
-      if (sharedTool) navigateToResource(sharedTool);
-    }
-  }, [sharedResourceId, leadSubmitted, activeConfig]);
 
   // Track login
   useEffect(() => {
@@ -199,38 +170,17 @@ export default function Dashboard() {
   };
 
   const handleExclusiveResourceClick = (resource) => {
-    if (hasSubmittedLead()) {
-      // Already gave details — navigate directly
-      navigateToResource(resource);
-    } else {
-      setPendingResource(resource);
-      setShowLeadDialog(true);
+    // For authenticated users, check if they already have access code in session
+    if (user) {
+      const hasAccessCode = sessionStorage.getItem(`access_code_${resource.id}`);
+      if (hasAccessCode) {
+        return; // Already have access, let the card handle the navigation
+      }
     }
-  };
-
-  const navigateToResource = (resource) => {
-    if (resource.page) {
-      window.location.href = createPageUrl(resource.page);
-    } else if (resource.file_url) {
-      window.open(resource.file_url, '_blank');
-    } else if (resource.link) {
-      window.open(resource.link, '_blank');
-    }
-  };
-
-  const handleLeadSuccess = () => {
-    setShowLeadDialog(false);
-    setLeadSubmitted(true);
-    if (pendingResource) {
-      navigateToResource(pendingResource);
-      setPendingResource(null);
-    } else if (sharedResourceId && activeConfig) {
-      const tools = activeConfig.sections
-        ? activeConfig.sections.flatMap(s => (s.tools || []).map(t => ({ ...t, sectionId: s.id })))
-        : [];
-      const sharedTool = tools.find(t => t.id === sharedResourceId);
-      if (sharedTool) navigateToResource(sharedTool);
-    }
+    
+    // Show access code dialog for everyone (authenticated or not)
+    setSelectedExclusiveResource(resource);
+    setShowAccessCodeDialog(true);
   };
 
   const handleSuggestResource = () => {
@@ -253,8 +203,8 @@ export default function Dashboard() {
 
 
   // Extract all tools from all sections
-  const allTools = activeConfig?.sections 
-    ? activeConfig.sections.flatMap(section => 
+  const allTools = publishedConfig?.sections 
+    ? publishedConfig.sections.flatMap(section => 
         (section.tools || []).map(tool => ({
           ...tool,
           sectionTitle: section.title,
@@ -280,13 +230,13 @@ export default function Dashboard() {
   const newToolsCount = allTools.filter(tool => {
     const toolDate = tool.published_date 
       ? new Date(tool.published_date) 
-      : activeConfig?.updated_date 
-        ? new Date(activeConfig.updated_date)
+      : publishedConfig?.updated_date 
+        ? new Date(publishedConfig.updated_date)
         : null;
-
-      if (!toolDate) return false;
-      return toolDate > cutoffDate;
-      }).length;
+    
+    if (!toolDate) return false;
+    return toolDate > cutoffDate;
+  }).length;
 
 
 
@@ -337,8 +287,8 @@ export default function Dashboard() {
     const matchesNew = !showNewOnly || (() => {
       const toolDate = tool.published_date 
         ? new Date(tool.published_date) 
-        : activeConfig?.updated_date 
-          ? new Date(activeConfig.updated_date)
+        : publishedConfig?.updated_date 
+          ? new Date(publishedConfig.updated_date)
           : null;
 
       if (!toolDate) return false;
@@ -472,10 +422,10 @@ export default function Dashboard() {
         onOpenChange={setShowAccessRequestDialog}
       />
 
-      <BrevoLeadDialog
-        open={showLeadDialog}
-        onSuccess={handleLeadSuccess}
-        onClose={() => { setShowLeadDialog(false); setPendingResource(null); }}
+      <AccessCodeDialog
+        open={showAccessCodeDialog}
+        onOpenChange={setShowAccessCodeDialog}
+        resource={selectedExclusiveResource}
       />
 
       {/* Header */}
@@ -574,7 +524,184 @@ export default function Dashboard() {
           </div>
         )}
 
+        {/* Search Bar and Filters */}
+        <div className="mb-8 max-w-5xl mx-auto">
+          <div className="relative mb-4">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+            <Input
+              type="text"
+              placeholder="Search tools, resources, and playbooks..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                if (e.target.value) {
+                  base44.analytics.track({
+                    eventName: 'search_query',
+                    properties: { query_length: e.target.value.length }
+                  });
+                }
+              }}
+              className="h-14 pl-12 pr-4 text-base border-slate-200 focus:border-slate-900 focus:ring-slate-900 shadow-sm"
+            />
+          </div>
 
+          {/* Filter Controls */}
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 flex-wrap">
+              <span className="text-sm font-medium text-slate-700 whitespace-nowrap">Filter by:</span>
+              <div className="flex items-center gap-2 flex-wrap">
+              {newToolsCount > 0 && (
+                <Button
+                  variant={showNewOnly ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => {
+                    setShowNewOnly(!showNewOnly);
+                    base44.analytics.track({
+                      eventName: 'filter_newly_added_toggle',
+                      properties: { enabled: !showNewOnly }
+                    });
+                  }}
+                  className={`${showNewOnly ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-white text-green-600 border-green-300 hover:bg-green-50'}`}
+                >
+                  Newly added {showNewOnly && `(${newToolsCount})`}
+                </Button>
+              )}
+              <Button
+                variant={showFeaturedOnly ? "default" : "outline"}
+                size="sm"
+                onClick={() => {
+                  setShowFeaturedOnly(!showFeaturedOnly);
+                  base44.analytics.track({
+                    eventName: 'filter_featured_toggle',
+                    properties: { enabled: !showFeaturedOnly }
+                  });
+                }}
+                className={`${showFeaturedOnly ? 'bg-purple-500 hover:bg-purple-600 text-white' : 'bg-white text-purple-600 border-purple-300 hover:bg-purple-50'}`}
+              >
+                Featured
+              </Button>
+              <Button
+                variant={showExclusiveOnly ? "default" : "outline"}
+                size="sm"
+                onClick={() => {
+                  setShowExclusiveOnly(!showExclusiveOnly);
+                  base44.analytics.track({
+                    eventName: 'filter_exclusive_toggle',
+                    properties: { enabled: !showExclusiveOnly }
+                  });
+                }}
+                className={`${showExclusiveOnly ? 'bg-orange-500 hover:bg-orange-600 text-white' : 'bg-white text-orange-600 border-orange-300 hover:bg-orange-50'}`}
+              >
+                Exclusive
+              </Button>
+              <Button
+                variant={showComingSoonOnly ? "default" : "outline"}
+                size="sm"
+                onClick={() => {
+                  setShowComingSoonOnly(!showComingSoonOnly);
+                  base44.analytics.track({
+                    eventName: 'filter_coming_soon_toggle',
+                    properties: { enabled: !showComingSoonOnly }
+                  });
+                }}
+                className={`${showComingSoonOnly ? 'bg-blue-500 hover:bg-blue-600 text-white' : 'bg-white text-blue-600 border-blue-300 hover:bg-blue-50'}`}
+              >
+                Coming Soon
+              </Button>
+              <Button
+                variant={openFilter === 'topic' || selectedTopics.length > 0 ? "default" : "outline"}
+                size="sm"
+                onClick={() => toggleFilterSection('topic')}
+                className={`${openFilter === 'topic' || selectedTopics.length > 0 ? 'bg-slate-900 text-white' : 'bg-white text-slate-700 border-slate-300'}`}
+              >
+                Topic {selectedTopics.length > 0 && `(${selectedTopics.length})`}
+              </Button>
+              <Button
+                variant={openFilter === 'type' || selectedTypes.length > 0 ? "default" : "outline"}
+                size="sm"
+                onClick={() => toggleFilterSection('type')}
+                className={`${openFilter === 'type' || selectedTypes.length > 0 ? 'bg-slate-900 text-white' : 'bg-white text-slate-700 border-slate-300'}`}
+              >
+                Type {selectedTypes.length > 0 && `(${selectedTypes.length})`}
+              </Button>
+
+              </div>
+              {hasActiveFilters && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={clearAllFilters}
+                  className="text-slate-600 hover:text-slate-900"
+                >
+                  Clear all
+                </Button>
+              )}
+            </div>
+            
+
+          </div>
+
+          {/* Filter Options */}
+          {openFilter === 'topic' && (
+            <div className="mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200 relative">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setOpenFilter(null)}
+                className="absolute top-2 right-2 h-6 w-6 text-slate-500 hover:text-slate-900"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+              <div className="flex flex-wrap gap-2">
+                {availableTopics.map(topic => (
+                  <Badge
+                    key={topic}
+                    variant={selectedTopics.includes(topic) ? "default" : "outline"}
+                    className={`cursor-pointer px-3 py-1.5 text-xs transition-all ${
+                      selectedTopics.includes(topic)
+                        ? 'bg-slate-900 text-white hover:bg-slate-800'
+                        : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-300'
+                    }`}
+                    onClick={() => toggleTopic(topic)}
+                  >
+                    {topic}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {openFilter === 'type' && (
+            <div className="mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200 relative">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setOpenFilter(null)}
+                className="absolute top-2 right-2 h-6 w-6 text-slate-500 hover:text-slate-900"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+              <div className="flex flex-wrap gap-2">
+                {availableTypes.map(type => (
+                  <Badge
+                    key={type}
+                    variant={selectedTypes.includes(type) ? "default" : "outline"}
+                    className={`cursor-pointer px-3 py-1.5 text-xs transition-all ${
+                      selectedTypes.includes(type)
+                        ? 'bg-slate-900 text-white hover:bg-slate-800'
+                        : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-300'
+                    }`}
+                    onClick={() => toggleType(type)}
+                  >
+                    {type}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+
+        </div>
 
         {/* Results */}
         <div className="mb-6 flex items-center justify-between">
@@ -597,66 +724,53 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Tools grouped by asset_type category */}
-        {(() => {
-          const iconMap = { ClipboardCheck, BookOpen, Wrench };
-          const categoryOrder = ['Insights', 'Tools', 'Playbooks', 'Deep dive series'];
-          
-          // Group all tools by asset_type, falling back to section title
-          const grouped = {};
-          activeConfig?.sections?.forEach(section => {
-            (section.tools || []).forEach(tool => {
-              const category = tool.asset_type || section.title || 'Other';
-              if (!grouped[category]) grouped[category] = [];
-              grouped[category].push({ ...tool, sectionTitle: section.title, sectionId: section.id, sectionComingSoon: section.coming_soon });
-            });
-          });
+        {/* Tools Grid */}
+        {filteredTools.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredTools.map((tool) => {
+              const iconMap = {
+                ClipboardCheck,
+                BookOpen,
+                Wrench
+              };
+              const IconComponent = iconMap[tool.icon] || ClipboardCheck;
 
-          // Sort by known order, then alphabetically for unknown
-          const sortedCategories = Object.keys(grouped).sort((a, b) => {
-            const ai = categoryOrder.indexOf(a);
-            const bi = categoryOrder.indexOf(b);
-            if (ai === -1 && bi === -1) return a.localeCompare(b);
-            if (ai === -1) return 1;
-            if (bi === -1) return -1;
-            return ai - bi;
-          });
+              const isToolOrDeepDive = tool.sectionId === 'deep-dive' || 
+                                       tool.sectionTitle?.toLowerCase().includes('tool');
+              const needsLoginCheck = !user && isToolOrDeepDive && tool.page;
 
-          return sortedCategories.map(category => (
-            <div key={category} className="mb-14">
-              <h2 className="text-2xl font-semibold text-slate-900 mb-6 pb-3 border-b border-slate-200">
-                {category}
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {grouped[category].map((tool) => {
-                  const IconComponent = iconMap[tool.icon] || ClipboardCheck;
-                  const isToolOrDeepDive = tool.sectionId === 'deep-dive' || tool.sectionTitle?.toLowerCase().includes('tool');
-                  const needsLoginCheck = !user && isToolOrDeepDive && tool.page;
-                  return (
-                    <ToolCard
-                      key={tool.id}
-                      onClick={needsLoginCheck ? () => handleResourceClick(tool) : undefined}
-                      onExclusiveClick={() => handleExclusiveResourceClick(tool)}
-                      title={tool.title}
-                      description={tool.description}
-                      icon={IconComponent}
-                      href={tool.page ? createPageUrl(tool.page) : '#'}
-                      comingSoon={!leadSubmitted}
-                      isComingSoon={tool.is_coming_soon}
-                      fileUrl={tool.file_url}
-                      link={tool.link}
-                      actionText={getActionText(tool.sectionId)}
-                      type={tool.asset_type || tool.sectionTitle}
-                      topics={tool.topics || []}
-                      resourceId={tool.id}
-                      coverImage={tool.cover_image}
-                    />
-                  );
-                })}
-              </div>
+              const isExclusive = tool.coming_soon || tool.sectionComingSoon;
+              
+              return (
+                <ToolCard
+                  key={tool.id}
+                  onClick={needsLoginCheck ? () => handleResourceClick(tool) : undefined}
+                  onExclusiveClick={isExclusive ? () => handleExclusiveResourceClick(tool) : undefined}
+                  title={tool.title}
+                  description={tool.description}
+                  icon={IconComponent}
+                  href={tool.page ? createPageUrl(tool.page) : '#'}
+                  comingSoon={isExclusive}
+                  isComingSoon={tool.is_coming_soon}
+                  fileUrl={tool.file_url}
+                  link={tool.link}
+                  actionText={getActionText(tool.sectionId)}
+                  type={tool.asset_type || tool.sectionTitle}
+                  topics={tool.topics || []}
+                  resourceId={tool.id}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <div className="text-center py-16">
+            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Search className="h-8 w-8 text-slate-400" />
             </div>
-          ));
-        })()}
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">No results found</h3>
+            <p className="text-slate-500">Try adjusting your search or filters</p>
+          </div>
+        )}
       </main>
 
       {/* Footer */}

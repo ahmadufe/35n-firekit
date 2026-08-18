@@ -27,7 +27,6 @@ export default function ResourcesManagementTab() {
     page: '',
     link: '',
     file_url: '',
-    cover_image: '',
     coming_soon: false,
     is_coming_soon: false,
     published_date: '',
@@ -128,7 +127,6 @@ export default function ResourcesManagementTab() {
         page: resource.page || '',
         link: resource.link || '',
         file_url: resource.file_url || '',
-        cover_image: resource.cover_image || '',
         coming_soon: resource.coming_soon || false,
         is_coming_soon: resource.is_coming_soon || false,
         published_date: resource.published_date || '',
@@ -145,7 +143,6 @@ export default function ResourcesManagementTab() {
         page: '',
         link: '',
         file_url: '',
-        cover_image: '',
         coming_soon: false,
         is_coming_soon: false,
         published_date: '',
@@ -174,7 +171,6 @@ export default function ResourcesManagementTab() {
       page: formData.page || null,
       link: formData.link || null,
       file_url: formData.file_url || null,
-      cover_image: formData.cover_image || null,
       coming_soon: formData.coming_soon,
       is_coming_soon: formData.is_coming_soon,
       published_date: formData.published_date || new Date().toISOString(),
@@ -325,20 +321,10 @@ export default function ResourcesManagementTab() {
   const handleFileUpload = async (file) => {
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      setFormData(prev => ({ ...prev, file_url }));
+      setFormData({ ...formData, file_url });
       toast.success('File uploaded');
     } catch (error) {
       toast.error('Failed to upload file');
-    }
-  };
-
-  const handleCoverImageUpload = async (file) => {
-    try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      setFormData(prev => ({ ...prev, cover_image: file_url }));
-      toast.success('Cover image uploaded');
-    } catch (error) {
-      toast.error('Failed to upload cover image');
     }
   };
 
@@ -663,43 +649,6 @@ export default function ResourcesManagementTab() {
                   value={formData.link}
                   onChange={(e) => setFormData({ ...formData, link: e.target.value })}
                   placeholder="https://..."
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label>Cover Image (optional)</Label>
-              <div className="flex items-center gap-3 mt-2">
-                {formData.cover_image ? (
-                  <div className="flex items-center gap-3">
-                    <img src={formData.cover_image} alt="Cover" className="h-16 w-28 object-cover rounded border border-slate-200" />
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setFormData(prev => ({ ...prev, cover_image: '' }))}
-                    >
-                      <X className="h-4 w-4 text-red-500" />
-                    </Button>
-                  </div>
-                ) : (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => document.getElementById('cover-image-upload').click()}
-                  >
-                    <Upload className="mr-2 h-4 w-4" />
-                    Upload Cover Image
-                  </Button>
-                )}
-                <input
-                  id="cover-image-upload"
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    if (file) handleCoverImageUpload(file);
-                  }}
                 />
               </div>
             </div>
