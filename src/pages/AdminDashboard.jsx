@@ -3,9 +3,11 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, BarChart3, LogIn, Users, FolderOpen, Layout, Lightbulb, UserPlus } from "lucide-react";
+import { ArrowLeft, BarChart3, LogIn, Users, FolderOpen, Layout, Lightbulb, UserPlus, Download, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { downloadJSON } from "@/lib/exportData";
+import { toast } from "sonner";
 import InsightsTab from "@/components/admin/InsightsTab";
 import LoginsTab from "@/components/admin/LoginsTab";
 import UsersTab from "@/components/admin/UsersTab";
@@ -19,6 +21,7 @@ import LeadsTab from "@/components/admin/LeadsTab";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('manage');
+  const [isExporting, setIsExporting] = useState(false);
   const navigate = useNavigate();
 
   const { data: user, isLoading } = useQuery({
@@ -31,6 +34,51 @@ export default function AdminDashboard() {
       navigate(createPageUrl('Dashboard'));
     }
   }, [user, isLoading, navigate]);
+
+  const handleExportAll = async () => {
+    setIsExporting(true);
+    try {
+      const [users, userProfiles, logins, feedback, suggestions, accessRequests, accessCodes, leads] = await Promise.all([
+        base44.entities.User.list('-created_date'),
+        base44.entities.UserProfile.list(),
+        base44.entities.LoginHistory.list('-created_date'),
+        base44.entities.Feedback.list('-created_date'),
+        base44.entities.SuggestedResource.list('-created_date'),
+        base44.entities.AccessRequest.list('-created_date'),
+        base44.entities.AccessCode.list(),
+        base44.entities.Lead.list('-created_date')
+      ]);
+
+      const usersWithProfiles = users.map(u => {
+        const profile = userProfiles.find(p => p.user_email === u.email);
+        return {
+          email: u.email,
+          full_name: u.full_name || null,
+          role: u.role,
+          company: profile?.company || null,
+          team: profile?.team || null,
+          interested_resources: profile?.interested_resources || [],
+          interested_areas: profile?.interested_areas || [],
+          created_date: u.created_date
+        };
+      });
+
+      downloadJSON({
+        exported_at: new Date().toISOString(),
+        users: usersWithProfiles,
+        login_history: logins,
+        feedback,
+        suggested_resources: suggestions,
+        access_requests: accessRequests,
+        access_codes: accessCodes,
+        leads
+      }, "firekit-all-data");
+      toast.success("All data exported to JSON");
+    } catch (error) {
+      toast.error("Failed to export data");
+    }
+    setIsExporting(false);
+  };
 
   if (isLoading) {
     return (
@@ -67,6 +115,19 @@ export default function AdminDashboard() {
                 <p className="text-xs text-slate-500">Manage your platform</p>
               </div>
             </div>
+            <Button onClick={handleExportAll} disabled={isExporting} className="bg-slate-900 hover:bg-slate-800">
+              {isExporting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Exporting...
+                </>
+              ) : (
+                <>
+                  <Download className="mr-2 h-4 w-4" />
+                  Export All Data
+                </>
+              )}
+            </Button>
           </div>
         </div>
       </header>
