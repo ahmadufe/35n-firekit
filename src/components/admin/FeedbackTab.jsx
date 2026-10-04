@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
+import { downloadJSON } from "@/lib/exportData";
 
 export default function FeedbackTab() {
   const [selectedIds, setSelectedIds] = useState([]);
@@ -48,63 +49,13 @@ export default function FeedbackTab() {
 
   const handleBulkExport = () => {
     const selectedFeedback = feedback.filter(f => selectedIds.includes(f.id));
-    const headers = ['Date', 'Time', 'First Name', 'Last Name', 'Email', 'Company', 'Team', 'Message'];
-    const rows = selectedFeedback.map(item => {
-      const date = new Date(item.created_date);
-      const abuDhabiDate = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Dubai' }));
-      return [
-        format(abuDhabiDate, 'MMM d, yyyy'),
-        format(abuDhabiDate, 'HH:mm:ss'),
-        item.first_name,
-        item.last_name,
-        item.email,
-        item.company || 'N/A',
-        item.team || 'N/A',
-        item.message
-      ];
-    });
-
-    const csvContent = [
-      headers.join(','),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `feedback-${format(new Date(), 'yyyy-MM-dd')}.csv`;
-    link.click();
-    toast.success('Exported to CSV');
+    downloadJSON(selectedFeedback, "feedback");
+    toast.success('Exported to JSON');
   };
 
   const handleExportAll = () => {
-    const headers = ['Date', 'Time', 'First Name', 'Last Name', 'Email', 'Company', 'Team', 'Message'];
-    const rows = feedback.map(item => {
-      const date = new Date(item.created_date);
-      const abuDhabiDate = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Dubai' }));
-      return [
-        format(abuDhabiDate, 'MMM d, yyyy'),
-        format(abuDhabiDate, 'HH:mm:ss'),
-        item.first_name,
-        item.last_name,
-        item.email,
-        item.company || 'N/A',
-        item.team || 'N/A',
-        item.message
-      ];
-    });
-
-    const csvContent = [
-      headers.join(','),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `feedback-${format(new Date(), 'yyyy-MM-dd')}.csv`;
-    link.click();
-    toast.success('Exported to CSV');
+    downloadJSON(feedback, "feedback");
+    toast.success('Exported to JSON');
   };
 
   if (isLoading) {

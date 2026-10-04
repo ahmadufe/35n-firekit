@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Download, Loader2, LogIn } from "lucide-react";
 import { format } from "date-fns";
+import { downloadJSON } from "@/lib/exportData";
 
 export default function LoginsTab() {
   const { data: logins = [], isLoading } = useQuery({
@@ -15,29 +16,7 @@ export default function LoginsTab() {
   });
 
   const handleExport = () => {
-    const headers = ['Date', 'Time', 'User Email', 'User Name', 'Login Type'];
-    const rows = logins.map(login => {
-      const date = new Date(login.created_date);
-      const abuDhabiDate = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Dubai' }));
-      return [
-        format(abuDhabiDate, 'MMM d, yyyy'),
-        format(abuDhabiDate, 'HH:mm:ss'),
-        login.user_email,
-        login.user_name || 'N/A',
-        login.login_type
-      ];
-    });
-
-    const csvContent = [
-      headers.join(','),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `login-history-${format(new Date(), 'yyyy-MM-dd')}.csv`;
-    link.click();
+    downloadJSON(logins, "login-history");
   };
 
   if (isLoading) {
@@ -57,7 +36,7 @@ export default function LoginsTab() {
         </div>
         <Button onClick={handleExport} className="bg-slate-900 hover:bg-slate-800">
           <Download className="mr-2 h-4 w-4" />
-          Export to Excel
+          Export JSON
         </Button>
       </div>
 

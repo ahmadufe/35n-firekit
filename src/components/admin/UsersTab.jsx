@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Download, Loader2, Users as UsersIcon, Eye, LogIn, UserPlus, Mail } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
+import { downloadJSON } from "@/lib/exportData";
 
 export default function UsersTab() {
   const [selectedUser, setSelectedUser] = useState(null);
@@ -45,29 +46,21 @@ export default function UsersTab() {
   };
 
   const handleExport = () => {
-    const headers = ['Email', 'Full Name', 'Role', 'Company', 'Team', 'Created Date'];
-    const rows = users.map(user => {
+    const data = users.map(user => {
       const profile = userProfiles.find(p => p.user_email === user.email);
-      return [
-        user.email,
-        user.full_name || 'N/A',
-        user.role,
-        profile?.company || 'N/A',
-        profile?.team || 'N/A',
-        format(new Date(user.created_date), 'MMM d, yyyy')
-      ];
+      return {
+        email: user.email,
+        full_name: user.full_name || null,
+        role: user.role,
+        company: profile?.company || null,
+        team: profile?.team || null,
+        interested_resources: profile?.interested_resources || [],
+        interested_areas: profile?.interested_areas || [],
+        created_date: user.created_date
+      };
     });
-
-    const csvContent = [
-      headers.join(','),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `users-${format(new Date(), 'yyyy-MM-dd')}.csv`;
-    link.click();
+    downloadJSON(data, "users");
+    toast.success("Exported to JSON");
   };
 
   const handleInvite = async (e) => {
@@ -116,7 +109,7 @@ export default function UsersTab() {
           </Button>
           <Button onClick={handleExport} className="bg-slate-900 hover:bg-slate-800">
             <Download className="mr-2 h-4 w-4" />
-            Export to Excel
+            Export JSON
           </Button>
         </div>
       </div>

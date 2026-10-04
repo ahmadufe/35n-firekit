@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { downloadJSON } from "@/lib/exportData";
 
 export default function AccessRequestsTab() {
   const [selectedIds, setSelectedIds] = useState([]);
@@ -49,59 +50,13 @@ export default function AccessRequestsTab() {
 
   const handleBulkExport = () => {
     const selectedRequests = requests.filter(r => selectedIds.includes(r.id));
-    const headers = ['Date', 'Time', 'Name', 'Email', 'Resource', 'Resource Type'];
-    const rows = selectedRequests.map(item => {
-      const date = new Date(item.created_date);
-      const abuDhabiDate = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Dubai' }));
-      return [
-        format(abuDhabiDate, 'MMM d, yyyy'),
-        format(abuDhabiDate, 'HH:mm:ss'),
-        item.user_name,
-        item.user_email,
-        item.resource_title,
-        item.resource_type || 'N/A'
-      ];
-    });
-
-    const csvContent = [
-      headers.join(','),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `access-requests-${format(new Date(), 'yyyy-MM-dd')}.csv`;
-    link.click();
-    toast.success('Exported to CSV');
+    downloadJSON(selectedRequests, "access-requests");
+    toast.success('Exported to JSON');
   };
 
   const handleExportAll = () => {
-    const headers = ['Date', 'Time', 'Name', 'Email', 'Resource', 'Resource Type'];
-    const rows = requests.map(item => {
-      const date = new Date(item.created_date);
-      const abuDhabiDate = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Dubai' }));
-      return [
-        format(abuDhabiDate, 'MMM d, yyyy'),
-        format(abuDhabiDate, 'HH:mm:ss'),
-        item.user_name,
-        item.user_email,
-        item.resource_title,
-        item.resource_type || 'N/A'
-      ];
-    });
-
-    const csvContent = [
-      headers.join(','),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `access-requests-${format(new Date(), 'yyyy-MM-dd')}.csv`;
-    link.click();
-    toast.success('Exported to CSV');
+    downloadJSON(requests, "access-requests");
+    toast.success('Exported to JSON');
   };
 
   if (isLoading) {

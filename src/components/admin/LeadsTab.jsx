@@ -2,7 +2,9 @@ import React from 'react';
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Download, Loader2 } from "lucide-react";
+import { downloadJSON } from "@/lib/exportData";
 
 export default function LeadsTab() {
   const { data: leads = [], isLoading } = useQuery({
@@ -21,10 +23,20 @@ export default function LeadsTab() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Leads from Exclusive Resources</CardTitle>
-        <p className="text-sm text-slate-500 mt-2">
-          Users who accessed exclusive resources by providing their details
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle>Leads from Exclusive Resources</CardTitle>
+            <p className="text-sm text-slate-500 mt-2">
+              Users who accessed exclusive resources by providing their details
+            </p>
+          </div>
+          {leads.length > 0 && (
+            <Button onClick={() => downloadJSON(leads, "leads")} className="bg-slate-900 hover:bg-slate-800">
+              <Download className="mr-2 h-4 w-4" />
+              Export JSON
+            </Button>
+          )}
+        </div>
       </CardHeader>
       <CardContent>
         {leads.length === 0 ? (

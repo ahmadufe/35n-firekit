@@ -9,6 +9,7 @@ import { CheckCircle2, XCircle, Clock, Download, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { format } from "date-fns";
+import { downloadJSON } from "@/lib/exportData";
 
 export default function SuggestedResourcesTab() {
   const [filterStatus, setFilterStatus] = useState('all');
@@ -56,34 +57,8 @@ export default function SuggestedResourcesTab() {
 
   const handleBulkExport = () => {
     const selectedSuggestions = suggestions.filter(s => selectedIds.includes(s.id));
-    const headers = ['Date', 'Time', 'User Name', 'User Email', 'Company', 'Team', 'Title', 'Description', 'Status'];
-    const rows = selectedSuggestions.map(item => {
-      const date = new Date(item.created_date);
-      const abuDhabiDate = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Dubai' }));
-      return [
-        format(abuDhabiDate, 'MMM d, yyyy'),
-        format(abuDhabiDate, 'HH:mm:ss'),
-        item.user_name,
-        item.user_email,
-        item.company || 'N/A',
-        item.team || 'N/A',
-        item.title,
-        item.description,
-        item.status
-      ];
-    });
-
-    const csvContent = [
-      headers.join(','),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `suggestions-${format(new Date(), 'yyyy-MM-dd')}.csv`;
-    link.click();
-    toast.success('Exported to CSV');
+    downloadJSON(selectedSuggestions, "suggestions");
+    toast.success('Exported to JSON');
   };
 
   const filteredSuggestions = suggestions.filter(s => 

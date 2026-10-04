@@ -7,8 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Plus, Copy, Trash2, Loader2, CheckCircle2 } from "lucide-react";
+import { Plus, Copy, Trash2, Loader2, CheckCircle2, Download } from "lucide-react";
 import { toast } from "sonner";
+import { downloadJSON } from "@/lib/exportData";
 
 const AVAILABLE_TYPES = ['Tools', 'Guides & Insights', 'Playbooks', 'Deep Dive'];
 
@@ -206,10 +207,18 @@ export default function AccessCodesTab() {
           <h2 className="text-2xl font-semibold text-slate-900">Access Codes</h2>
           <p className="text-sm text-slate-500 mt-1">Manage exclusive resource access codes</p>
         </div>
-        <Button onClick={handleOpenDialog}>
-          <Plus className="mr-2 h-4 w-4" />
-          Generate Access Code
-        </Button>
+        <div className="flex gap-3">
+          {accessCodes.length > 0 && (
+            <Button onClick={() => downloadJSON(accessCodes, "access-codes")} variant="outline">
+              <Download className="mr-2 h-4 w-4" />
+              Export JSON
+            </Button>
+          )}
+          <Button onClick={handleOpenDialog}>
+            <Plus className="mr-2 h-4 w-4" />
+            Generate Access Code
+          </Button>
+        </div>
       </div>
 
       <div className="mb-4">
